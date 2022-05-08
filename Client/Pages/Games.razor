@@ -1,0 +1,62 @@
+﻿@using Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Shared.Entities
+@inject HttpClient Http
+@inject NavigationManager nav
+
+@page "/Games/{userId:int}"
+
+
+@if (currentUser != null)
+{
+    <h3>המשחקים של @currentUser.FirstName</h3>
+
+    <MudTable Items="@currentUser.UserGames" Hover="true">
+        <HeaderContent>
+            <MudTh>שם המשחק</MudTh>
+            <MudTh>קוד המשחק</MudTh>
+            <MudTh>פרסום המשחק</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="שם המשחק">@context.GameName</MudTd>
+            <MudTd DataLabel="קוד המשחק">@context.GameCode</MudTd>
+            <MudTd DataLabel="פרסום המשחק">
+                <MudCheckBox CheckedChanged="@((bool newState) => PublishGame(context))" Checked="@context.IsPublished" Color="Color.Primary"></MudCheckBox>
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+
+}
+
+@code {
+
+    [Parameter]
+    public int userId { get; set; }
+
+    User currentUser;
+    string msg = "";
+
+    protected async override Task OnInitializedAsync()
+    {
+        var getResponse = await Http.GetAsync("api/Games/" + userId);
+        if (getResponse.IsSuccessStatusCode == true)
+        {
+            currentUser = getResponse.Content.ReadFromJsonAsync<User>().Result;
+        }
+        else
+        {
+            string errorMsg = getResponse.Content.ReadAsStringAsync().Result;
+            if (errorMsg == "User not logged in" || errorMsg == "Empty Session")
+            {
+                nav.NavigateTo("./");
+            }
+            else
+            {
+                msg = "המשתמש לא נמצא";
+            }
+        }
+    }
+    void PublishGame(Game selectedGame)
+    {
+        selectedGame.IsPublished = !selectedGame.IsPublished;
+    }
+
+}

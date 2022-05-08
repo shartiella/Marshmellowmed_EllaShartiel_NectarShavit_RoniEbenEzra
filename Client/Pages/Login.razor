@@ -1,0 +1,58 @@
+﻿@page "/"
+@inject HttpClient Http
+@inject NavigationManager nav
+
+<h3>Login</h3>
+
+<MudTextField @bind-Value="inputMail" Label="כתובת מייל" Variant="Variant.Outlined" />
+<MudButton Variant="Variant.Filled" @onclick="loginUser">כניסה</MudButton>
+<p>@msg</p>
+
+@code {
+    string inputMail = "";
+    string msg = "";
+    //async Task userLogin()
+    //{
+    //    if (inputMail != "")
+    //    {
+    //        var loginUser = await Http.GetAsync("api/users/" + inputMail);
+    //        if (loginUser.IsSuccessStatusCode)
+    //        {
+    //            msg = "login successes";
+    //        }
+    //        else
+    //        {
+    //            msg = "login failed";
+    //        }
+    //    }
+    //}
+    async Task loginUser()
+    {
+        if (string.IsNullOrEmpty(inputMail) == false)
+        {
+            var loginUser = await Http.GetAsync("api/users/" + inputMail);
+            if (loginUser.IsSuccessStatusCode == true)
+            {
+                int userId = loginUser.Content.ReadFromJsonAsync<int>().Result;
+                nav.NavigateTo("./Games/" + userId);
+            }
+            else
+            {
+                string error = loginUser.Content.ReadAsStringAsync().Result;
+                if (error == "User not found")
+                {
+                    msg = "לא נמצא משתמש התואם למייל שהוזן";
+                }
+                else
+                {
+                    msg = "התרחשה תקלת שרת";
+                }
+            }
+        }
+        else
+        {
+            msg = "יש להקליד כתובת מייל";
+        }
+    }
+
+}

@@ -1,0 +1,18 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Shared.Entities
+{
+    public class Game
+    {
+        public int ID { get; set; }
+        public string GameName { get; set; }
+        public int GameCode { get; set; }
+        public bool IsPublished { get; set; }
+        public int UserID { get; set; }
+        public User GameUser { get; set; }
+    }
+}

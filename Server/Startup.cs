@@ -1,10 +1,15 @@
+using Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Server.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using System;
 using System.Linq;
 
 namespace Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Server
@@ -23,8 +28,20 @@ namespace Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Server
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddNewtonsoftJson(opt =>
+            {
+                opt.SerializerSettings.ReferenceLoopHandling =
+                    Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            });
+
             services.AddRazorPages();
+            services.AddDbContext<DataContext>(x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddSession(options => {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+            });
+
+            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,6 +63,7 @@ namespace Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Server
             app.UseBlazorFrameworkFiles();
             app.UseStaticFiles();
 
+            app.UseSession();
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
