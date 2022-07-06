@@ -24,30 +24,8 @@ namespace Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Server.Controlle
 		[HttpGet("{mail}")]
 		public async Task<IActionResult> LoginUser(string mail)
 		{
-			//string SessionID = HttpContext.Session.GetString("UserId");
-			//if (string.IsNullOrEmpty(SessionID))
-			//{
-			//	User userToReturn = await _context.Users.FirstOrDefaultAsync(u => u.Email == mail.ToLower());
-			//	if (userToReturn != null)
-			//	{
-			//		HttpContext.Session.SetString("UserId", userToReturn.ID.ToString());
-			//		return Ok();
-			//	}
-			//	return BadRequest("User not found");
-			//}
-			//else
-			//{
-			//	int userId = Convert.ToInt32(SessionID);
-			//	User userToReturn = await _context.Users.FirstOrDefaultAsync(u => u.ID == userId && u.Email == mail.ToLower());
-			//	if (userToReturn != null)
-			//	{
-			//		return Ok();
-			//	}
 
-			//	HttpContext.Session.SetString("UserId", "");
-			//	return BadRequest("User not found");
-			//}
-			User userToReturn = await _context.Users.FirstOrDefaultAsync(u => u.Email == mail.ToLower()); //האם האימייל תואם למייל שהתקבל, אם כן אז לקלוט אותו
+			User userToReturn = await _context.Users.FirstOrDefaultAsync(u => u.Email == mail.ToLower()); //האם יש אימייל שתואם למייל שהתקבל, אם כן אז לקלוט אותו
 			if (userToReturn != null)
 			{
 				HttpContext.Session.SetString("UserId", userToReturn.ID.ToString());

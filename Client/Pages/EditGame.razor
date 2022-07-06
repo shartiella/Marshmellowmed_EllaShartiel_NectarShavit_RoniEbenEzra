@@ -1,0 +1,254 @@
+﻿@using Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Shared.Entities
+@inject HttpClient Http
+@inject NavigationManager nav
+@inject IDialogService DialogService
+
+@page "/EditGame/{gameCode:int}"
+
+<h2>עריכת משחק</h2>
+
+@if (singleGame != null) //אם נטען משחק
+{
+<EditForm Model="singleGame" OnValidSubmit="validSubmit">
+
+    <input type="submit" value="חזרה למשחקים שלי" class="mud-button-root mud-button mud-button-filled mud-button-filled-default mud-button-filled-size-medium mud-ripple" />
+
+    <div class="game-verifications">
+        <h3>תנאים לפרסום המשחק:</h3>
+
+        <section class="category-number">
+            @if (categoriesCount >= 2)
+            {
+                <MudIcon Icon="@Icons.Filled.CheckBox"></MudIcon>
+            }
+            else
+            {
+                <MudIcon Icon="@Icons.Filled.CheckBoxOutlineBlank"></MudIcon>
+            }
+
+            <p>לפחות 2 קטגוריות</p>
+            <p>מספר קטגוריות: @categoriesCount.ToString()/5</p>
+        </section>
+
+        <section class="item-number">
+            @if (minItemCountperCat== categoriesCount && categoriesCount>0)
+            {
+                <MudIcon Icon="@Icons.Filled.CheckBox"></MudIcon>
+            }
+            else
+            {
+                <MudIcon Icon="@Icons.Filled.CheckBoxOutlineBlank"></MudIcon>
+            }
+
+            <p>לפחות 2 פריטים בקטגוריה</p>
+            <p>יש להוסיף פריטים ב-@(categoriesCount-minItemCountperCat) מהקטגוריות</p>
+        </section>
+
+        <section class="item-total-number">
+            @if (totalItemCount >= 10)
+            {
+                <MudIcon Icon="@Icons.Filled.CheckBox"></MudIcon>
+            }
+            else
+            {
+                <MudIcon Icon="@Icons.Filled.CheckBoxOutlineBlank"></MudIcon>
+            }
+
+            <p>לפחות 10 פריטים סה"כ</p>
+            <p>מספר פריטים כולל: @totalItemCount.ToString()/20</p>
+        </section>
+
+        @if (categoriesCount >= 2 && minItemCountperCat == categoriesCount && categoriesCount > 0 && totalItemCount >= 10) //אם הוא עומד בתנאי הפרסום
+        {
+            if (singleGame.IsPublished == false) //אם המשחק עוד לא פורסם
+            {
+                <MudButton Variant="Variant.Filled" Color="Color.Secondary" @onclick="PublishGame" Disabled="false">פרסום משחק</MudButton>
+            }
+            else
+            {
+                <MudButton Variant="Variant.Filled" Color="Color.Secondary" @onclick="UnPublishGame" Disabled="false">ביטול פרסום משחק</MudButton>
+            }
+        }
+        else //אם הוא לא עומד בתנאי הפרסום
+        {
+            <MudButton Variant="Variant.Filled" Color="Color.Secondary" @onclick="PublishGame" Disabled="true">פרסום משחק</MudButton>
+        }
+
+    </div>
+
+    <MudTextField T="string" @bind-Value="singleGame.GameName" Counter="30" MaxLength="30" HelperText="" Immediate="true" Validation="@(new Func<string, IEnumerable<string>>(MaxCharacters))" Label="" Variant="Variant.Outlined" />
+
+    @if (categoriesCount >= 5)//אם הגיע למספר הקטגוריות המקסימלי
+    {
+        <MudButton Variant="Variant.Filled" Color="Color.Secondary" @onclick="AddNewCategory" Disabled="true">הוספת קטגוריה</MudButton>
+    }
+    else //אם אפשר עוד להוסיף קטגוריות
+    {
+        <MudButton Variant="Variant.Filled" Color="Color.Secondary" @onclick="AddNewCategory" Disabled="false">הוספת קטגוריה</MudButton>
+
+    }
+
+    <div id="categories-area">
+        @if (singleGame.GameCategories != null)//אם קיימת רשימת קטגוריות
+        {
+            if (singleGame.GameCategories.Count() > 0)//אם קיימות קטגוריות
+            {
+                foreach (Category c in singleGame.GameCategories)
+                {
+                    <CategoryComp CategoryAll=@c DeletedCategory="DeleteCategoryAfter" ItemChange="AfterChangeInItems"></CategoryComp>
+                }
+
+            }
+            else
+            {
+                <p>לחצו על הכפתור כדי להוסיף קטגוריה</p>
+            }
+        }
+        else
+        {
+            <p>בעיה בטעינת רשימת הקטגוריות</p>
+        }
+
+    </div>
+</EditForm>
+}
+else //אם לא נטען משחק
+{
+    <p>המשחק לא נמצא</p>
+}
+
+
+
+@code {
+
+    [Parameter]
+    public int gameCode { get; set; }
+
+    Game singleGame = new Game();
+    int categoriesCount;
+    int minItemCountperCat = 0;
+    int totalItemCount = 0;
+    Category newCategory = new Category();
+
+    protected async override Task OnInitializedAsync()
+    {
+        var getResponse = await Http.GetAsync("api/Games/byCode/" + gameCode);
+        if (getResponse.IsSuccessStatusCode == true)
+        {
+            singleGame = getResponse.Content.ReadFromJsonAsync<Game>().Result;
+            categoriesCount = singleGame.GameCategories.Count();
+            foreach (Category c in singleGame.GameCategories)
+            {
+                if (c.CategoryItems.Count()>=2)
+                {
+                    minItemCountperCat++;
+                }
+                totalItemCount += c.CategoryItems.Count();
+            }
+
+            //CatList = singleGame.GameCategories;
+        }
+        else
+        {
+            var options = new DialogOptions() { CloseButton = true };
+            DialogService.Show<Error>(getResponse.Content.ReadAsStringAsync().Result, options);
+        }
+
+    }
+
+    async Task validSubmit()
+    {
+        var updateResponse = await Http.PostAsJsonAsync("api/Games/Update", singleGame); //קריאת עדכון לטבלת הפריטים
+
+        if (updateResponse.IsSuccessStatusCode == true)
+        {
+            nav.NavigateTo("./Games/" + singleGame.UserID); //מעביר לעמוד עריכת המשחק עם קוד המשחק
+        }
+        else
+        {
+
+        }
+    }
+
+    private IEnumerable<string> MaxCharacters(string ch)
+    {
+        if (!string.IsNullOrEmpty(ch) && 30 < ch?.Length)
+            yield return "עד 30 תווים";
+    }
+
+
+    void AddNewCategory()
+    {
+        //הגדרת נתוני הפריט הדיפולטיים
+        newCategory.CategoryName = "";
+        newCategory.GameID = singleGame.ID;
+        //newCategory.CategoryGame = singleGame;
+        newCategory.CategoryItems = new List<Item>();
+        //newCategory.ID = 0;
+
+
+        //הקפצת חלון עריכת הפריט החדש
+        var parameters = new DialogParameters();
+        parameters.Add("currentCategory", newCategory);
+        parameters.Add("UpdatedCategory", EventCallback.Factory.Create<Category>(this, NewCategoryAfter));
+
+        var options = new DialogOptions() { CloseButton = true };
+        DialogService.Show<CategoryWindow>("הוספת קטגוריה חדשה למשחק " + singleGame.GameName, parameters, options);
+    }
+
+    void NewCategoryAfter(Category UpdatedCategory)
+    {
+        singleGame.GameCategories.Add(UpdatedCategory);
+        categoriesCount = singleGame.GameCategories.Count();
+
+    }
+
+    void DeleteCategoryAfter(Category categoryToDelete)
+    {
+        singleGame.GameCategories.Remove(categoryToDelete);
+        categoriesCount = singleGame.GameCategories.Count();
+
+    }
+
+    async Task PublishGame()
+    {
+        var publishResponse = await Http.PostAsJsonAsync("api/Games/Publish", singleGame); //קריאת עדכון לטבלת הפריטים
+
+        if (publishResponse.IsSuccessStatusCode == true)
+        {
+            singleGame.IsPublished = publishResponse.Content.ReadFromJsonAsync<bool>().Result; //קבלת הפריט המעודכן מבסיס הנתונים
+        }
+        else
+        {
+
+        }
+    }
+
+    async Task UnPublishGame()
+    {
+        var publishResponse = await Http.PostAsJsonAsync("api/Games/UnPublish", singleGame); //קריאת עדכון לטבלת הפריטים
+
+        if (publishResponse.IsSuccessStatusCode == true)
+        {
+            singleGame.IsPublished = publishResponse.Content.ReadFromJsonAsync<bool>().Result; //קבלת הפריט המעודכן מבסיס הנתונים
+        }
+        else
+        {
+
+        }
+    }
+
+    void AfterChangeInItems()
+    {
+        minItemCountperCat = 0;
+        totalItemCount = 0;
+        foreach (Category c in singleGame.GameCategories)
+        {
+            if (c.CategoryItems.Count() >= 2)
+            {
+                minItemCountperCat++;
+            }
+            totalItemCount += c.CategoryItems.Count();
+        }
+    }
+}

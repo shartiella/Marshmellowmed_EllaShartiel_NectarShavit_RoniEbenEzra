@@ -1,29 +1,56 @@
 ﻿@using Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Shared.Entities
 @inject HttpClient Http
 @inject NavigationManager nav
+@inject IDialogService DialogService
+@inject ISnackbar SnackbarService
 
 @page "/Games/{userId:int}"
 
 
 @if (currentUser != null)
 {
-    <h3>המשחקים של @currentUser.FirstName</h3>
+    <h2>המשחקים של @currentUser.FirstName</h2>
+
+    <EditForm Model="newGame" OnValidSubmit="NewGame">
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+        <p>שם המשחק</p>
+        <MudTextField T="string" @bind-Value="newGame.GameName" Counter="30" MaxLength="30" HelperText="" Immediate="true" Validation="@(new Func<string, IEnumerable<string>>(MaxCharacters))" Label="" Variant="Variant.Outlined" />
+        <ValidationMessage For="@(() => newGame.GameName)" />
+        <input type="submit" value="יצירת משחק" class="mud-button-root mud-button mud-button-filled mud-button-filled-default mud-button-filled-size-medium mud-ripple" />
+    </EditForm>
 
     <MudTable Items="@currentUser.UserGames" Hover="true">
+        @*ככה הוא יודע איזו רשימה להדפיס*@
         <HeaderContent>
             <MudTh>שם המשחק</MudTh>
-            <MudTh>קוד המשחק</MudTh>
-            <MudTh>פרסום המשחק</MudTh>
+            <MudTh>קוד</MudTh>
+            <MudTh>עריכה</MudTh>
+            <MudTh>שכפול</MudTh>
+            <MudTh>מחיקה</MudTh>
+            <MudTh>פרסום</MudTh>
         </HeaderContent>
         <RowTemplate>
-            <MudTd DataLabel="שם המשחק">@context.GameName</MudTd>
-            <MudTd DataLabel="קוד המשחק">@context.GameCode</MudTd>
-            <MudTd DataLabel="פרסום המשחק">
+            <MudTd DataLabel="שם המשחק">@context.GameName </MudTd>
+            <MudTd DataLabel="קוד">@context.GameCode</MudTd>
+            <MudTd DataLabel="עריכה">
+                <MudIconButton Icon="@Icons.Filled.Edit" Variant="Variant.Filled" Color="Color.Secondary" Title="עריכה" @onclick="()=>EditGame(context.GameCode)" />
+            </MudTd>
+            <MudTd DataLabel="שכפול">
+                <MudIconButton Icon="@Icons.Filled.ContentCopy" Variant="Variant.Filled" Color="Color.Secondary" Title="שכפול" @onclick="()=>DuplicateGame(context)" />
+            </MudTd>
+            <MudTd DataLabel="מחיקה">
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Secondary" Title="מחיקה" @onclick="()=>DeleteGame(context)" />
+            </MudTd>
+            <MudTd DataLabel="פרסום">
                 <MudCheckBox CheckedChanged="@((bool newState) => PublishGame(context))" Checked="@context.IsPublished" Color="Color.Primary"></MudCheckBox>
             </MudTd>
         </RowTemplate>
     </MudTable>
 
+}
+else
+{
+    <p>@msg</p>
 }
 
 @code {
@@ -31,12 +58,15 @@
     [Parameter]
     public int userId { get; set; }
 
-    User currentUser;
+    User currentUser = new User();
+    Game newGame = new Game();
     string msg = "";
+
+    public string NewGameName;
 
     protected async override Task OnInitializedAsync()
     {
-        var getResponse = await Http.GetAsync("api/Games/" + userId);
+        var getResponse = await Http.GetAsync("api/Games/" + userId); //שליפת היוזר כולל רשימת המשחקים שלו
         if (getResponse.IsSuccessStatusCode == true)
         {
             currentUser = getResponse.Content.ReadFromJsonAsync<User>().Result;
@@ -54,9 +84,123 @@
             }
         }
     }
-    void PublishGame(Game selectedGame)
+    async Task PublishGame(Game selectedGame)
     {
-        selectedGame.IsPublished = !selectedGame.IsPublished;
+        if (selectedGame.IsPublished == false) //אם לא מפובלש
+        {
+            if (selectedGame.GameCategories.Count()<=2&& selectedGame.GameCategories.Count()>=5)
+            {
+                //לדאוג השצ'קבוקס יהיה מאופרר
+                //רק אז לאפשר פיבלוש
+            }
+
+            var publishResponse = await Http.PostAsJsonAsync("api/Games/Publish", selectedGame); //קריאת עדכון לטבלת הפריטים
+
+            if (publishResponse.IsSuccessStatusCode == true)
+            {
+                selectedGame.IsPublished = publishResponse.Content.ReadFromJsonAsync<bool>().Result; //קבלת הפריט המעודכן מבסיס הנתונים
+            }
+            else
+            {
+
+            }
+        }
+        else //אם כבר מפובלש
+        {
+            var publishResponse = await Http.PostAsJsonAsync("api/Games/UnPublish", selectedGame); //קריאת עדכון לטבלת הפריטים
+
+            if (publishResponse.IsSuccessStatusCode == true)
+            {
+                selectedGame.IsPublished = publishResponse.Content.ReadFromJsonAsync<bool>().Result; //קבלת הפריט המעודכן מבסיס הנתונים
+            }
+            else
+            {
+
+            }
+        }
     }
 
+    void EditGame(int gameCodeToEdit)
+    {
+        Console.WriteLine(gameCodeToEdit);
+        nav.NavigateTo("./EditGame/" + gameCodeToEdit); //מעביר לעמוד עריכת המשחק עם קוד המשחק
+        Console.WriteLine("nav");
+
+    }
+
+    async Task DeleteGame(Game gameToDelete)
+    {
+
+        if (gameToDelete.GameCategories.Count() > 0)
+        {
+            //הגדרת חלון דיאלוג חדש
+            var parameters = new DialogParameters();
+            parameters.Add("GameToDelete", gameToDelete);
+            parameters.Add("DeletedGame", EventCallback.Factory.Create<Game>(this, DeletedCategoryAfter));
+
+            var options = new DialogOptions() { CloseButton = true };
+            DialogService.Show<DeleteGame>("מחיקת משחק", parameters, options);
+        }
+        else
+        {
+            var deleteResponse = await Http.DeleteAsync("api/Games/" + gameToDelete.ID);
+
+            bool isDeleted = deleteResponse.Content.ReadFromJsonAsync<bool>().Result;
+
+            if (isDeleted == true && deleteResponse.IsSuccessStatusCode == true)
+            {
+                currentUser.UserGames.Remove(gameToDelete);
+            }
+            else
+            {
+                //WorkersList = new List<Worker>();
+            }
+        }
+    }
+
+    void DeletedCategoryAfter(Game deletedGame)
+    {
+        currentUser.UserGames.Remove(deletedGame);
+    }
+
+    async Task DuplicateGame(Game gameToCopy)
+    {
+        var postResponse = await Http.PostAsJsonAsync("api/Games/Copy", gameToCopy);
+        Console.WriteLine("gametocopy sent to controller " + postResponse.IsSuccessStatusCode);
+
+        if (postResponse.IsSuccessStatusCode == true)
+        {
+            Game currentNewGame = postResponse.Content.ReadFromJsonAsync<Game>().Result;
+            currentUser.UserGames.Add(currentNewGame);
+            //nav.NavigateTo("./EditGame/" + currentNewGame.GameCode); //מעביר לעמוד עריכת המשחק עם קוד המשחק
+        }
+        else
+        {
+            var options = new DialogOptions() { CloseButton = true };
+            DialogService.Show<Error>(postResponse.Content.ReadAsStringAsync().Result, options);
+        }
+
+    }
+
+    async Task NewGame()
+    {
+        newGame.IsPublished = false;
+        newGame.UserID = userId;
+        var postResponse = await Http.PostAsJsonAsync("api/Games/Insert", newGame);
+        if (postResponse.IsSuccessStatusCode == true)
+        {
+            Game currentNewGame = postResponse.Content.ReadFromJsonAsync<Game>().Result;
+            nav.NavigateTo("./EditGame/" + currentNewGame.GameCode); //מעביר לעמוד עריכת המשחק עם קוד המשחק
+        }
+        else
+        {
+            var options = new DialogOptions() { CloseButton = true };
+            DialogService.Show<Error>(postResponse.Content.ReadAsStringAsync().Result, options);
+        }
+    }
+    private IEnumerable<string> MaxCharacters(string ch)
+    {
+        if (!string.IsNullOrEmpty(ch) && 30 < ch?.Length)
+            yield return "עד 30 תווים";
+    }
 }

@@ -1,0 +1,44 @@
+﻿@using Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Shared.Entities
+@inject IDialogService DialogService
+@inject HttpClient Http
+
+<MudDialog>
+    <DialogContent>
+        @*<MudText>@ContentText</MudText>*@
+        <MudText>המשחק "@GameToDelete.GameName" וכל התוכן שבו ימחק ולא יהיה ניתן לשחזור.</MudText>
+        <MudText>האם ברצונך להמשיך?</MudText>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">ביטול</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">מחיקה</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    [Parameter] public Game GameToDelete { get; set; }
+
+    [Parameter] public EventCallback<Game> DeletedGame { get; set; }
+
+    void Cancel() => MudDialog.Cancel();
+
+    async Task Submit()
+    {
+
+        var deleteResponse = await Http.DeleteAsync("api/Games/" + GameToDelete.ID);
+
+        bool isDeleted = deleteResponse.Content.ReadFromJsonAsync<bool>().Result;
+
+        if (isDeleted == true && deleteResponse.IsSuccessStatusCode == true)
+        {
+            await DeletedGame.InvokeAsync(GameToDelete);
+        }
+        else
+        {
+            //WorkersList = new List<Worker>();
+        }
+
+        MudDialog.Close(DialogResult.Ok(true));
+
+    }
+}

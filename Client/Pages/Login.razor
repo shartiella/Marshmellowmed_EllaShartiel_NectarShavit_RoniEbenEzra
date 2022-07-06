@@ -1,40 +1,68 @@
 ﻿@page "/"
 @inject HttpClient Http
 @inject NavigationManager nav
+@using Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Shared.Entities
 
-<h3>Login</h3>
 
-<MudTextField @bind-Value="inputMail" Label="כתובת מייל" Variant="Variant.Outlined" />
-<MudButton Variant="Variant.Filled" @onclick="loginUser">כניסה</MudButton>
-<p>@msg</p>
+<h2>התחברות</h2>
+<EditForm Model="thisUser" OnValidSubmit="loginUser" OnInvalidSubmit="invalidLogin">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+    <MudTextField @bind-Value="thisUser.Email" Label="כתובת מייל" Variant="Variant.Outlined" />
+    <ValidationMessage For="@(() => thisUser.Email)" /><p>@msg</p>
+    <input type="submit" value="כניסה" class="mud-button-root mud-button mud-button-filled mud-button-filled-default mud-button-filled-size-medium mud-ripple" />
+</EditForm>
+
 
 @code {
+    User thisUser = new User();
+
     string inputMail = "";
     string msg = "";
-    //async Task userLogin()
-    //{
-    //    if (inputMail != "")
-    //    {
-    //        var loginUser = await Http.GetAsync("api/users/" + inputMail);
-    //        if (loginUser.IsSuccessStatusCode)
-    //        {
-    //            msg = "login successes";
-    //        }
-    //        else
-    //        {
-    //            msg = "login failed";
-    //        }
-    //    }
-    //}
+
     async Task loginUser()
     {
-        if (string.IsNullOrEmpty(inputMail) == false)
+
+        if (string.IsNullOrEmpty(thisUser.Email) == false) //אם יש משהו בתיבת הטקסט
         {
-            var loginUser = await Http.GetAsync("api/users/" + inputMail);
-            if (loginUser.IsSuccessStatusCode == true)
+            /////////////////////////////////////////////////////////////////////////////////////////////לשנות את המייל לthisUser.Email
+            var loginUser = await Http.GetAsync("api/users/" + "admin@mail.com"); //שולף משתמש לפי האימייל ופותח לו סשן
+            if (loginUser.IsSuccessStatusCode == true) //אם יש כזה והקריאה הצליחה
             {
                 int userId = loginUser.Content.ReadFromJsonAsync<int>().Result;
-                nav.NavigateTo("./Games/" + userId);
+                nav.NavigateTo("./Games/" + userId); //מעביר לעמוד משחקים עם מספר היוזר
+            }
+            else
+            {
+                string error = loginUser.Content.ReadAsStringAsync().Result;
+                if (error == "User not found")
+                {
+                    msg = "לא נמצא משתמש התואם למייל שהוזן";
+                }
+                else
+                {
+                    msg = "התרחשה תקלת שרת";
+                }
+            }
+        }
+        else
+        {
+            msg = "יש להקליד כתובת מייל";
+        }
+    }
+
+    async Task invalidLogin()
+    {
+
+        //למחוק כל מה שיש כאן כדי שזה לא יעבוד בסוף
+
+        if (string.IsNullOrEmpty(thisUser.Email) == false) //אם יש משהו בתיבת הטקסט
+        {
+            /////////////////////////////////////////////////////////////////////////////////////////////לשנות את המייל לthisUser.Email
+            var loginUser = await Http.GetAsync("api/users/" + "admin@mail.com"); //שולף משתמש לפי האימייל ופותח לו סשן
+            if (loginUser.IsSuccessStatusCode == true) //אם יש כזה והקריאה הצליחה
+            {
+                int userId = loginUser.Content.ReadFromJsonAsync<int>().Result;
+                nav.NavigateTo("./Games/" + userId); //מעביר לעמוד משחקים עם מספר היוזר
             }
             else
             {

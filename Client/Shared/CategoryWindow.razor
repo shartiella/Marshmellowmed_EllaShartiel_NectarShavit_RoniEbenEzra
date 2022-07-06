@@ -1,0 +1,83 @@
+﻿@using Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Shared.Entities
+@inject HttpClient Http
+@inject NavigationManager nav
+@inject IDialogService DialogService
+
+<MudDialog>
+    <DialogContent>
+        @*<MudText>@ContentText</MudText>*@
+        <EditForm Model="currentCategory" OnValidSubmit="UpdateCategory">
+            <DataAnnotationsValidator></DataAnnotationsValidator>
+            <p>שם הקטגוריה:</p>
+            <MudTextField T="string" @bind-Value="currentCategory.CategoryName" Counter="10" MaxLength="10" HelperText="" Immediate="true" Validation="@(new Func<string, IEnumerable<string>>(MaxCharacters))" Label="" Variant="Variant.Outlined" />
+            <ValidationMessage For="@(() => currentCategory.CategoryName)" />
+            <MudButton OnClick="Cancel">ביטול</MudButton>
+            <input type="submit" value="שמירה" />
+        </EditForm>
+    </DialogContent>
+    <DialogActions>
+        @*<MudButton Color="Color.Primary" OnClick="Submit">שמירה</MudButton>*@
+    </DialogActions>
+</MudDialog>
+
+@code {
+
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    [Parameter] public Category currentCategory { get; set; } //הקטגוריה שעבורה נפתח חלון העריכה
+
+    [Parameter]
+    public EventCallback<Category> UpdatedCategory { get; set; } //פרמטר לעדכון קומפוננטת הקטגוריה על עדכון לצורך שינוי התצוגה
+
+    void Cancel() => MudDialog.Cancel(); //ביטול העריכה - להוסיף מה קורה כשמבטלים קטגוריה חדשה
+
+    private IEnumerable<string> MaxCharacters(string ch)//לאכיפת הולידציה על הגבלת התווים
+    {
+        if (!string.IsNullOrEmpty(ch) && 10 < ch?.Length)
+            yield return "עד 10 תווים";
+    }
+
+    async Task UpdateCategory() //עדכון הקטגוריה - בלחיצה על שמירה
+    {
+        if (currentCategory.ID == 0) //אם הקטגוריה היא חדשה וצריך ליצור אותה
+        {
+
+            Console.WriteLine("לפני הקריאה");
+
+            var postResponse = await Http.PostAsJsonAsync("api/Categories/New", currentCategory); //יצירת פריט חדש וריק
+
+            Console.WriteLine("אחרי הקריאה");
+
+            if (postResponse.IsSuccessStatusCode == true)
+            {
+                Category CategoryFromDb = postResponse.Content.ReadFromJsonAsync<Category>().Result; //קליטת הפריט החדש מהטבלה
+                await UpdatedCategory.InvokeAsync(CategoryFromDb); //עדכון של קומפוננטת פריט
+                MudDialog.Close(DialogResult.Ok(true)); //סגירת החלון
+            }
+            else
+            {
+                Console.WriteLine(postResponse.Content.ReadAsStringAsync().Result);
+
+                var options = new DialogOptions() { CloseButton = true };
+                DialogService.Show<Error>(postResponse.Content.ReadAsStringAsync().Result, options);
+            }
+        }
+        else //אם הפריט קיים וצריך לעדכן אותו
+        {
+            var updateResponse = await Http.PostAsJsonAsync("api/Categories/Update", currentCategory); //קריאת עדכון לטבלת הפריטים
+
+            if (updateResponse.IsSuccessStatusCode == true)
+            {
+                currentCategory = updateResponse.Content.ReadFromJsonAsync<Category>().Result; //קבלת הפריט המעודכן מבסיס הנתונים
+                await UpdatedCategory.InvokeAsync(currentCategory); //עדכון של קומפוננטת פריט
+                MudDialog.Close(DialogResult.Ok(true)); //סגירת החלון
+            }
+            else
+            {
+                var options = new DialogOptions() { CloseButton = true };
+                DialogService.Show<Error>(updateResponse.Content.ReadAsStringAsync().Result, options);
+            }
+        }
+    }
+
+}

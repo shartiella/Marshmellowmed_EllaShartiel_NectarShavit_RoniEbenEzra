@@ -1,4 +1,5 @@
 using Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Server.Data;
+using Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Server.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -41,6 +42,7 @@ namespace Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Server
             });
 
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<FileStorage>();
 
         }
 
@@ -65,6 +67,7 @@ namespace Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Server
 
             app.UseSession();
             app.UseRouting();
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.UseEndpoints(endpoints =>
             {

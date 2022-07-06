@@ -1,7 +1,9 @@
 ﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+@import url('https://fonts.googleapis.com/css2?family=Assistant:wght@200;300;400;500;600;700;800&display=swap');
 
 html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+/*    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+*/    font-family: 'Assistant', sans-serif;
 }
 
 a, .btn-link {
@@ -48,3 +50,102 @@ a, .btn-link {
         right: 0.75rem;
         top: 0.5rem;
     }
+
+.gameCategory {
+    display: inline-block;
+    margin: 10px;
+    text-align: center;
+    background-color: gainsboro;
+    border-radius: 15px;
+    vertical-align: top;
+    text-align:-webkit-center;
+}
+
+    .gameCategory > header {
+        background-color: deepskyblue;
+        width: 230px;
+        padding: 10px;
+        text-align: center;
+        border-radius: 15px;
+    }
+
+    .gameCategory > header > .mud-button{
+        margin:5px;
+        margin-top:0px;
+        margin-bottom:0px;
+    }
+
+    .gameCategory h3{
+    display:inline;
+}
+
+    .gameCategory > .mud-button {
+        margin: 20px;
+    }
+
+    .gameCategory > p {
+        max-inline-size: fit-content;
+        margin: 30px;
+    }
+
+.singleItem {
+    display: flex;
+    height: 130px;
+    width: 130px;
+    margin: 15px;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+}
+
+.singleItem h4{
+}
+
+#categories-area {
+    text-align: center;
+}
+
+#categories-area>.mud-button{
+    margin:30px;
+}
+
+.item-buttons {
+    /* visibility: hidden; */
+    display: inline-block;
+    /* margin-bottom: -85px; */
+    /* position: absolute; */
+    transition-duration: 0.2s;
+    opacity: 0;
+    height: 100%;
+    width: 100%;
+}
+
+.item-buttons:hover{
+/*    visibility:visible;
+*/
+opacity:1;
+}
+
+    .item-buttons .mud-button {
+        margin-left: 5px;
+        margin-right: 5px;
+        margin-bottom: -90%;
+    }
+
+.item-content {
+    position: absolute;
+    width: inherit;
+}
+
+    .mud-dialog{
+        transition-duration:0.5s;
+    }
+
+.mud-input-control-input-container{
+    display:block;
+}
+
+.mud-dialog {
+    width: 50%;
+    height: max-content;
+}

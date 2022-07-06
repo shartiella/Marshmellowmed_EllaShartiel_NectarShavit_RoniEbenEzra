@@ -1,0 +1,158 @@
+﻿@using Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Shared.Entities
+@inject IDialogService DialogService
+@inject HttpClient Http
+
+
+
+<section class="gameCategory">
+    <header>
+        <h3>@CategoryAll.CategoryName</h3>
+        <MudIconButton Icon="@Icons.Filled.Edit" Variant="Variant.Filled" Color="Color.Secondary" Title="שינוי שם" @onclick="EditCategory" />
+        <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Secondary" Title="מחיקה" @onclick="DeleteCategory" />
+
+    </header>
+
+
+    @if (CategoryAll.CategoryItems.Count > 0)
+    {
+        @foreach (Item i in CategoryAll.CategoryItems)
+        {
+            <ItemComp thisItem=@i DeletedItem="DeleteItemAfter" UpdatedItem="ItemUpdateAfter"></ItemComp>
+        }
+        if (CategoryAll.CategoryItems.Count >= 4)
+        {
+            NewItemDisabled = true;
+        }
+        else
+        {
+            NewItemDisabled = false;
+        }
+    }
+    else
+    {
+        <p>קטגוריה ריקה, לחצו על הכפתור כדי להוסיף פריטים</p>
+    }
+    <MudButton Variant="Variant.Filled" Color="Color.Secondary" @onclick="AddNewItem" Disabled="@NewItemDisabled">הוספת פריט</MudButton>
+
+</section>
+
+@code {
+
+    [Parameter]
+    public Category CategoryAll { get; set; }
+
+    [Parameter]
+    public EventCallback<Category> DeletedCategory { get; set; }
+
+    [Parameter]
+    public EventCallback<string> ItemChange { get; set; }
+
+    bool NewItemDisabled = false;
+
+    Item newItem = new Item();
+
+    void AddNewItem()
+    {
+        //הגדרת נתוני הפריט הדיפולטיים
+        newItem.CategoryID = CategoryAll.ID;
+        newItem.IsPicture = false;
+        newItem.ItemContent = "";
+        newItem.ID = 0;
+
+        //הקפצת חלון עריכת הפריט החדש
+        var parameters = new DialogParameters();
+        parameters.Add("currentItem", newItem);
+        parameters.Add("UpdatedItem", EventCallback.Factory.Create<Item>(this, AfterNewItem));
+
+        var options = new DialogOptions() { CloseButton = true };
+        DialogService.Show<ItemWindow>("הוספת פריט לקטגוריה " + CategoryAll.CategoryName, parameters, options);
+    }
+
+
+    void AfterNewItem(Item updatedItem)
+    {
+        CategoryAll.CategoryItems.Add(updatedItem);
+        ItemChange.InvokeAsync("new item");
+    }
+
+    async Task EditCategory() //עריכת הקטגוריה הזו
+    {
+        var getResponse = await Http.GetAsync("api/Categories/" + CategoryAll.ID); //שליפת הפרטים של הקטגוריה מבסיס הנתונים
+        if (getResponse.IsSuccessStatusCode == true)
+        {
+
+            Category categoryFromController = getResponse.Content.ReadFromJsonAsync<Category>().Result; //קליטת הפריט למשתנה
+
+            //הגדרת חלון דיאלוג חדש
+            var parameters = new DialogParameters();
+            parameters.Add("currentCategory", categoryFromController);
+            parameters.Add("UpdatedCategory", EventCallback.Factory.Create<Category>(this, AfterCategorypdate));
+
+            var options = new DialogOptions() { CloseButton = true };
+            DialogService.Show<CategoryWindow>("עריכת קטגוריה", parameters, options);
+
+        }
+        else
+        {
+            var options = new DialogOptions() { CloseButton = true };
+            DialogService.Show<Error>(getResponse.Content.ReadAsStringAsync().Result, options);
+        }
+
+    }
+
+    void AfterCategorypdate(Category updatedCategory)
+    {
+        //UpdatedCategory.InvokeAsync(updatedCategory);
+        CategoryAll.CategoryName = updatedCategory.CategoryName;
+    }
+
+    void ItemUpdateAfter(Item updatedItem)
+    {
+        int IndexOfItem = CategoryAll.CategoryItems.FindIndex(i => i.ID == updatedItem.ID);
+        CategoryAll.CategoryItems[IndexOfItem] = updatedItem;
+    }
+
+
+    async Task DeleteCategory()
+    {
+        if (CategoryAll.CategoryItems.Count() > 0)
+        {
+            //הגדרת חלון דיאלוג חדש
+            var parameters = new DialogParameters();
+            parameters.Add("CategoryToDelete", CategoryAll);
+            parameters.Add("DeletedCategory", EventCallback.Factory.Create<Category>(this, DeletedCategoryAfter));
+
+            var options = new DialogOptions() { CloseButton = true };
+            DialogService.Show<DeleteCategory>("מחיקת קטגוריה", parameters, options);
+        }
+        else
+        {
+            var deleteResponse = await Http.DeleteAsync("api/Categories/" + CategoryAll.ID);
+
+            bool isDeleted = deleteResponse.Content.ReadFromJsonAsync<bool>().Result;
+
+            if (isDeleted == true && deleteResponse.IsSuccessStatusCode == true)
+            {
+                await DeletedCategory.InvokeAsync(CategoryAll);
+            }
+            else
+            {
+                //WorkersList = new List<Worker>();
+            }
+        }
+    }
+
+    void DeletedCategoryAfter(Category categoryToDelete)
+    {
+
+        DeletedCategory.InvokeAsync(categoryToDelete);
+        ItemChange.InvokeAsync("less item");
+    }
+
+    void DeleteItemAfter(Item itemToDelete)
+    {
+        CategoryAll.CategoryItems.Remove(itemToDelete);
+    }
+
+
+}

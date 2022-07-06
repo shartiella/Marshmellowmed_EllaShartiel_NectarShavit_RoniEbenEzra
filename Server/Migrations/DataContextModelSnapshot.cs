@@ -15,6 +15,25 @@ namespace Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Server.Migration
             modelBuilder
                 .HasAnnotation("ProductVersion", "5.0.12");
 
+            modelBuilder.Entity("Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Shared.Entities.Category", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("CategoryName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("GameID")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("GameID");
+
+                    b.ToTable("Categories");
+                });
+
             modelBuilder.Entity("Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Shared.Entities.Game", b =>
                 {
                     b.Property<int>("ID")
@@ -40,6 +59,28 @@ namespace Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Server.Migration
                     b.ToTable("Games");
                 });
 
+            modelBuilder.Entity("Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Shared.Entities.Item", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("CategoryID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsPicture")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ItemContent")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("CategoryID");
+
+                    b.ToTable("Items");
+                });
+
             modelBuilder.Entity("Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Shared.Entities.User", b =>
                 {
                     b.Property<int>("ID")
@@ -60,6 +101,17 @@ namespace Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Server.Migration
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Shared.Entities.Category", b =>
+                {
+                    b.HasOne("Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Shared.Entities.Game", "CategoryGame")
+                        .WithMany("GameCategories")
+                        .HasForeignKey("GameID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CategoryGame");
+                });
+
             modelBuilder.Entity("Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Shared.Entities.Game", b =>
                 {
                     b.HasOne("Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Shared.Entities.User", "GameUser")
@@ -69,6 +121,27 @@ namespace Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Server.Migration
                         .IsRequired();
 
                     b.Navigation("GameUser");
+                });
+
+            modelBuilder.Entity("Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Shared.Entities.Item", b =>
+                {
+                    b.HasOne("Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Shared.Entities.Category", "ItemCategory")
+                        .WithMany("CategoryItems")
+                        .HasForeignKey("CategoryID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ItemCategory");
+                });
+
+            modelBuilder.Entity("Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Shared.Entities.Category", b =>
+                {
+                    b.Navigation("CategoryItems");
+                });
+
+            modelBuilder.Entity("Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Shared.Entities.Game", b =>
+                {
+                    b.Navigation("GameCategories");
                 });
 
             modelBuilder.Entity("Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Shared.Entities.User", b =>

@@ -1,0 +1,95 @@
+﻿@using Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Shared.Entities
+@inject IDialogService DialogService
+@inject HttpClient Http
+
+
+
+<section class="singleItem">
+    <div class="item-content">
+        @if (thisItem.IsPicture == true)
+        {
+            <img src=@thisItem.ItemContent width="100" />
+        }
+        else
+        {
+            <p>@thisItem.ItemContent</p>
+        }
+    </div>
+    <div class="item-buttons">
+        <MudIconButton OnClick="EditItem" Icon="@Icons.Filled.Edit" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" />
+        <MudIconButton OnClick="DeleteItem" Icon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" />
+        @*<MudIconButton OnClick="ZoomIn" Icon="@Icons.Filled.ZoomIn" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" />*@
+    </div>
+</section>
+
+@code {
+    [Parameter]
+    public Item thisItem { get; set; }
+
+    [Parameter]
+    public EventCallback<Item> DeletedItem { get; set; }
+
+    [Parameter]
+    public EventCallback<Item> UpdatedItem { get; set; }
+
+    async Task EditItem() //עריכת הפריט הזה
+    {
+        var getResponse = await Http.GetAsync("api/Items/" + thisItem.ID); //שליפת הפרטים של הפריט מבסיס הנתונים
+        if (getResponse.IsSuccessStatusCode == true)
+        {
+
+            Item itemFromController = getResponse.Content.ReadFromJsonAsync<Item>().Result; //קליטת הפריט למשתנה
+
+            //הגדרת חלון דיאלוג חדש
+            var parameters = new DialogParameters();
+            parameters.Add("currentItem", itemFromController);
+            parameters.Add("UpdatedItem", EventCallback.Factory.Create<Item>(this, AfterItemUpdate));
+
+            var options = new DialogOptions() { CloseButton = true };
+            DialogService.Show<ItemWindow>("עריכת פריט", parameters, options);
+
+        }
+        else
+        {
+            var options = new DialogOptions() { CloseButton = true };
+            DialogService.Show<Error>(getResponse.Content.ReadAsStringAsync().Result, options);
+        }
+
+    }
+
+
+    async Task DeleteItem()
+    {
+        var deleteResponse = await Http.DeleteAsync("api/Items/" + thisItem.ID);
+        //ניגש לנתיב שמסתיים באיידי של העובד שלחצו עליו
+
+        bool isDeleted = deleteResponse.Content.ReadFromJsonAsync<bool>().Result;
+
+        if (isDeleted == true && deleteResponse.IsSuccessStatusCode == true)
+        {
+            await DeletedItem.InvokeAsync(thisItem);
+        }
+        else
+        {
+            //WorkersList = new List<Worker>();
+        }
+    }
+
+    void AfterItemUpdate(Item updatedItem)
+    {
+        //thisItem = updatedItem;
+        UpdatedItem.InvokeAsync(updatedItem);
+    }
+
+    void ZoomIn()
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("imgURL", thisItem.ItemContent);
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+
+        DialogService.Show<ZoomIn>("הגדלה", parameters, options);
+    }
+
+
+
+}

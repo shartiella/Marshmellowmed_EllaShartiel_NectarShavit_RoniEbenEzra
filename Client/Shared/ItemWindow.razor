@@ -1,0 +1,214 @@
+﻿@using Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Shared.Entities
+@inject HttpClient Http
+@inject NavigationManager nav
+@inject IDialogService DialogService
+
+<MudDialog>
+    <DialogContent>
+        @*<MudText>@ContentText</MudText>*@
+        <EditForm Model="currentItem" OnValidSubmit="UpdateItem">
+            <DataAnnotationsValidator></DataAnnotationsValidator>
+            @*<MudRadioGroup @bind-SelectedOption="@SelectedOption">
+            <MudRadio Option="true" Color="Color.Primary">טקסט</MudRadio>
+            <MudRadio @bind-Value="currentItem.IsPicture" Option="false" Color="Color.Primary">תמונה</MudRadio>
+        </MudRadioGroup>*@
+            <MudRadioGroup @bind-SelectedOption="currentItem.IsPicture">
+                <MudRadio Option="false" Color="Color.Primary">טקסט</MudRadio>
+                <MudRadio Option="true" Color="Color.Primary">תמונה</MudRadio>
+            </MudRadioGroup>
+            <p>תוכן הפריט:</p>
+            @if (currentItem.IsPicture == false) //אם הפריט הוא טקסט
+            {
+                @if (currentItem.ItemContent.StartsWith("uploaded"))
+                {
+                    currentItem.ItemContent = "";
+                }
+                <MudTextField Lines="5" T="string" @bind-Value="currentItem.ItemContent" Counter="100" MaxLength="100" HelperText="" Immediate="true" Validation="@(new Func<string, IEnumerable<string>>(MaxCharacters))" Label="" Variant="Variant.Outlined" />
+                <ValidationMessage For="@(() => currentItem.ItemContent)" />
+            }
+            else //אם הפריט הוא תמונה
+            {
+                <InputFile id="imageInput" OnChange="UploadFile" hidden multiple accept=".jpg, .jpeg, .png" />
+                <img src=@imageUrl width="300" />
+                @if (currentItem.ItemContent.StartsWith("uploaded") == true || imageUrl.StartsWith("uploaded") == true) //אם לא העלו עדיין תמונה
+                {
+                    <MudButton HtmlTag="label"
+                               Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               StartIcon="@Icons.Filled.CloudUpload"
+                               for="imageInput">
+                        החלפת תמונה
+                    </MudButton>
+                }
+                else //אם כבר יש תמונה ורוצים להחליף אותה
+                {
+                    <MudButton HtmlTag="label"
+                               Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               StartIcon="@Icons.Filled.CloudUpload"
+                               for="imageInput">
+                        העלאת תמונה
+                    </MudButton>
+                }
+            }
+            <MudButton OnClick="Cancel">ביטול</MudButton>
+            <input type="submit" value="שמירה" />
+        </EditForm>
+    </DialogContent>
+    <DialogActions>
+        @*<MudButton Color="Color.Primary" OnClick="Submit">שמירה</MudButton>*@
+    </DialogActions>
+</MudDialog>
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    [Parameter] public Item currentItem { get; set; } //הפריט שעבורו נפתח חלון העריכה
+
+    [Parameter]
+    public EventCallback<Item> UpdatedItem { get; set; } //פרמטר לעדכון קומפוננטת הפריט על עדכון לצורך שינוי התצוגה
+
+    public string imageUrl = "/Images/emptyimg.PNG";
+
+    protected override void OnInitialized()
+    {
+        if (currentItem.IsPicture == true)
+        {
+            if (currentItem.ItemContent.StartsWith("uploaded") == true)
+            {
+                imageUrl = currentItem.ItemContent;
+            }
+            else
+            {
+                imageUrl = "/Images/emptyimg.PNG";
+            }
+        }
+    }
+
+
+    async Task Cancel() //ביטול
+    {
+        if (imageUrl != currentItem.ItemContent && imageUrl!= "/Images/emptyimg.PNG")//אם יש תמונה בפריט שצריך למחוק אותה מתיקיית התמונות
+        {
+            List<string> imagesToDelete = new List<string>(); //הכנה למחיקה
+
+            imagesToDelete.Add(imageUrl.Substring(14)); //הוספת תמונת הפריט הנוכחי למחיקה
+            var deleteResponse = await Http.PostAsJsonAsync("api/Items/deleteImages", imagesToDelete); //מחיקת התמונה
+            if (deleteResponse.IsSuccessStatusCode == true) //אם המחיקה הצליחה
+            {
+                Console.WriteLine(deleteResponse.Content.ReadAsStringAsync().Result);
+            }
+            else
+            {
+                Console.WriteLine("בעיה במחיקת התמונה");
+            }
+        }
+
+        MudDialog.Cancel();
+
+    }
+
+    private IEnumerable<string> MaxCharacters(string ch)//לאכיפת הולידציה על הגבלת התווים
+    {
+        if (!string.IsNullOrEmpty(ch) && 100 < ch?.Length)
+            yield return "עד 100 תווים";
+    }
+
+    async Task UpdateItem() //עדכון הפריט - בלחיצה על שמירה
+    {
+
+        if (currentItem.ID == 0) //אם הפריט הוא חדש וצריך ליצור אותו
+        {
+            //שמירת הפריט החדש עם הנתונים שלו בבסיס הנתונים
+
+            if (currentItem.IsPicture == true) //אם זה תמונה
+            {
+                currentItem.ItemContent = imageUrl; //שמירת תמונת התצוגה המקדימה בתור התמונה הסופית של הפריט
+            }
+
+            var postResponse = await Http.PostAsJsonAsync("api/Items/New", currentItem); //יצירת פריט חדש וריק
+            if (postResponse.IsSuccessStatusCode == true)
+            {
+                currentItem = postResponse.Content.ReadFromJsonAsync<Item>().Result; //קליטת הפריט החדש מהטבלה
+                await UpdatedItem.InvokeAsync(currentItem); //עדכון של קומפוננטת פריט
+                MudDialog.Close(DialogResult.Ok(true)); //סגירת החלון
+            }
+            else
+            {
+                var options = new DialogOptions() { CloseButton = true };
+                DialogService.Show<Error>(postResponse.Content.ReadAsStringAsync().Result, options);
+            }
+        }
+        else //אם הפריט קיים וצריך לעדכן אותו
+        {
+            if (currentItem.ItemContent.StartsWith("uploaded")) //אם כבר יש תמונה בפריט שצריך למחוק אותה מתיקיית התמונות
+            {
+                List<string> imagesToDelete = new List<string>(); //הכנה למחיקה
+
+                imagesToDelete.Add(currentItem.ItemContent.Substring(14)); //הוספת תמונת הפריט הנוכחי למחיקה
+                var deleteResponse = await Http.PostAsJsonAsync("api/Items/deleteImages", imagesToDelete); //מחיקת התמונה
+                if (deleteResponse.IsSuccessStatusCode == true) //אם המחיקה הצליחה
+                {
+                    Console.WriteLine(deleteResponse.Content.ReadAsStringAsync().Result);
+                }
+                else
+                {
+                    Console.WriteLine("בעיה במחיקת התמונה");
+                }
+            }
+
+            if (currentItem.IsPicture == true) //אם זה תמונה
+            {
+                currentItem.ItemContent = imageUrl; //השמת התמונה החדשה בתוכן הפריט
+            }
+
+            var updateResponse = await Http.PostAsJsonAsync("api/Items/Update", currentItem); //קריאת עדכון לטבלת הפריטים
+
+            if (updateResponse.IsSuccessStatusCode == true)
+            {
+                currentItem = updateResponse.Content.ReadFromJsonAsync<Item>().Result; //קבלת הפריט המעודכן מבסיס הנתונים
+                await UpdatedItem.InvokeAsync(currentItem); //עדכון של קומפוננטת פריט
+                MudDialog.Close(DialogResult.Ok(true)); //סגירת החלון
+            }
+            else
+            {
+                var options = new DialogOptions() { CloseButton = true };
+                DialogService.Show<Error>(updateResponse.Content.ReadAsStringAsync().Result, options);
+            }
+        }
+    }
+
+    long maxFileSize = 4194304; //גודל תמונה מקסימלי
+
+    private async Task UploadFile(InputFileChangeEventArgs e) //העלאת תמונה לפריט - בעקבות לחיצה על כפתור העלאת תמונה
+    {
+        var imageFiles = e.GetMultipleFiles();
+        foreach (var file in imageFiles)
+        {
+            if (file.Size <= maxFileSize) //אם הקובץ לא גדול מידי
+            {
+                var buffer = new byte[file.Size]; //מערך בייטים חדש - זה הבאפר
+                await file.OpenReadStream(maxFileSize).ReadAsync(buffer); //פתיחת הקובץ לקריאה והשמת התוכן לתוך באפר
+                var imageBase64 = Convert.ToBase64String(buffer); //הכנסת תוכן המערך כמחרוזת לתוך המשתנה החדש
+                var saveResponse = await Http.PostAsJsonAsync("api/Items/upload", imageBase64); //שמירת התמונה בתיקיית התמונות
+
+                if (saveResponse.IsSuccessStatusCode == true) //אם הצליח
+                {
+                    string resizeUrl = saveResponse.Content.ReadAsStringAsync().Result; //שליפת נתיב התמונה
+                    imageUrl = resizeUrl; //הצגה בתצוגה מקדימה
+
+                    //currentItem.ItemContent = imageUrl;
+                }
+                else
+                {
+                    var options = new DialogOptions() { CloseButton = true };
+                    DialogService.Show<Error>(saveResponse.Content.ReadAsStringAsync().Result, options);
+                }
+            }
+            else
+            {
+                var options = new DialogOptions() { CloseButton = true };
+                DialogService.Show<Error>("הקובץ גדול מידי", options);
+            }
+        }
+    }
+}

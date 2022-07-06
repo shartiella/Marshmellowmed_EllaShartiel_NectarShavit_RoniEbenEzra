@@ -1,0 +1,44 @@
+﻿@using Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Shared.Entities
+@inject IDialogService DialogService
+@inject HttpClient Http
+
+<MudDialog>
+    <DialogContent>
+        @*<MudText>@ContentText</MudText>*@
+        <MudText>הקטגוריה "@CategoryToDelete.CategoryName" וכל הפריטים השייכים לה ימחקו ולא יהיה ניתן לשחזר אותם.</MudText>
+        <MudText>האם ברצונך להמשיך?</MudText>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">ביטול</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">מחיקה</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    [Parameter] public Category CategoryToDelete { get; set; }
+
+    [Parameter] public EventCallback<Category> DeletedCategory { get; set; }
+
+    void Cancel() => MudDialog.Cancel();
+
+    async Task Submit()
+    {
+
+        var deleteResponse = await Http.DeleteAsync("api/Categories/" + CategoryToDelete.ID);
+
+        bool isDeleted = deleteResponse.Content.ReadFromJsonAsync<bool>().Result;
+
+        if (isDeleted == true && deleteResponse.IsSuccessStatusCode == true)
+        {
+            await DeletedCategory.InvokeAsync(CategoryToDelete);
+        }
+        else
+        {
+            //WorkersList = new List<Worker>();
+        }
+
+        MudDialog.Close(DialogResult.Ok(true));
+
+    }
+}
