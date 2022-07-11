@@ -1,0 +1,84 @@
+﻿<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="utf-8" />
+    <title>מרשמלומד</title>
+    <meta name="description" content="משחק לימודי - נקטר שביט, אלה שרתיאל ורוני אבן עזרא" />
+    <meta name="keywords" content="" />
+    <meta name="author" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+    <!-- CSS -->
+
+    <link rel="icon" href="images/firelogo.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Assistant&display=swap" rel="stylesheet">
+
+    <link href="styles/reset.css" rel="stylesheet" />
+    <link href="styles/indexCss.css" rel="stylesheet" />
+
+    <!-- JS -->
+    <script src="jScripts/jquery-1.12.0.min.js"></script>
+    <script src="jScripts/JavaScript.js" type="text/javascript"></script>
+
+</head>
+<body>
+    <div id="container">
+        <header>
+            <!--תפריט עליון-->
+            <nav>
+                <div id="right">
+                    <img id="logo" src="images/logo.png" />
+                </div>
+                <span id="left">
+                    <a id="howToPlay" onclick="openHow()">איך משחקים?</a>
+                    <a id="about" onclick="openAbout()">אודות</a>
+                </span>
+            </nav>
+        </header>
+        <div id="aboutPopUp" class="aboutPopUpClosed">
+            <div class="aboutPopUpBox">
+                <img id="aboutPopUpX" class="aboutPopUpXclosed" onclick="closeAbout()" src="images/aboutX.png">
+                <h2 class="aboutH2">אודות</h2>
+                <img src="images/marshlogo.png" />
+                <div id="aboutPopUpContent">
+                    <h3>אפיון ופיתוח</h3>
+                    <p>נקטר שביט, אלה שרתיאל ורוני אבן עזרא</p>
+                    <h3>אופיין ופותח במסגרת פרויקט בקורסים</h3>
+                    <p>סביבות לימוד אינטראקטיביות + תכנות אינטראקטיבי </p>
+                   
+                    <a href="https://www.hit.ac.il/telem/overview">
+                        <h3>תשפ"ב - הפקולטה לטכנולוגיות למידה</h3>
+                    </a>
+
+                    <img id="faculta" src="images/HITlogo.png" alt="">
+                </div>
+            </div>
+        </div>
+        <div id="howPopUp" class="howPopUpClosed">
+            <div class="howPopUpBox">
+                <img id="howPopUpX" class="howPopUpXclosed" onclick="closeHow()" src="images/aboutX.png">
+                <h2 class="howH2">איך משחקים?</h2>
+                <div id="howPopUpContent">
+                    <table>
+                        <tr><th><img src="images/marshmoveicon.png" /></th><td>בכל סיבוב, תוצג בפניכם שאלה על גבי מרשמלו שינוע מצד לצד.</td></tr>
+                        <tr><th><img src="images/marshzoom.png" /></th><td>מעבר עכבר על המרשמלו יעצור ויגדיל אותו לצורך עיון בתוכן.</td></tr>
+                        <tr><th><img src="images/smoreicon.png" /></th><td>לחצו על השיפוד הנכון כדי למיין את המרשמלו לקטגוריה המתאימה.</td></tr>
+                        <tr><th><img src="images/losemarshicon.png" /></th><td>אם תטעו, המרשמלו ישרף ויעלם, והשאלה תחזור שוב בהמשך.</td></tr>
+                        <tr><th><img src="images/winmarshicon.png" /></th><td>אם תמיינו נכון, המרשמלו יצלה ויזהיב, ויתווסף לשיפוד המתאים.</td></tr>
+                        <tr><th><img src="images/btns.png" /></th><td>בעזרת הכפתורים בפינה תוכלו לשלוט בסאונד, בהשהייה, ובמהירות בהתאמה.</td></tr>
+                    </table>
+                    <p>המשחק יסתיים לאחר שכל המרשמלואים יאספו וימלאו את מד ההתקדמות.</p>
+                    <p><b>בהצלחה!</b></p>
+                </div>
+            </div>
+        </div>
+        <!--תוכן העמוד-->
+        <main id="game">
+            <iframe src="marshmellowmed.html" frameBorder="0" allowfullscreen="">Browser not compatible</iframe>
+        </main>
+    </div>
+</body>
+</html>

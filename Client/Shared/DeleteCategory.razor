@@ -20,10 +20,40 @@
 
     [Parameter] public EventCallback<Category> DeletedCategory { get; set; }
 
+    List<Item> itemsToDelete = new List<Item>();
+    List<string> imagesToDelete = new List<string>();
+
     void Cancel() => MudDialog.Cancel();
+
+    protected override void OnInitialized()
+    {
+        itemsToDelete = CategoryToDelete.CategoryItems;
+        foreach (Item i in itemsToDelete)
+        {
+            if (i.IsPicture == true && i.ItemContent.StartsWith("uploaded"))
+            {
+                imagesToDelete.Add(i.ItemContent);//הוספת תמונת הפריט הנוכחי למחיקה
+            }
+        }
+
+    }
 
     async Task Submit()
     {
+        //אם יש פריטים עם תמונות שצריך למחוק אותם
+        if (imagesToDelete.Count() > 0)
+        {
+            var imgdeleteResponse = await Http.PostAsJsonAsync("api/Items/deleteImages", imagesToDelete); //מחיקת התמונה
+            if (imgdeleteResponse.IsSuccessStatusCode == true) //אם המחיקה הצליחה
+            {
+                Console.WriteLine(imgdeleteResponse.Content.ReadAsStringAsync().Result);
+            }
+            else
+            {
+                Console.WriteLine(imgdeleteResponse.Content.ReadAsStringAsync().Result);
+            }
+        }
+
 
         var deleteResponse = await Http.DeleteAsync("api/Categories/" + CategoryToDelete.ID);
 

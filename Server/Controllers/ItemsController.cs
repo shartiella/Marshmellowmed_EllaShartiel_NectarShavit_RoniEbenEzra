@@ -98,6 +98,25 @@ namespace Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Server.Controlle
             Item itemToDelete = await _context.Items.FirstOrDefaultAsync(i => i.ID == id);
             if (itemToDelete != null)
             {
+                if (itemToDelete.ItemContent.StartsWith("uploaded") == true) //אם הפריט מכיל תמונה שצריך למחוק אותה
+                {
+                    //האם יש לפחות פריט נוסף שמשתמש בה
+                    List<Item> isPictureReused = await _context.Items.Where(i => i.ItemContent == itemToDelete.ItemContent).ToListAsync();
+                    if (isPictureReused.Count > 1)
+                    {
+                        //אם יש, אז לא למחוק
+                    }
+                    else
+                    {
+                        List<string> imagesToDelete = new List<string>();
+                        imagesToDelete.Add(itemToDelete.ItemContent.Substring(14));
+                        foreach(string img in imagesToDelete)
+                        {
+                            await _fileStorage.DeleteFile(img, "uploadedFiles");
+                        }
+                    }
+                }
+
                 _context.Items.Remove(itemToDelete); //מחיקה ללא שמירה
                 await _context.SaveChangesAsync(); //שמירה של השינויים
 
@@ -126,13 +145,40 @@ namespace Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Server.Controlle
         }
 
         [HttpPost("deleteImages")]
-		public async Task<IActionResult> DeleteImages([FromBody] List<string> images)
+		public async Task<IActionResult> DeleteImages([FromBody] List<string> imagesToDelete)
 		{
-			foreach (string img in images)
-			{
-				await _fileStorage.DeleteFile(img, "uploadedFiles");
-			}
-			return Ok("deleted");
-		}
-	}
+            foreach(string img in imagesToDelete)
+            {
+                List<Item> isPictureReused = await _context.Items.Where(i => i.ItemContent == img).ToListAsync();
+                if (isPictureReused.Count > 1)
+                {
+                    //אם יש, אז לא למחוק
+                }
+                else
+                {
+                    string imgToDelete = img.Substring(14);
+                    await _fileStorage.DeleteFile(imgToDelete, "uploadedFiles");
+                }
+            }
+            return Ok("deleted");
+        }
+
+        [HttpPost("deleteImage")]
+        public async Task<IActionResult> DeleteImage([FromBody] string imageToDelete)
+        {
+
+            List<Item> isPictureReused = await _context.Items.Where(i => i.ItemContent == imageToDelete).ToListAsync();
+            if (isPictureReused.Count > 1)
+            {
+                //אם יש, אז לא למחוק
+                return Ok("not deleted " + isPictureReused.Count);
+            }
+            else
+            {
+                string img = imageToDelete.Substring(14);
+                await _fileStorage.DeleteFile(img, "uploadedFiles");
+                return Ok("deleted " + img);
+            }
+        }
+    }
 }

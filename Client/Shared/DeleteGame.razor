@@ -24,6 +24,31 @@
 
     async Task Submit()
     {
+        //אם יש פריטים עם תמונות שצריך למחוק אותם
+        List<string> imagesToDelete = new List<string>();
+        foreach (Category c in GameToDelete.GameCategories)
+        {
+            foreach(Item i in c.CategoryItems)
+            {
+                if (i.ItemContent.StartsWith("uploaded")==true)
+                {
+                    imagesToDelete.Add(i.ItemContent);
+                }
+            }
+        }
+        if (imagesToDelete.Count() > 0)
+        {
+            var imgdeleteResponse = await Http.PostAsJsonAsync("api/Items/deleteImages", imagesToDelete); //מחיקת התמונה
+            if (imgdeleteResponse.IsSuccessStatusCode == true) //אם המחיקה הצליחה
+            {
+                Console.WriteLine(imgdeleteResponse.Content.ReadAsStringAsync().Result);
+            }
+            else
+            {
+                Console.WriteLine(imgdeleteResponse.Content.ReadAsStringAsync().Result);
+            }
+        }
+
 
         var deleteResponse = await Http.DeleteAsync("api/Games/" + GameToDelete.ID);
 

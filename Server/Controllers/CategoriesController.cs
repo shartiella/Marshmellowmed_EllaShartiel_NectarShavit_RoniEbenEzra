@@ -51,6 +51,7 @@ namespace Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Server.Controlle
             {
 
                 CategoryfromDB.CategoryName = categoryToUpdate.CategoryName;
+                //CategoryfromDB.CategoryGame = categoryToUpdate.CategoryGame;
 
                 await _context.SaveChangesAsync();
                 return Ok(CategoryfromDB);

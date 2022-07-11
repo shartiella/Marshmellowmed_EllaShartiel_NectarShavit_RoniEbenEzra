@@ -89,17 +89,15 @@
     {
         if (imageUrl != currentItem.ItemContent && imageUrl!= "/Images/emptyimg.PNG")//אם יש תמונה בפריט שצריך למחוק אותה מתיקיית התמונות
         {
-            List<string> imagesToDelete = new List<string>(); //הכנה למחיקה
 
-            imagesToDelete.Add(imageUrl.Substring(14)); //הוספת תמונת הפריט הנוכחי למחיקה
-            var deleteResponse = await Http.PostAsJsonAsync("api/Items/deleteImages", imagesToDelete); //מחיקת התמונה
+            var deleteResponse = await Http.PostAsJsonAsync("api/Items/deleteImage", imageUrl); //מחיקת התמונה
             if (deleteResponse.IsSuccessStatusCode == true) //אם המחיקה הצליחה
             {
                 Console.WriteLine(deleteResponse.Content.ReadAsStringAsync().Result);
             }
             else
             {
-                Console.WriteLine("בעיה במחיקת התמונה");
+                Console.WriteLine(deleteResponse.Content.ReadAsStringAsync().Result);
             }
         }
 
@@ -142,17 +140,19 @@
         {
             if (currentItem.ItemContent.StartsWith("uploaded")) //אם כבר יש תמונה בפריט שצריך למחוק אותה מתיקיית התמונות
             {
-                List<string> imagesToDelete = new List<string>(); //הכנה למחיקה
+                //List<string> imagesToDelete = new List<string>(); //הכנה למחיקה
 
-                imagesToDelete.Add(currentItem.ItemContent.Substring(14)); //הוספת תמונת הפריט הנוכחי למחיקה
-                var deleteResponse = await Http.PostAsJsonAsync("api/Items/deleteImages", imagesToDelete); //מחיקת התמונה
+                //imagesToDelete.Add(currentItem.ItemContent.Substring(14)); //הוספת תמונת הפריט הנוכחי למחיקה
+                //var deleteResponse = await Http.PostAsJsonAsync("api/Items/deleteImages", imagesToDelete); //מחיקת התמונה
+
+                var deleteResponse = await Http.PostAsJsonAsync("api/Items/deleteImage", currentItem.ItemContent); //מחיקת התמונה
                 if (deleteResponse.IsSuccessStatusCode == true) //אם המחיקה הצליחה
                 {
                     Console.WriteLine(deleteResponse.Content.ReadAsStringAsync().Result);
                 }
                 else
                 {
-                    Console.WriteLine("בעיה במחיקת התמונה");
+                    Console.WriteLine(deleteResponse.Content.ReadAsStringAsync().Result);
                 }
             }
 
@@ -179,7 +179,7 @@
 
     long maxFileSize = 4194304; //גודל תמונה מקסימלי
 
-    private async Task UploadFile(InputFileChangeEventArgs e) //העלאת תמונה לפריט - בעקבות לחיצה על כפתור העלאת תמונה
+    private async Task UploadFile(InputFileChangeEventArgs e) //העלאת תמונה לתצוגה מקדימה - בעקבות לחיצה על כפתור העלאת תמונה
     {
         var imageFiles = e.GetMultipleFiles();
         foreach (var file in imageFiles)
@@ -195,8 +195,6 @@
                 {
                     string resizeUrl = saveResponse.Content.ReadAsStringAsync().Result; //שליפת נתיב התמונה
                     imageUrl = resizeUrl; //הצגה בתצוגה מקדימה
-
-                    //currentItem.ItemContent = imageUrl;
                 }
                 else
                 {

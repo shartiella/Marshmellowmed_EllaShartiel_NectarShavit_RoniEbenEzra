@@ -6,51 +6,63 @@
 
 @page "/Games/{userId:int}"
 
+<NavBar></NavBar>
 
 @if (currentUser != null)
 {
-    <h2>המשחקים של @currentUser.FirstName</h2>
+<h2>המשחקים של @currentUser.FirstName</h2>
 
-    <EditForm Model="newGame" OnValidSubmit="NewGame">
-        <DataAnnotationsValidator></DataAnnotationsValidator>
-        <p>שם המשחק</p>
-        <MudTextField T="string" @bind-Value="newGame.GameName" Counter="30" MaxLength="30" HelperText="" Immediate="true" Validation="@(new Func<string, IEnumerable<string>>(MaxCharacters))" Label="" Variant="Variant.Outlined" />
-        <ValidationMessage For="@(() => newGame.GameName)" />
-        <input type="submit" value="יצירת משחק" class="mud-button-root mud-button mud-button-filled mud-button-filled-default mud-button-filled-size-medium mud-ripple" />
-    </EditForm>
+<EditForm Model="newGame" OnValidSubmit="NewGame">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+    <p>שם המשחק</p>
+    <MudTextField T="string" @bind-Value="newGame.GameName" Counter="30" MaxLength="30" HelperText="" Immediate="true" Validation="@(new Func<string, IEnumerable<string>>(MaxCharacters))" Label="" Variant="Variant.Outlined" />
+    <ValidationMessage For="@(() => newGame.GameName)" />
+    <input type="submit" value="יצירת משחק" class="mud-button-root mud-button mud-button-filled mud-button-filled-default mud-button-filled-size-medium mud-ripple" />
+</EditForm>
 
-    <MudTable Items="@currentUser.UserGames" Hover="true">
-        @*ככה הוא יודע איזו רשימה להדפיס*@
-        <HeaderContent>
-            <MudTh>שם המשחק</MudTh>
-            <MudTh>קוד</MudTh>
-            <MudTh>עריכה</MudTh>
-            <MudTh>שכפול</MudTh>
-            <MudTh>מחיקה</MudTh>
-            <MudTh>פרסום</MudTh>
-        </HeaderContent>
-        <RowTemplate>
-            <MudTd DataLabel="שם המשחק">@context.GameName </MudTd>
-            <MudTd DataLabel="קוד">@context.GameCode</MudTd>
-            <MudTd DataLabel="עריכה">
-                <MudIconButton Icon="@Icons.Filled.Edit" Variant="Variant.Filled" Color="Color.Secondary" Title="עריכה" @onclick="()=>EditGame(context.GameCode)" />
-            </MudTd>
-            <MudTd DataLabel="שכפול">
-                <MudIconButton Icon="@Icons.Filled.ContentCopy" Variant="Variant.Filled" Color="Color.Secondary" Title="שכפול" @onclick="()=>DuplicateGame(context)" />
-            </MudTd>
-            <MudTd DataLabel="מחיקה">
-                <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Secondary" Title="מחיקה" @onclick="()=>DeleteGame(context)" />
-            </MudTd>
-            <MudTd DataLabel="פרסום">
-                <MudCheckBox CheckedChanged="@((bool newState) => PublishGame(context))" Checked="@context.IsPublished" Color="Color.Primary"></MudCheckBox>
-            </MudTd>
-        </RowTemplate>
-    </MudTable>
+<MudTable Items="@currentUser.UserGames" Hover="true" Style="color:white" Striped="true">
+    @*ככה הוא יודע איזו רשימה להדפיס*@
+    <HeaderContent>
+        <MudTh><MudTableSortLabel SortBy="new Func<Game, object>(x=>x.GameName)">שם המשחק</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<Game, object>(x=>x.GameCode)">קוד</MudTableSortLabel></MudTh>
+        <MudTh>עריכה</MudTh>
+        <MudTh>שכפול</MudTh>
+        <MudTh>מחיקה</MudTh>
+        <MudTh>פרסום</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="שם המשחק">@context.GameName </MudTd>
+        <MudTd DataLabel="קוד">@context.GameCode</MudTd>
+        <MudTd DataLabel="עריכה">
+            <MudIconButton Icon="@Icons.Filled.Edit" Variant="Variant.Filled" Color="Color.Secondary" Title="עריכה" @onclick="()=>EditGame(context.GameCode)" />
+        </MudTd>
+        <MudTd DataLabel="שכפול">
+            <MudIconButton Icon="@Icons.Filled.ContentCopy" Variant="Variant.Filled" Color="Color.Secondary" Title="שכפול" @onclick="()=>DuplicateGame(context)" />
+        </MudTd>
+        <MudTd DataLabel="מחיקה">
+            <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Secondary" Title="מחיקה" @onclick="()=>DeleteGame(context)" />
+        </MudTd>
+        <MudTd DataLabel="פרסום">
+            @if (isNOTokToPublish(context) == false)
+                {
+                <MudTooltip Text="המשחק עומד בתנאי הפרסום" Arrow="true" Placement="Placement.Bottom">
+                    <MudCheckBox CheckedChanged="@((bool newState) => PublishGame(context))" Checked="@context.IsPublished" Disabled="isNOTokToPublish(context)" Color="Color.Primary"></MudCheckBox>
+                </MudTooltip>
+                }
+                else
+                {
+                <MudTooltip Text="המשחק אינו עומד בתנאי הפרסום" Arrow="true" Placement="Placement.Bottom">
+                    <MudCheckBox CheckedChanged="@((bool newState) => PublishGame(context))" Checked="@context.IsPublished" Disabled="isNOTokToPublish(context)" Color="Color.Primary"></MudCheckBox>
+                </MudTooltip>
+                }
+        </MudTd>
+    </RowTemplate>
+</MudTable>
 
 }
 else
 {
-    <p>@msg</p>
+<p>@msg</p>
 }
 
 @code {
@@ -76,7 +88,7 @@ else
             string errorMsg = getResponse.Content.ReadAsStringAsync().Result;
             if (errorMsg == "User not logged in" || errorMsg == "Empty Session")
             {
-                nav.NavigateTo("./");
+                nav.NavigateTo("./Login");
             }
             else
             {
@@ -84,28 +96,45 @@ else
             }
         }
     }
-    async Task PublishGame(Game selectedGame)
+
+    bool isNOTokToPublish(Game context)
     {
-        if (selectedGame.IsPublished == false) //אם לא מפובלש
+        if (context.IsPublished==true) //אם המשחק מפובלש
         {
-            if (selectedGame.GameCategories.Count()<=2&& selectedGame.GameCategories.Count()>=5)
+            return false;
+        }
+        else
+        {
+            int categoriesCount = 0;
+            int minItemCountperCat = 0;
+            int totalItemCount = 0;
+
+            foreach (Category c in context.GameCategories)
             {
-                //לדאוג השצ'קבוקס יהיה מאופרר
-                //רק אז לאפשר פיבלוש
+                categoriesCount++;
+                if (c.CategoryItems.Count() >= 2)
+                {
+                    minItemCountperCat++;
+                }
+                totalItemCount += c.CategoryItems.Count();
             }
-
-            var publishResponse = await Http.PostAsJsonAsync("api/Games/Publish", selectedGame); //קריאת עדכון לטבלת הפריטים
-
-            if (publishResponse.IsSuccessStatusCode == true)
+            Console.WriteLine(context.GameName + " - " + "categoriesCount: "+ categoriesCount+ ", minItemCountperCat: "+ minItemCountperCat+ ", totalItemCount: "+ totalItemCount);
+            if (categoriesCount >= 2 && minItemCountperCat == categoriesCount && categoriesCount > 0 && totalItemCount >= 10)
             {
-                selectedGame.IsPublished = publishResponse.Content.ReadFromJsonAsync<bool>().Result; //קבלת הפריט המעודכן מבסיס הנתונים
+                return false;
             }
             else
             {
+                return true;
 
             }
         }
-        else //אם כבר מפובלש
+    }
+
+    async Task PublishGame(Game selectedGame)
+    {
+        // אם כבר מפובלש
+        if (selectedGame.IsPublished == true)
         {
             var publishResponse = await Http.PostAsJsonAsync("api/Games/UnPublish", selectedGame); //קריאת עדכון לטבלת הפריטים
 
@@ -118,6 +147,21 @@ else
 
             }
         }
+        else  //אם עוד לא מפובלש
+        {
+
+            var publishResponse = await Http.PostAsJsonAsync("api/Games/Publish", selectedGame); //קריאת עדכון לטבלת הפריטים
+
+            if (publishResponse.IsSuccessStatusCode == true)
+            {
+                selectedGame.IsPublished = publishResponse.Content.ReadFromJsonAsync<bool>().Result; //קבלת הפריט המעודכן מבסיס הנתונים
+            }
+            else
+            {
+
+            }
+        }
+
     }
 
     void EditGame(int gameCodeToEdit)

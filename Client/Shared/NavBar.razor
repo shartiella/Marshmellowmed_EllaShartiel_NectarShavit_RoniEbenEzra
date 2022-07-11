@@ -1,0 +1,46 @@
+﻿@inject NavigationManager nav
+@inject IDialogService DialogService
+
+<nav>
+    <div id="right">
+        <img id="logo" src="images/logo.png" />
+    </div>
+    <span id="left">
+        <a @onclick="play">משחק</a>
+        <a id="howToPlay" @onclick="openHow">איך משחקים?</a>
+        <a @onclick="editor">עורך</a>
+        <a id="about" @onclick="openAbout">אודות</a>
+    </span>
+</nav>
+
+@code {
+
+    void openHow()
+    {
+        var parameters = new DialogParameters();
+        //parameters.Add("currentCategory", newCategory);
+
+        var options = new DialogOptions() { CloseButton = true };
+        DialogService.Show<HowToPlay>("איך משחקים", parameters, options);
+    }
+
+    void openAbout()
+    {
+        var parameters = new DialogParameters();
+        //parameters.Add("currentCategory", newCategory);
+
+        var options = new DialogOptions() { NoHeader = true , CloseButton = true };
+        DialogService.Show<About>("אודות", parameters, options);
+    }
+
+    void play()
+    {
+        nav.NavigateTo("./Game");
+    }
+
+    void editor()
+    {
+        nav.NavigateTo("./");
+    }
+
+}

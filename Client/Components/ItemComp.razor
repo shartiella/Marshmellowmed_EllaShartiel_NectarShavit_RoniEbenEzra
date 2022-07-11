@@ -45,7 +45,7 @@
             parameters.Add("currentItem", itemFromController);
             parameters.Add("UpdatedItem", EventCallback.Factory.Create<Item>(this, AfterItemUpdate));
 
-            var options = new DialogOptions() { CloseButton = true };
+            var options = new DialogOptions() { CloseButton = true, DisableBackdropClick = true };
             DialogService.Show<ItemWindow>("עריכת פריט", parameters, options);
 
         }
@@ -81,14 +81,14 @@
         UpdatedItem.InvokeAsync(updatedItem);
     }
 
-    void ZoomIn()
-    {
-        var parameters = new DialogParameters();
-        parameters.Add("imgURL", thisItem.ItemContent);
-        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+    //void ZoomIn()
+    //{
+    //    var parameters = new DialogParameters();
+    //    parameters.Add("imgURL", thisItem.ItemContent);
+    //    var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
 
-        DialogService.Show<ZoomIn>("הגדלה", parameters, options);
-    }
+    //    DialogService.Show<ZoomIn>("הגדלה", parameters, options);
+    //}
 
 
 

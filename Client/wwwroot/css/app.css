@@ -2,8 +2,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@200;300;400;500;600;700;800&display=swap');
 
 html, body {
-/*    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-*/    font-family: 'Assistant', sans-serif;
+    /*    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+*/ font-family: 'Assistant', sans-serif;
+    background-color: inherit;
+/*    direction: rtl;
+*/    /*    background-image: linear-gradient(to right, #28316E, #1D1937, #28316E);
+*/  color: white;
+}
+
+html {
+    background: linear-gradient(45deg, #323366, #5353A0, #323366);
+    height: 100%;
+}
+
+.mud-table {
+    background-color: inherit;
 }
 
 a, .btn-link {
@@ -51,15 +64,30 @@ a, .btn-link {
         top: 0.5rem;
     }
 
-.gameCategory {
-    display: inline-block;
-    margin: 10px;
-    text-align: center;
-    background-color: gainsboro;
-    border-radius: 15px;
-    vertical-align: top;
-    text-align:-webkit-center;
+#loadingimg{
+
 }
+
+.mud-table-root{
+color:inherit;
+}
+    .mud-table-root .mud-table-body .mud-table-cell{
+        color:inherit;
+    }
+    .mud-table-root .mud-table-head .mud-table-cell {
+        color: inherit;
+    }
+
+
+    .gameCategory {
+        display: inline-block;
+        margin: 10px;
+        text-align: center;
+        background-color: gainsboro;
+        border-radius: 15px;
+        vertical-align: top;
+        text-align: -webkit-center;
+    }
 
     .gameCategory > header {
         background-color: deepskyblue;
@@ -149,3 +177,262 @@ opacity:1;
     width: 50%;
     height: max-content;
 }
+
+/*CSS ישן*/
+
+@import url('https://fonts.googleapis.com/css2?family=Assistant&display=swap');
+
+nav {
+    background-image: linear-gradient(#28316E, #1D1937);
+    padding: 10px;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+    nav h1 {
+        display: inline;
+        font-family: 'Assistant';
+        font-weight: 800;
+        font-size: 1.5em;
+        vertical-align: top;
+        margin-right: 10px
+    }
+
+    nav #right {
+        text-align: right;
+        display: inline;
+        padding-right: 5px
+    }
+
+    nav #left {
+        position: absolute;
+        left: 0;
+        margin-right: 5px;
+        margin-top: 10px;
+    }
+
+    nav a {
+        color: white;
+        font-family: 'Assistant', sans-serif;
+        font-size: large;
+        padding-left: 20px;
+    }
+
+.mud-main-content{
+    padding:0px;
+}
+
+main {
+    width: 100%;
+    height: 500px;
+}
+
+    main iframe {
+        width: 100%;
+        height: 94%;
+        position: absolute;
+    }
+
+.aboutPopUpClosed {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+}
+
+.aboutPopUpOpen {
+    display: block;
+    position: fixed;
+    z-index: 5;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(37,34,76,0.6);
+}
+
+.aboutPopUpBox {
+    background: linear-gradient( 0.25turn, #25224C, #383E87);
+    margin: 0 auto;
+    padding: 20px;
+    width: 607px;
+    border-radius: 55px;
+    text-align: center;
+    color: white;
+    font-size: 16pt;
+    margin-top: 200px;
+    line-height: 1.4em;
+    box-shadow: 0px 0px 30px white;
+}
+
+.aboutPopUpXclosed {
+    width: 30px;
+    height: 30px;
+    position: relative;
+    right: 366px;
+    bottom: 206px;
+    display: none;
+}
+
+.aboutPopUpXopen {
+    display: block;
+    position: relative;
+    right: 5px;
+    top: 5px;
+    cursor: pointer;
+    margin-bottom: -30px;
+}
+
+.aboutH2 {
+    display: inline-block;
+    margin-left: 20px;
+    font-size: 35pt;
+    font-weight: bold;
+}
+
+#aboutPopUpContent {
+    margin-top: 20px;
+}
+
+    #aboutPopUpContent p {
+        margin-bottom: 20px;
+    }
+
+
+    #aboutPopUpContent img {
+        background-color: white;
+        margin-top: 10px;
+        margin-bottom: 20px;
+        padding: 5px;
+        display: inline-block;
+        border-radius: 70px;
+        width: fit-content;
+    }
+
+    #aboutPopUpContent a {
+        text-decoration: underline;
+        color: white;
+    }
+
+a {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#faculta img {
+    width: 90%;
+    vertical-align: middle;
+}
+
+.howPopUpClosed {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+}
+
+.howPopUpOpen {
+    display: block;
+    position: fixed;
+    z-index: 5;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(37,34,76,0.6);
+}
+
+.howPopUpBox {
+    background: linear-gradient( 0.25turn, #25224C, #383E87);
+    margin: 0 auto;
+    padding: 20px;
+    width: 650px;
+    border-radius: 55px;
+    text-align: center;
+    color: white;
+    font-size: 13pt;
+    margin-top: 140px;
+    line-height: 1.4em;
+    box-shadow: 0px 0px 30px white;
+}
+
+.howPopUpXclosed {
+    width: 30px;
+    height: 30px;
+    position: relative;
+    right: 366px;
+    bottom: 206px;
+    display: none;
+}
+
+.howPopUpXopen {
+    display: block;
+    position: relative;
+    right: 5px;
+    top: 5px;
+    cursor: pointer;
+    margin-bottom: -30px;
+}
+
+.howH2 {
+    display: inline-block;
+    margin-left: 20px;
+    font-size: 35pt;
+    font-weight: bold;
+}
+
+#howPopUpContent {
+    margin-top: 20px;
+}
+
+    #howPopUpContent p {
+        margin-bottom: 20px;
+        margin-top: 20px;
+    }
+
+    #howPopUpContent a {
+        background-color: white;
+        margin-top: 10px;
+        margin-bottom: 20px;
+        padding: 5px;
+        display: inline-block;
+        border-radius: 70px;
+        width: fit-content;
+    }
+
+    #howPopUpContent table {
+        text-align: right;
+    }
+
+        #howPopUpContent table tr {
+        }
+
+            #howPopUpContent table tr td {
+                padding-right: 13px;
+                vertical-align: middle;
+            }
+
+            #howPopUpContent table tr th {
+                padding-right: 13px;
+                vertical-align: middle;
+                text-align: center;
+            }
+
+    #howPopUpContent > img {
+        margin: 5px;
+    }

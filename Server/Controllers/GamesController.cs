@@ -16,6 +16,7 @@ namespace TriangleProject_Class.Server.Controllers
 	{
 		private readonly DataContext _context;
 
+
 		public GamesController(DataContext context)
 		{
 			_context = context;
@@ -24,7 +25,7 @@ namespace TriangleProject_Class.Server.Controllers
 		[HttpGet("{userId}")]
 		public async Task<IActionResult> GetAllGames(int userId) //שיטה לשליפת כל המשחקים של משתמש מסוים
 		{
-			string SessionContent = HttpContext.Session.GetString("UserId");//בדיקה איזה משתמש מחובר
+			string SessionContent = HttpContext.Session.GetString("UserId");//בדיקה איזה משתמש מחובר מתוך הסשן
 			if (string.IsNullOrEmpty(SessionContent) == false) //האם מחובר משתמש בכלל
 			{
 				if (userId == Convert.ToInt32(SessionContent))//האם המשתמש המחובר זה המשתמש שמחפשים את המשחקים שלו
@@ -116,6 +117,7 @@ namespace TriangleProject_Class.Server.Controllers
 		public async Task<IActionResult> DuplicateGame(Game gamefrompage) //יצירת משחק חדש
 																		  //מקבל כפרמטר את גוף הקריאה שמתקבל בהפעלת השיטה - מידע על משחק בודד
 		{
+			//שליפת המשחק לשכפול והתוכן שלו
 			Game gameToCopy = await _context.Games.Include(g => g.GameCategories).ThenInclude(c => c.CategoryItems).FirstOrDefaultAsync(g => g.ID == gamefrompage.ID);
 			if (gameToCopy != null)
 			{
@@ -125,16 +127,40 @@ namespace TriangleProject_Class.Server.Controllers
 				{
 					if (gameToCopy.UserID == Convert.ToInt32(SessionContent))//האם מי שמחובר זה מי שיצר את המשחק
 					{
+						//הכנסת משחק חדש לבסיס הנתונים
 						Game newGame = new Game();
 						newGame.GameName = "עותק של " + gameToCopy.GameName;
 						newGame.IsPublished = false;
 						newGame.UserID = gameToCopy.UserID;
-						newGame.GameCategories = gameToCopy.GameCategories;
-						
 
 						_context.Games.Add(newGame);
 						await _context.SaveChangesAsync();
-						//הכנסת המשחק לבסיס הנתונים
+
+						//עכשיו יש למשחק המועתק איידי חדש משלו
+						Game newGameFromDb = await _context.Games.Include(g => g.GameCategories).ThenInclude(c => c.CategoryItems).FirstOrDefaultAsync(g => g.ID == newGame.ID);
+
+						List<Category> categoriesToCopy = gameToCopy.GameCategories.ToList(); //רשימת הקטגוריות להעתקה
+						List<Category> categoriesToAdd = new List<Category>(); //רשימת קטגוריות ריקה זמנית
+						foreach (Category c in categoriesToCopy) //עבור כל קטגוריה שצריך להעתיק
+                        {
+							Category currentCategory = new Category();
+							currentCategory.CategoryName = c.CategoryName;
+							currentCategory.GameID = newGameFromDb.ID;
+							categoriesToAdd.Add(currentCategory);
+
+							List<string> imagesToCopy = new List<string>();
+
+							currentCategory.CategoryItems = new List<Item>();
+							foreach(Item i in c.CategoryItems) //עבור כל פריט בקטגוריה הזו
+                            {
+								Item currentItem = new Item();
+								currentItem.IsPicture = i.IsPicture;
+								currentItem.ItemContent = i.ItemContent;
+								currentItem.ItemCategory = currentCategory;
+								currentCategory.CategoryItems.Add(currentItem);
+                            }
+						}
+						newGameFromDb.GameCategories.AddRange(categoriesToAdd);
 
 						newGame.GameCode = newGame.ID + 100;
 						await _context.SaveChangesAsync();
@@ -151,7 +177,7 @@ namespace TriangleProject_Class.Server.Controllers
 			}
 			else
 			{
-				return BadRequest("Game was not sent");
+				return BadRequest("Game not found");
 			}
 		}
 

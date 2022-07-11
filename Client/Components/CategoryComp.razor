@@ -64,7 +64,7 @@
         parameters.Add("currentItem", newItem);
         parameters.Add("UpdatedItem", EventCallback.Factory.Create<Item>(this, AfterNewItem));
 
-        var options = new DialogOptions() { CloseButton = true };
+        var options = new DialogOptions() { CloseButton = true, DisableBackdropClick = true };
         DialogService.Show<ItemWindow>("הוספת פריט לקטגוריה " + CategoryAll.CategoryName, parameters, options);
     }
 
@@ -88,7 +88,7 @@
             parameters.Add("currentCategory", categoryFromController);
             parameters.Add("UpdatedCategory", EventCallback.Factory.Create<Category>(this, AfterCategorypdate));
 
-            var options = new DialogOptions() { CloseButton = true };
+            var options = new DialogOptions() { CloseButton = true , DisableBackdropClick = true };
             DialogService.Show<CategoryWindow>("עריכת קטגוריה", parameters, options);
 
         }
@@ -115,7 +115,7 @@
 
     async Task DeleteCategory()
     {
-        if (CategoryAll.CategoryItems.Count() > 0)
+        if (CategoryAll.CategoryItems.Count() > 0) //אם יש פריטים לקטגוריה
         {
             //הגדרת חלון דיאלוג חדש
             var parameters = new DialogParameters();
