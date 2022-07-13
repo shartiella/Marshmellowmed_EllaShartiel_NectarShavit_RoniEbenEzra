@@ -13,7 +13,7 @@
         <MudTextField @bind-Value="thisUser.Email" Label="כתובת מייל" Variant="Variant.Filled" />
         <ValidationMessage For="@(() => thisUser.Email)" />
         <section class="btns-section">
-            <input type="submit" value="כניסה" class="mud-button-root mud-button mud-button-filled mud-button-filled-default mud-button-filled-size-medium mud-ripple marsh-btn marsh-btn-primary" />
+            <input type="submit" value="כניסה" class="mud-button-root mud-button mud-button-filled mud-button-filled-primary mud-button-filled-size-medium mud-ripple" />
         </section>
     </EditForm>
 </div>
@@ -24,9 +24,16 @@
 
     //string inputMail = "admin@mail.com";
 
-    protected override void OnInitialized() //למחוק את זה
+    protected async override Task OnInitializedAsync() //למחוק את זה
     {
-        thisUser.Email = "admin@mail.com";
+        thisUser.Email = "admin@mail.com"; ///למחוק
+
+        var loginUserCheck = await Http.GetAsync("api/users/Check"); //בודק האם מחובר משתמש כבר
+        if (loginUserCheck.IsSuccessStatusCode == true) //אם מחובר משתמש
+        {
+            int userId = loginUserCheck.Content.ReadFromJsonAsync<int>().Result;
+            nav.NavigateTo("./Games/" + userId); //מעביר לעמוד משחקים עם מספר היוזר
+        }
     }
 
     async Task loginUser()

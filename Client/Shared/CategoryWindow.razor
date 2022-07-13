@@ -11,8 +11,10 @@
             <p>שם הקטגוריה:</p>
             <MudTextField T="string" @bind-Value="currentCategory.CategoryName" Counter="10" MaxLength="10" HelperText="" Immediate="true" Validation="@(new Func<string, IEnumerable<string>>(MaxCharacters))" Label="" Variant="Variant.Outlined" />
             <ValidationMessage For="@(() => currentCategory.CategoryName)" />
-            <MudButton OnClick="Cancel">ביטול</MudButton>
-            <input type="submit" value="שמירה" />
+            <section class="btns-section">
+                <MudButton @onclick="Cancel" Variant="Variant.Outlined" Color="Color.Primary">ביטול</MudButton>
+                <input type="submit" class="mud-button-root mud-button mud-button-filled mud-button-filled-primary mud-button-filled-size-medium mud-ripple" value="שמירה" />
+            </section>
         </EditForm>
     </DialogContent>
     <DialogActions>

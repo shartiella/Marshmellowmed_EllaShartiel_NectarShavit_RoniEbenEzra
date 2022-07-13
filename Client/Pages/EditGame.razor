@@ -10,9 +10,21 @@
 @if (singleGame != null) //אם נטען משחק
 {
 <EditForm Model="singleGame" OnValidSubmit="validSubmit">
-    <header>
-        <h2>עריכת משחק</h2>
-        <input type="submit" value="חזרה למשחקים שלי" class="mud-button-root mud-button mud-button-filled mud-button-filled-default mud-button-filled-size-medium mud-ripple marsh-btn marsh-btn-light" />
+    <header class="edit-game">
+        <div class="game-name">
+            <h2>עריכת משחק - </h2>
+            @if (editingGameName == false)
+            {
+                <p class="game-name"> @singleGame.GameName</p>
+                <MudTooltip Text="עריכת שם המשחק" Arrow="true" Placement="Placement.Bottom">
+                    <MudIconButton @onclick="EditGameName" Icon="@Icons.Filled.Edit" Color="Color.Primary"></MudIconButton>
+                </MudTooltip> }
+            else
+            {
+                <MudTextField AutoFocus="true" T="string" @bind-Value="singleGame.GameName" Counter="30" MaxLength="30" HelperText="" Immediate="true" Validation="@(new Func<string, IEnumerable<string>>(MaxCharacters))" Label="" Variant="Variant.Outlined" @onfocusout="SaveGameName" @onkeydown="SaveGameNameEnter" />
+            }
+        </div>
+        <input type="submit" value="שמירה וחזרה למשחקים שלי" class="mud-button-root mud-button mud-button-filled mud-button-filled-secondary mud-button-filled-size-medium mud-ripple" />
     </header>
 
     <section class="edit-game">
@@ -22,43 +34,55 @@
             <section class="GV category-number">
                 @if (categoriesCount >= 2)
                 {
-                    <MudIcon Icon="@Icons.Filled.CheckBox"></MudIcon>
+                    <MudIcon Class="GVyes" Icon="@Icons.Outlined.Check"></MudIcon>
                 }
                 else
                 {
-                    <MudIcon Icon="@Icons.Filled.CheckBoxOutlineBlank"></MudIcon>
+                    <MudIcon Class="GVno" Icon="@Icons.Outlined.Close"></MudIcon>
                 }
-
-                <p>לפחות 2 קטגוריות</p>
-                <p>מספר קטגוריות: @categoriesCount.ToString()/5</p>
+                <div class="gvText">
+                    <p>בין 2-5 קטגוריות</p>
+                    <p>מספר קטגוריות: @categoriesCount.ToString()</p>
+                </div>
             </section>
 
             <section class="GV item-number">
                 @if (minItemCountperCat == categoriesCount && categoriesCount > 0)
                 {
-                    <MudIcon Icon="@Icons.Filled.CheckBox"></MudIcon>
+                    <MudIcon Class="GVyes" Icon="@Icons.Outlined.Check"></MudIcon>
                 }
                 else
                 {
-                    <MudIcon Icon="@Icons.Filled.CheckBoxOutlineBlank"></MudIcon>
+                    <MudIcon Class="GVno" Icon="@Icons.Outlined.Close"></MudIcon>
                 }
 
-                <p>לפחות 2 פריטים בקטגוריה</p>
-                <p>יש להוסיף פריטים ב-@(categoriesCount-minItemCountperCat) מהקטגוריות</p>
+                <div class="gvText">
+                    <p>בין 2-4 פריטים בקטגוריה</p>
+                    @if (categoriesCount - minItemCountperCat > 0)
+                    {
+                        <p>יש להוסיף פריטים ב-@(categoriesCount-minItemCountperCat) מהקטגוריות</p>
+                    }
+                    else
+                    {
+                        <p>בכל הקטגוריות יש לפחות 2 פריטים</p>
+                    }
+                </div>
             </section>
 
             <section class="GV item-total-number">
                 @if (totalItemCount >= 10)
                 {
-                    <MudIcon Icon="@Icons.Filled.CheckBox"></MudIcon>
+                    <MudIcon Class="GVyes" Icon="@Icons.Outlined.Check"></MudIcon>
                 }
                 else
                 {
-                    <MudIcon Icon="@Icons.Filled.CheckBoxOutlineBlank"></MudIcon>
+                    <MudIcon Class="GVno" Icon="@Icons.Outlined.Close"></MudIcon>
                 }
 
-                <p>לפחות 10 פריטים סה"כ</p>
-                <p>מספר פריטים כולל: @totalItemCount.ToString()/20</p>
+                <div class="gvText">
+                    <p>בין 10-20 פריטים במשחק</p>
+                    <p>מספר פריטים כולל: @totalItemCount.ToString()</p>
+                </div>
             </section>
 
             <section class="GV publish-game-btn">
@@ -66,32 +90,20 @@
                 {
                     if (singleGame.IsPublished == false) //אם המשחק עוד לא פורסם
                     {
-                        <MudButton Class="marsh-btn marsh-btn-primary" Variant="Variant.Filled" Color="Color.Secondary" @onclick="PublishGame" Disabled="false">פרסום משחק</MudButton>
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="PublishGame" Disabled="false">פרסום משחק</MudButton>
                     }
                     else
                     {
-                        <MudButton Class="marsh-btn marsh-btn-primary" Variant="Variant.Filled" Color="Color.Secondary" @onclick="UnPublishGame" Disabled="false">ביטול פרסום משחק</MudButton>
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="UnPublishGame" Disabled="false">ביטול פרסום משחק</MudButton>
                     }
                 }
                 else //אם הוא לא עומד בתנאי הפרסום
                 {
-                    <MudButton Class="marsh-btn marsh-btn-primary" Variant="Variant.Filled" Color="Color.Secondary" @onclick="PublishGame" Disabled="true">פרסום משחק</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="PublishGame" Disabled="true">פרסום משחק</MudButton>
                 }
             </section>
 
         </div>
-
-        <MudTextField T="string" @bind-Value="singleGame.GameName" Counter="30" MaxLength="30" HelperText="" Immediate="true" Validation="@(new Func<string, IEnumerable<string>>(MaxCharacters))" Label="" Variant="Variant.Outlined" />
-
-        @if (categoriesCount >= 5)//אם הגיע למספר הקטגוריות המקסימלי
-        {
-            <MudButton Class="marsh-btn marsh-btn-primary" Variant="Variant.Filled" Color="Color.Secondary" @onclick="AddNewCategory" Disabled="true">הוספת קטגוריה</MudButton>
-        }
-        else //אם אפשר עוד להוסיף קטגוריות
-        {
-            <MudButton Class="marsh-btn marsh-btn-primary" Variant="Variant.Filled" Color="Color.Secondary" @onclick="AddNewCategory" Disabled="false">הוספת קטגוריה</MudButton>
-
-        }
 
         <div id="categories-area">
             @if (singleGame.GameCategories != null)//אם קיימת רשימת קטגוריות
@@ -113,7 +125,17 @@
             {
                 <p>בעיה בטעינת רשימת הקטגוריות</p>
             }
+            @if (categoriesCount >= 5)//אם הגיע למספר הקטגוריות המקסימלי
+            {
+                <MudTooltip Text="הגעת למספר הקטגוריות המקסימלי למשחק" Arrow="true" Placement="Placement.Top">
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="AddNewCategory" Disabled="true">הוספת קטגוריה</MudButton>
+                </MudTooltip>
+            }
+            else //אם אפשר עוד להוסיף קטגוריות
+            {
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="AddNewCategory" Disabled="false">הוספת קטגוריה</MudButton>
 
+            }
         </div>
     </section>
 
@@ -136,6 +158,7 @@ else //אם לא נטען משחק
     int minItemCountperCat = 0;
     int totalItemCount = 0;
     Category newCategory = new Category();
+    bool editingGameName = false;
 
     protected async override Task OnInitializedAsync()
     {
@@ -260,6 +283,24 @@ else //אם לא נטען משחק
                 minItemCountperCat++;
             }
             totalItemCount += c.CategoryItems.Count();
+        }
+    }
+
+    void EditGameName()
+    {
+        editingGameName = true;
+    }
+
+    void SaveGameName()
+    {
+        editingGameName = false;
+    }
+
+    void SaveGameNameEnter(KeyboardEventArgs e)
+    {
+        if (e.Code=="Enter"||e.Code=="NumpadEnter")
+        {
+            editingGameName = false;
         }
     }
 }

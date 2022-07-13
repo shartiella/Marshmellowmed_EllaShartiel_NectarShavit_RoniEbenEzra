@@ -12,47 +12,51 @@
             <MudRadio Option="true" Color="Color.Primary">טקסט</MudRadio>
             <MudRadio @bind-Value="currentItem.IsPicture" Option="false" Color="Color.Primary">תמונה</MudRadio>
         </MudRadioGroup>*@
-            <MudRadioGroup @bind-SelectedOption="currentItem.IsPicture">
+            <MudRadioGroup Class="radio-group" @bind-SelectedOption="currentItem.IsPicture">
                 <MudRadio Option="false" Color="Color.Primary">טקסט</MudRadio>
                 <MudRadio Option="true" Color="Color.Primary">תמונה</MudRadio>
             </MudRadioGroup>
-            <p>תוכן הפריט:</p>
+            <h7>תוכן הפריט:</h7>
             @if (currentItem.IsPicture == false) //אם הפריט הוא טקסט
             {
                 @if (currentItem.ItemContent.StartsWith("uploaded"))
                 {
                     currentItem.ItemContent = "";
                 }
-                <MudTextField Lines="5" T="string" @bind-Value="currentItem.ItemContent" Counter="100" MaxLength="100" HelperText="" Immediate="true" Validation="@(new Func<string, IEnumerable<string>>(MaxCharacters))" Label="" Variant="Variant.Outlined" />
+                <MudTextField AutoFocus="true" Lines="5" T="string" @bind-Value="currentItem.ItemContent" Counter="100" MaxLength="100" HelperText="" Immediate="true" Validation="@(new Func<string, IEnumerable<string>>(MaxCharacters))" Label="" Variant="Variant.Outlined" @onkeydown="SaveItemEnter" />
                 <ValidationMessage For="@(() => currentItem.ItemContent)" />
             }
             else //אם הפריט הוא תמונה
             {
-                <InputFile id="imageInput" OnChange="UploadFile" hidden multiple accept=".jpg, .jpeg, .png" />
-                <img src=@imageUrl width="300" />
-                @if (currentItem.ItemContent.StartsWith("uploaded") == true || imageUrl.StartsWith("uploaded") == true) //אם לא העלו עדיין תמונה
-                {
-                    <MudButton HtmlTag="label"
-                               Variant="Variant.Filled"
-                               Color="Color.Primary"
-                               StartIcon="@Icons.Filled.CloudUpload"
-                               for="imageInput">
-                        החלפת תמונה
-                    </MudButton>
-                }
-                else //אם כבר יש תמונה ורוצים להחליף אותה
-                {
-                    <MudButton HtmlTag="label"
-                               Variant="Variant.Filled"
-                               Color="Color.Primary"
-                               StartIcon="@Icons.Filled.CloudUpload"
-                               for="imageInput">
-                        העלאת תמונה
-                    </MudButton>
-                }
+                <section class="pic-upload">
+                    <InputFile id="imageInput" OnChange="UploadFile" hidden multiple accept=".jpg, .jpeg, .png" />
+                    <img src=@imageUrl width="300" />
+                    @if (currentItem.ItemContent.StartsWith("uploaded") == true || imageUrl.StartsWith("uploaded") == true) //אם לא העלו עדיין תמונה
+                    {
+                        <MudButton HtmlTag="label"
+                                   Variant="Variant.Filled"
+                                   Color="Color.Primary"
+                                   StartIcon="@Icons.Filled.CloudUpload"
+                                   for="imageInput">
+                            החלפת תמונה
+                        </MudButton>
+                    }
+                    else //אם כבר יש תמונה ורוצים להחליף אותה
+                    {
+                        <MudButton HtmlTag="label"
+                                   Variant="Variant.Filled"
+                                   Color="Color.Primary"
+                                   StartIcon="@Icons.Filled.CloudUpload"
+                                   for="imageInput">
+                            העלאת תמונה
+                        </MudButton>
+                    }
+                </section>
             }
-            <MudButton OnClick="Cancel">ביטול</MudButton>
-            <input type="submit" value="שמירה" />
+            <section class="btns-section">
+                <MudButton @onclick="Cancel" Variant="Variant.Outlined" Color="Color.Primary">ביטול</MudButton>
+                <input type="submit" class="mud-button-root mud-button mud-button-filled mud-button-filled-primary mud-button-filled-size-medium mud-ripple" value="שמירה" />
+            </section>
         </EditForm>
     </DialogContent>
     <DialogActions>
@@ -67,7 +71,7 @@
     [Parameter]
     public EventCallback<Item> UpdatedItem { get; set; } //פרמטר לעדכון קומפוננטת הפריט על עדכון לצורך שינוי התצוגה
 
-    public string imageUrl = "/Images/emptyimg.PNG";
+    public string imageUrl = "/Images/defaultimg.png";
 
     protected override void OnInitialized()
     {
@@ -210,6 +214,14 @@
                 var options = new DialogOptions() { DisableBackdropClick = true };
                 DialogService.Show<Error>("שגיאה", parameters, options);
             }
+        }
+    }
+
+    void SaveItemEnter(KeyboardEventArgs e)
+    {
+        if (e.Code == "Enter" || e.Code == "NumpadEnter")
+        {
+            UpdateItem();
         }
     }
 }

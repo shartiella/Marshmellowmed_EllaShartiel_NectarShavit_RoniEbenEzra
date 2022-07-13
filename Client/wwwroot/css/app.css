@@ -25,23 +25,35 @@ h4{
 
 }
 
-.marsh-btn {
+h7 {
+    font-size: 1.2em;
+    font-weight: 700;
+    display: block;
+}
+
+
+
+.mud-button {
     font-size: 1.5em;
     font-family: 'Assistant';
     font-weight: 600;
+    border-radius: 10px;
 }
-.marsh-btn-primary {
+
+.mud-button-filled.mud-button-filled-primary:disabled {
+    background: radial-gradient(#A0A0A0, #B9B9B9);
+}
+
+.mud-button-filled.mud-button-filled-primary {
     background: radial-gradient(#7575CD, #50529F);
     color: white;
 }
 
-.marsh-btn-light {
+.mud-button-filled.mud-button-filled-secondary {
     background: radial-gradient(#D3D4F3, #B0B2E8);
     color: #323366;
 }
-.mud-button-filled.mud-button-filled-secondary {
-    color: #323366;
-}
+
 .mud-button-filled.mud-button-filled-tertiary {
     background: radial-gradient(#F9726F, #B43610);
     color: white;
@@ -63,9 +75,10 @@ h4{
         color: #323366;
     }
 
-.btns-section {
-    text-align: center;
-}
+    #login-box .btns-section {
+margin-top:20px;
+
+    }
 
 #games{
     padding:60px;
@@ -74,33 +87,52 @@ h4{
     #games h2 {
         margin-top: -30px;
         margin-bottom: 30px;
+        display: inline-block;
     }
 
-#games .new-game{
-/*    width:500px;
-*/
-}
+    #games .new-game {
+        display: inline-block;
+        width: 100%;
+    }
 
     #games .new-game p {
-        display: inline-block;
         color: white;
-        font-size: 1.5em;
-        vertical-align: super;
-        margin-left: 25px;
     }
+
+        #games .new-game form > p {
+            display: inline-block;
+            font-size: 1.5em;
+            vertical-align: middle;
+            margin-left: 25px;
+        }
+
     #games .new-game .marsh-btn {
         margin: 25px;
         margin-top: 10px;
     }
 
-    #games .new-game .mud-input-control.mud-input-input-control {
-        display: inline-block;
-        width: 280px;
-    }
+        #games .new-game .mud-input-control.mud-input-input-control {
+            display: inline-block;
+            width: 280px;
+            margin-top: 0px;
+        }
 
     #games .new-game .mud-input-control-input-container {
         background-color: white;
         border-radius: 10px;
+    }
+
+        #games .new-game .mud-button {
+            margin-right: 30px;
+        }
+
+    #games > .mud-button {
+        float: left;
+        margin-top: -20px;
+    }
+
+    #games .mud-button{
+        display:inline-block;
     }
 
     #games .mud-table.cell {
@@ -125,10 +157,12 @@ h4{
     color: white;
 }
 
-.edit-game {
+section.edit-game {
     background-color: white;
-    margin: 60px;
     border-radius: 20px;
+    padding-bottom: 20px;
+    max-width: 1233px;
+    margin: -15px auto;
 }
 
 .game-verifications {
@@ -143,17 +177,34 @@ h4{
     .game-verifications .GV {
         display: inline-block;
         vertical-align: middle;
-    }
-
-    .game-verifications h3 {
         text-align-last: right;
     }
 
+.GV .gvText {
+    display: inline-block;
+    margin-right: 15px;
+    vertical-align: middle;
+}
 
-    html {
-        background: linear-gradient(45deg, #323366, #5353A0, #323366);
-        height: 100%;
-    }
+.GV .mud-icon-root.mud-svg-icon.GVno {
+    background: radial-gradient(#F9726F, #B43610);
+    border-radius: 7px;
+}
+
+.GV .mud-icon-root.mud-svg-icon.GVyes {
+    background: radial-gradient(#7575cd, #50529F);
+    border-radius: 7px;
+}
+
+.game-verifications h3 {
+    text-align-last: right;
+}
+
+
+html {
+    background: radial-gradient(#5353A0, #323366);
+    height: 100%;
+}
 
 .mud-input.mud-input-filled {
 
@@ -214,25 +265,74 @@ a, .btn-link {
 
 }
 
-
-
-
-    .gameCategory {
-        display: inline-block;
-        margin: 10px;
-        text-align: center;
-        background-color: gainsboro;
-        border-radius: 15px;
-        vertical-align: top;
-        text-align: -webkit-center;
+header.edit-game {
+    margin: 60px;
+}
+    header.edit-game .mud-icon-button {
+        color: white;
+        margin-bottom: 15px;
     }
 
-        .gameCategory > header {
-            background: radial-gradient(#B9B9E7, #7678CA);
-            padding: 15px;
-            text-align: center;
-            border-radius: 15px;
-        }
+    header.edit-game h2 {
+        display: inline-block;
+    }
+
+    header.edit-game p.game-name {
+        display: inline-block;
+        color: white;
+        font-size: 2.5em;
+        margin-top: -20px;
+        margin-right: 8px;
+    }
+
+    header.edit-game div.game-name {
+        display: inline;
+    }
+
+    header.edit-game .game-name .mud-input-control {
+        display: table-row;
+        margin-right:20px;
+    }
+
+    header.edit-game .game-name .mud-input-control-input-container {
+        background-color:none;
+        margin-right: 10px;
+    }
+
+    header.edit-game .game-name input.mud-input-slot {
+        font-size: 2.5em;
+        height: 10px;
+        color: white;
+        width: 600px;
+    }
+
+    header.edit-game .game-name p {
+        color: white;
+    }
+
+    header.edit-game .mud-button {
+        display: inline-block;
+        float: left;
+    }
+
+.gameCategory {
+    display: inline-block;
+    margin: 10px;
+    text-align: center;
+    background-color: gainsboro;
+    border-radius: 15px;
+    vertical-align: top;
+    text-align: -webkit-center;
+    margin-top: 30px;
+}
+
+    .gameCategory > header {
+        background: radial-gradient(#B9B9E7, #7678CA);
+        padding: 15px;
+        text-align: center;
+        border-radius: 15px;
+        text-align-last: justify;
+    }
 
     .gameCategory > header > .mud-button{
         margin:5px;
@@ -240,11 +340,23 @@ a, .btn-link {
         margin-bottom:0px;
     }
 
-    .gameCategory h3{
-    display:inline;
-}
+        .gameCategory > header .category-btns {
+            display: inline-block;
+        }
+
+            .gameCategory > header .category-btns .mud-button {
+margin-right:5px;
+            }
+
+            .gameCategory h3 {
+                display: inline;
+            }
 
     .gameCategory > .mud-button {
+        margin: 20px;
+    }
+
+    .gameCategory > .mud-tooltip-root .mud-button {
         margin: 20px;
     }
 
@@ -274,6 +386,16 @@ a, .btn-link {
     margin:30px;
 }
 
+    #categories-area > .mud-tooltip-root > .mud-button {
+        margin: 30px;
+    }
+
+    #categories-area > p {
+        margin-top: 30px;
+        font-size: 1.2em;
+    }
+
+
 .item-buttons {
     /* visibility: hidden; */
     display: inline-block;
@@ -289,17 +411,33 @@ a, .btn-link {
 /*    visibility:visible;
 */
 opacity:1;
+
 }
 
-    .item-buttons .mud-button {
-        margin-left: 5px;
-        margin-right: 5px;
-        margin-bottom: -90%;
-    }
+.item-overlay {
+    transition-duration: 0.2s;
+    background-color: rgba(0,0,0,0);
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+.item-overlay:hover {
+    background-color: rgba(165,166,222,0.5);
+}
+
+.item-buttons .mud-button {
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-bottom: -90%;
+}
 
 .item-content {
     position: absolute;
     width: inherit;
+}
+
+.item-content img{
+    max-height:100px;
 }
 
 .mud-input-control-input-container{
@@ -311,6 +449,7 @@ opacity:1;
     height: max-content;
     border-radius: 10px;
     transition-duration: 0.5s;
+    padding: 10px;
 }
 
     .mud-dialog h6 {
@@ -320,18 +459,91 @@ opacity:1;
         color: #323366;
     }
 
-.mud-typography-body1 {
-    font-family: Assistant;
+    .mud-dialog .mud-input-control-input-container {
+        background-color: #E4E4E4;
+    }
+
+    .mud-dialog .mud-typography-body1 {
+        font-family: Assistant;
+        font-size: 1.2em;
+        font-weight: 600;
+        color: black;
+    }
+
+/*.mud-input-control-input-container {
+    background-color: white;
+    border-radius: 10px;
+}*/
+
+
+
+.mud-radio {
+    background: radial-gradient(#B9B9E7, #7678CA);
+    border-radius: 10px;
+    padding-left: 20px;
+    margin-left: 20px;
+    box-shadow: 2px 2px 5px rgb(0 0 0 / 25%);
 }
+
+.mud-radio-icons {
+    background-color: white;
+    border-radius: 100%;
+}
+
+.mud-radio > .mud-radio-content {
+    font-family: Assistant;
+    font-size: 1.2em;
+    font-weight: 600;
+    color: black;
+}
+
+.radio-group {
+    margin-bottom: 20px;
+}
+
+.btns-section {
+    text-align: center;
+    width: 100%;
+}
+
+.btns-section .mud-button {
+    margin: 10px;
+    margin-bottom: 0px;
+    margin-top: 0px;
+}
+
+.pic-upload {
+    text-align: center;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+    .pic-upload img {
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .pic-upload .mud-button {
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: 20px;
+    }
+
+.mud-main-content {
+    padding: 0px;
+    padding-bottom: 1px;
+}
+
 /*CSS ישן*/
 @import url('https://fonts.googleapis.com/css2?family=Assistant&display=swap');
 
 nav {
-    background-image: linear-gradient(#28316E, #1D1937);
+    background-image: linear-gradient(#2a2b60, #464689);
     padding: 10px;
     top: 0;
     left: 0;
     right: 0;
+    box-shadow: 0px 5px 16px rgb(0 0 0 / 25%);
 }
 
     nav h1 {
@@ -363,9 +575,7 @@ nav {
         padding-left: 20px;
     }
 
-.mud-main-content{
-    padding:0px;
-}
+
 
 main {
     width: 100%;

@@ -15,10 +15,13 @@
             <p>@thisItem.ItemContent</p>
         }
     </div>
-    <div class="item-buttons">
-        <MudIconButton OnClick="EditItem" Icon="@Icons.Filled.Edit" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" />
-        <MudIconButton OnClick="DeleteItem" Icon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" />
-        @*<MudIconButton OnClick="ZoomIn" Icon="@Icons.Filled.ZoomIn" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" />*@
+
+    <div class="item-overlay">
+        <div class="item-buttons">
+            <MudIconButton OnClick="EditItem" Icon="@Icons.Filled.Edit" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" />
+            <MudIconButton OnClick="DeleteItem" Icon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" />
+            @*<MudIconButton OnClick="ZoomIn" Icon="@Icons.Filled.ZoomIn" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" />*@
+        </div>
     </div>
 </section>
 
@@ -31,6 +34,9 @@
 
     [Parameter]
     public EventCallback<Item> UpdatedItem { get; set; }
+
+    [Parameter]
+    public string catName { get; set; }
 
     async Task EditItem() //עריכת הפריט הזה
     {
@@ -46,7 +52,7 @@
             parameters.Add("UpdatedItem", EventCallback.Factory.Create<Item>(this, AfterItemUpdate));
 
             var options = new DialogOptions() { CloseButton = true, DisableBackdropClick = true };
-            DialogService.Show<ItemWindow>("עריכת פריט", parameters, options);
+            DialogService.Show<ItemWindow>("עריכת פריט בקטגוריה "+ catName, parameters, options);
 
         }
         else

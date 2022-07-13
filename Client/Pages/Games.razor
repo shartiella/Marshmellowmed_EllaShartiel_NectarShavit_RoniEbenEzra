@@ -11,6 +11,8 @@
     @if (currentUser != null)
     {
         <h2>המשחקים של @currentUser.FirstName</h2>
+        <MudButton @onclick="LogOut" Variant="Variant.Filled" Color="Color.Primary">התנתקות</MudButton>
+
 
         <div class="new-game">
             <EditForm Model="newGame" OnValidSubmit="NewGame">
@@ -18,7 +20,7 @@
                 <p>הוספת משחק</p>
                 <MudTextField T="string" @bind-Value="newGame.GameName" Counter="30" MaxLength="30" Label="שם המשחק" Immediate="true" Validation="@(new Func<string, IEnumerable<string>>(MaxCharacters))" Variant="Variant.Filled" />
                 <ValidationMessage For="@(() => newGame.GameName)" />
-                <input type="submit" value="יצירת משחק" class="mud-button-root mud-button mud-button-filled mud-button-filled-default mud-button-filled-size-medium mud-ripple marsh-btn marsh-btn-light" />
+                <input type="submit" value="יצירת משחק" class="mud-button-root mud-button mud-button-filled mud-button-filled-secondary mud-button-filled-size-medium mud-ripple" />
             </EditForm>
         </div>
         <div class="games-table">
@@ -26,20 +28,20 @@
                 @*ככה הוא יודע איזו רשימה להדפיס*@
                 <HeaderContent>
                     <MudTh><MudTableSortLabel SortBy="new Func<Game, object>(x=>x.GameName)">שם המשחק</MudTableSortLabel></MudTh>
-                    <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<Game, object>(x=>x.GameCode)">קוד</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<Game, object>(x=>x.GameCode)">קוד משחק</MudTableSortLabel></MudTh>
                     <MudTh>עריכה</MudTh>
                     <MudTh>שכפול</MudTh>
                     <MudTh>מחיקה</MudTh>
-                    <MudTh>פרסום</MudTh>
+                    <MudTh><MudTableSortLabel SortBy="new Func<Game, object>(x=>x.IsPublished)">פרסום</MudTableSortLabel></MudTh>
                 </HeaderContent>
                 <RowTemplate>
                     <MudTd DataLabel="שם המשחק">@context.GameName </MudTd>
                     <MudTd DataLabel="קוד">@context.GameCode</MudTd>
                     <MudTd DataLabel="עריכה">
-                        <MudIconButton Class="marsh-btn marsh-btn-light" Icon="@Icons.Filled.Edit" Variant="Variant.Filled" Color="Color.Secondary" Title="עריכה" @onclick="()=>EditGame(context.GameCode)" />
+                        <MudIconButton Icon="@Icons.Filled.Edit" Variant="Variant.Filled" Color="Color.Secondary" Title="עריכה" @onclick="()=>EditGame(context.GameCode)" />
                     </MudTd>
                     <MudTd DataLabel="שכפול">
-                        <MudIconButton Class="marsh-btn marsh-btn-light" Icon="@Icons.Filled.ContentCopy" Variant="Variant.Filled" Color="Color.Secondary" Title="שכפול" @onclick="()=>DuplicateGame(context)" />
+                        <MudIconButton Icon="@Icons.Filled.ContentCopy" Variant="Variant.Filled" Color="Color.Secondary" Title="שכפול" @onclick="()=>DuplicateGame(context)" />
                     </MudTd>
                     <MudTd DataLabel="מחיקה">
                         <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Tertiary" Title="מחיקה" @onclick="()=>DeleteGame(context)" />
@@ -247,5 +249,14 @@
     {
         if (!string.IsNullOrEmpty(ch) && 30 < ch?.Length)
             yield return "עד 30 תווים";
+    }
+
+    async Task LogOut()
+    {
+        var LogOutResponse = await Http.GetAsync("api/Users/Logout"); //שליפת היוזר כולל רשימת המשחקים שלו
+        if (LogOutResponse.IsSuccessStatusCode == true)
+        {
+            nav.NavigateTo("./");
+        }
     }
 }

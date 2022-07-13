@@ -9,8 +9,10 @@
         <MudText>האם ברצונך להמשיך?</MudText>
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="Cancel">ביטול</MudButton>
-        <MudButton Color="Color.Primary" OnClick="Submit">מחיקה</MudButton>
+        <section class="btns-section">
+            <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Primary">ביטול</MudButton>
+            <MudButton OnClick="Submit" Variant="Variant.Filled" Color="Color.Tertiary">מחיקה</MudButton>
+        </section>
     </DialogActions>
 </MudDialog>
 @code {

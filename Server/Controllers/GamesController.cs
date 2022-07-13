@@ -136,9 +136,17 @@ namespace TriangleProject_Class.Server.Controllers
 						{
 							//הכנסת משחק חדש לבסיס הנתונים
 							Game newGame = new Game();
-							newGame.GameName = "עותק של " + gameToCopy.GameName;
 							newGame.IsPublished = false;
 							newGame.UserID = gameToCopy.UserID;
+
+							if (gameToCopy.GameName.Length <= 22)
+                            {
+								newGame.GameName = "עותק של " + gameToCopy.GameName;
+							}
+							else
+                            {
+                                newGame.GameName = "עותק של " + gameToCopy.GameName.Substring(0, gameToCopy.GameName.Length - 11) + "...";
+                            }
 
 							_context.Games.Add(newGame);
 							await _context.SaveChangesAsync();

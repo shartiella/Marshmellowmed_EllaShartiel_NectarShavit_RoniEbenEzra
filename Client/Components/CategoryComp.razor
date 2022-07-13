@@ -7,9 +7,11 @@
 <section class="gameCategory">
     <header>
         <h3>@CategoryAll.CategoryName</h3>
-        <MudIconButton Class="marsh-btn marsh-btn-primary" Icon="@Icons.Filled.Edit" Variant="Variant.Filled" Color="Color.Secondary" Title="שינוי שם" @onclick="EditCategory" />
-        <MudIconButton Class="marsh-btn marsh-btn-primary" Icon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Secondary" Title="מחיקה" @onclick="DeleteCategory" />
 
+        <section class="category-btns">
+            <MudIconButton Icon="@Icons.Filled.Edit" Variant="Variant.Filled" Color="Color.Primary" Title="שינוי שם" @onclick="EditCategory" />
+            <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Primary" Title="מחיקה" @onclick="DeleteCategory" />
+        </section>
     </header>
 
 
@@ -17,7 +19,7 @@
     {
         @foreach (Item i in CategoryAll.CategoryItems)
         {
-            <ItemComp thisItem=@i DeletedItem="DeleteItemAfter" UpdatedItem="ItemUpdateAfter"></ItemComp>
+            <ItemComp thisItem=@i catName=@CategoryAll.CategoryName DeletedItem="DeleteItemAfter" UpdatedItem="ItemUpdateAfter"></ItemComp>
         }
         if (CategoryAll.CategoryItems.Count >= 4)
         {
@@ -32,7 +34,16 @@
     {
         <p>קטגוריה ריקה, לחצו על הכפתור כדי להוסיף פריטים</p>
     }
-    <MudButton Class="marsh-btn marsh-btn-primary" Variant="Variant.Filled" Color="Color.Secondary" @onclick="AddNewItem" Disabled="@NewItemDisabled">הוספת פריט</MudButton>
+    @if (NewItemDisabled == false)
+    {
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="AddNewItem" Disabled="@NewItemDisabled">הוספת פריט +</MudButton>
+    }
+    else
+    {
+        <MudTooltip Text="הגעת למספר הפריטים המקסימלי לקטגוריה" Arrow="true" Placement="Placement.Bottom">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="AddNewItem" Disabled="@NewItemDisabled">הוספת פריט +</MudButton>
+        </MudTooltip>
+    }
 
 </section>
 
@@ -155,6 +166,7 @@
     void DeleteItemAfter(Item itemToDelete)
     {
         CategoryAll.CategoryItems.Remove(itemToDelete);
+        ItemChange.InvokeAsync("less item");
     }
 
 
