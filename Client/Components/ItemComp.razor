@@ -51,8 +51,10 @@
         }
         else
         {
-            var options = new DialogOptions() { CloseButton = true };
-            DialogService.Show<Error>(getResponse.Content.ReadAsStringAsync().Result, options);
+            var parameters = new DialogParameters();
+            parameters.Add("Content", getResponse.Content.ReadAsStringAsync().Result);
+            var options = new DialogOptions() { DisableBackdropClick = true };
+            DialogService.Show<Error>("שגיאה", parameters, options);
         }
 
     }
@@ -61,7 +63,6 @@
     async Task DeleteItem()
     {
         var deleteResponse = await Http.DeleteAsync("api/Items/" + thisItem.ID);
-        //ניגש לנתיב שמסתיים באיידי של העובד שלחצו עליו
 
         bool isDeleted = deleteResponse.Content.ReadFromJsonAsync<bool>().Result;
 
@@ -71,13 +72,15 @@
         }
         else
         {
-            //WorkersList = new List<Worker>();
+            var parameters = new DialogParameters();
+            parameters.Add("Content", deleteResponse.Content.ReadAsStringAsync().Result);
+            var options = new DialogOptions() { DisableBackdropClick = true };
+            DialogService.Show<Error>("שגיאה", parameters, options);
         }
     }
 
     void AfterItemUpdate(Item updatedItem)
     {
-        //thisItem = updatedItem;
         UpdatedItem.InvokeAsync(updatedItem);
     }
 

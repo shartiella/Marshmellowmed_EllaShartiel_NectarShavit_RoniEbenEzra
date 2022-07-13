@@ -7,13 +7,159 @@ html, body {
     background-color: inherit;
 /*    direction: rtl;
 */    /*    background-image: linear-gradient(to right, #28316E, #1D1937, #28316E);
-*/  color: white;
+*/  color: black;
 }
 
-html {
-    background: linear-gradient(45deg, #323366, #5353A0, #323366);
-    height: 100%;
+h1{
+
 }
+h2 {
+    color: white;
+    font-size: 2.5em;
+    margin-top: -20px;
+}
+h3{
+
+}
+h4{
+
+}
+
+.marsh-btn {
+    font-size: 1.5em;
+    font-family: 'Assistant';
+    font-weight: 600;
+}
+.marsh-btn-primary {
+    background: radial-gradient(#7575CD, #50529F);
+    color: white;
+}
+
+.marsh-btn-light {
+    background: radial-gradient(#D3D4F3, #B0B2E8);
+    color: #323366;
+}
+.mud-button-filled.mud-button-filled-secondary {
+    color: #323366;
+}
+.mud-button-filled.mud-button-filled-tertiary {
+    background: radial-gradient(#F9726F, #B43610);
+    color: white;
+}
+
+#login-box {
+    background-color: white;
+    width: 600px;
+    margin: 170px auto;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 2px 2px 20px rgb(0 0 0 / 25%);
+}
+    #login-box .marsh-btn-primary {
+        margin-top: 30px;
+    }
+
+    #login-box h2 {
+        color: #323366;
+    }
+
+.btns-section {
+    text-align: center;
+}
+
+#games{
+    padding:60px;
+}
+
+    #games h2 {
+        margin-top: -30px;
+        margin-bottom: 30px;
+    }
+
+#games .new-game{
+/*    width:500px;
+*/
+}
+
+    #games .new-game p {
+        display: inline-block;
+        color: white;
+        font-size: 1.5em;
+        vertical-align: super;
+        margin-left: 25px;
+    }
+    #games .new-game .marsh-btn {
+        margin: 25px;
+        margin-top: 10px;
+    }
+
+    #games .new-game .mud-input-control.mud-input-input-control {
+        display: inline-block;
+        width: 280px;
+    }
+
+    #games .new-game .mud-input-control-input-container {
+        background-color: white;
+        border-radius: 10px;
+    }
+
+    #games .mud-table.cell {
+        font-size: 1.2em;
+    }
+.mud-table-root .mud-table-head .mud-table-cell {
+    font-weight: 700;
+    color: inherit;
+    font-size: 1.3em;
+}
+
+.mud-table-root {
+    color: inherit;
+}
+
+    .mud-table-root .mud-table-body .mud-table-cell {
+        color: inherit;
+        font-size: 1.3em;
+    }
+
+#games .mud-icon-button-color-primary {
+    color: white;
+}
+
+.edit-game {
+    background-color: white;
+    margin: 60px;
+    border-radius: 20px;
+}
+
+.game-verifications {
+    background: radial-gradient(#9494D5, #6769C9);
+    border-radius: 10px;
+    padding: 30px;
+    color: white;
+    text-align-last: justify;
+    font-size: 1.2em;
+}
+
+    .game-verifications .GV {
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .game-verifications h3 {
+        text-align-last: right;
+    }
+
+
+    html {
+        background: linear-gradient(45deg, #323366, #5353A0, #323366);
+        height: 100%;
+    }
+
+.mud-input.mud-input-filled {
+
+    border-radius: 10px;
+/*    background-color:white;
+*/}
 
 .mud-table {
     background-color: inherit;
@@ -68,15 +214,7 @@ a, .btn-link {
 
 }
 
-.mud-table-root{
-color:inherit;
-}
-    .mud-table-root .mud-table-body .mud-table-cell{
-        color:inherit;
-    }
-    .mud-table-root .mud-table-head .mud-table-cell {
-        color: inherit;
-    }
+
 
 
     .gameCategory {
@@ -89,13 +227,12 @@ color:inherit;
         text-align: -webkit-center;
     }
 
-    .gameCategory > header {
-        background-color: deepskyblue;
-        width: 230px;
-        padding: 10px;
-        text-align: center;
-        border-radius: 15px;
-    }
+        .gameCategory > header {
+            background: radial-gradient(#B9B9E7, #7678CA);
+            padding: 15px;
+            text-align: center;
+            border-radius: 15px;
+        }
 
     .gameCategory > header > .mud-button{
         margin:5px;
@@ -165,10 +302,6 @@ opacity:1;
     width: inherit;
 }
 
-    .mud-dialog{
-        transition-duration:0.5s;
-    }
-
 .mud-input-control-input-container{
     display:block;
 }
@@ -176,10 +309,21 @@ opacity:1;
 .mud-dialog {
     width: 50%;
     height: max-content;
+    border-radius: 10px;
+    transition-duration: 0.5s;
 }
 
-/*CSS ישן*/
+    .mud-dialog h6 {
+        font-family: Assistant;
+        font-size: 2em;
+        font-weight: 700;
+        color: #323366;
+    }
 
+.mud-typography-body1 {
+    font-family: Assistant;
+}
+/*CSS ישן*/
 @import url('https://fonts.googleapis.com/css2?family=Assistant&display=swap');
 
 nav {

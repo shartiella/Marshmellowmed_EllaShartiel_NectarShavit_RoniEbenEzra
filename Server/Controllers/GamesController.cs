@@ -25,41 +25,57 @@ namespace TriangleProject_Class.Server.Controllers
 		[HttpGet("{userId}")]
 		public async Task<IActionResult> GetAllGames(int userId) //שיטה לשליפת כל המשחקים של משתמש מסוים
 		{
-			string SessionContent = HttpContext.Session.GetString("UserId");//בדיקה איזה משתמש מחובר מתוך הסשן
-			if (string.IsNullOrEmpty(SessionContent) == false) //האם מחובר משתמש בכלל
-			{
-				if (userId == Convert.ToInt32(SessionContent))//האם המשתמש המחובר זה המשתמש שמחפשים את המשחקים שלו
+			if (userId > 0) //האם הגיע איידי תקין של יוזר
+            {
+				string SessionContent = HttpContext.Session.GetString("UserId"); //בדיקת הסשן
+				if (string.IsNullOrEmpty(SessionContent) == false) //האם מחובר משתמש בכלל
 				{
-					User userToReturn = await _context.Users.Include(u => u.UserGames).ThenInclude(g=>g.GameCategories).ThenInclude(c=>c.CategoryItems).FirstOrDefaultAsync(u => u.ID == userId);//שליפת פרטי המשתמש כולל רשימת המשחקים שלו
-					if (userToReturn != null)
+					if (userId == Convert.ToInt32(SessionContent)) //האם המשתמש המחובר זה המשתמש הרצוי
 					{
-						return Ok(userToReturn);//החזרת פרטי המשתמש
+						//תוכן השיטה בפועל
+						User userToReturn = await _context.Users.Include(u => u.UserGames).ThenInclude(g=>g.GameCategories).ThenInclude(c=>c.CategoryItems).FirstOrDefaultAsync(u => u.ID == userId);//שליפת פרטי המשתמש כולל רשימת המשחקים שלו
+						if (userToReturn != null)
+						{
+							return Ok(userToReturn); //החזרת פרטי המשתמש
+						}
+						return BadRequest("משתמש לא נמצא");
 					}
-					return BadRequest("User not found");
+					return BadRequest("המשתמש הרצוי אינו מחובר");
 				}
-				return BadRequest("User not logged in");
-			}
-			return BadRequest("Empty Session");
+				return BadRequest("אין משתמש מחובר");
+            }
+			return BadRequest("בעיה בקבלת המידע");
 		}
 
 		[HttpGet("byCode/{gameCode}")]
 		public async Task<IActionResult> GetGameByCode(int gameCode) //שליפת תוכן משחק לפי קוד - לצורך המחולל
 		{
-
-			Game gameToReturn = await _context.Games.Include(g => g.GameCategories).ThenInclude(c=> c.CategoryItems).FirstOrDefaultAsync(g => g.GameCode == gameCode);
-			if (gameToReturn != null)
+			if (gameCode > 0) //האם הגיע קוד תקין של משחק
 			{
-				return Ok(gameToReturn);
+				string SessionContent = HttpContext.Session.GetString("UserId"); //בדיקת הסשן
+				if (string.IsNullOrEmpty(SessionContent) == false) //האם מחובר משתמש בכלל
+				{
+					//שליפת המשחק
+					Game gameToReturn = await _context.Games.Include(g => g.GameCategories).ThenInclude(c => c.CategoryItems).FirstOrDefaultAsync(g => g.GameCode == gameCode);
+					if (gameToReturn != null) //האם נמצא המשחק
+					{
+						if (gameToReturn.UserID == Convert.ToInt32(SessionContent)) //האם המשתמש המחובר זה המשתמש הרצוי
+						{
+							return Ok(gameToReturn);
+						}
+						return BadRequest("המשתמש הרצוי אינו מחובר");
+					}
+					return BadRequest("משחק לא נמצא");
+				}
+				return BadRequest("אין משתמש מחובר");
 			}
-			return BadRequest("no such game");
+			return BadRequest("בעיה בקבלת המידע");
 		}
 
 		[HttpGet("toPlay/{gameCode}")]
 		public async Task<IActionResult> PlayGameByCode(int gameCode) //שליפת תוכן משחק לפי קוד - לצורך המשחק עצמו
 		{
-			//Game gameToReturn = await _context.Games.FirstOrDefaultAsync(g => g.GameCode == gameCode);
-			//בהמשך, להוסיף לשליפה הזאת את תוכן המשחקים באינקלוד לפני הפירסט אור דיפולט
-
+			//אין צורך לבדוק סשן כי השיטה מיועדת לשימוש האנימייט
 			Game gameToReturn = await _context.Games.Include(g => g.GameCategories).ThenInclude(c => c.CategoryItems).FirstOrDefaultAsync(g => g.GameCode == gameCode);
 			if (gameToReturn != null)
 			{
@@ -73,183 +89,216 @@ namespace TriangleProject_Class.Server.Controllers
 		}
 
 		[HttpPost("Insert")]
-		public async Task<IActionResult> AddGame(Game newGame) //יצירת משחק חדש
-		//מקבל כפרמטר את גוף הקריאה שמתקבל בהפעלת השיטה - מידע על משחק בודד
+		public async Task<IActionResult> AddGame(Game newGame) //יצירת משחק חדש לפי שם
 		{
-			Console.WriteLine("newGame ID " + newGame.ID);
-
-			if (newGame != null)
+			if (newGame != null) //האם הגיע מידע
 			{
-				string SessionContent = HttpContext.Session.GetString("UserId");
-				Console.WriteLine("SessionContent " + SessionContent);
-				Console.WriteLine("newGame.UserID " + newGame.UserID);
-
-				if (string.IsNullOrEmpty(SessionContent) == false)//האם מישהו מחובר
+				string SessionContent = HttpContext.Session.GetString("UserId"); //בדיקת הסשן
+				if (string.IsNullOrEmpty(SessionContent) == false) //האם משתמש מחובר בכלל
 				{
-					if (newGame.UserID == Convert.ToInt32(SessionContent))//האם מי שמחובר זה מי שיצר את המשחק
+					if (newGame.UserID == Convert.ToInt32(SessionContent)) //האם המשתמש המחובר זה המשתמש הרצוי
 					{
 						User userToReturn = await _context.Users.Include(u => u.UserGames).FirstOrDefaultAsync(u => u.ID == newGame.UserID);
 						//שליפת פרטי המשתמש והמשחקים שלו
-						if (userToReturn != null)
+						if (userToReturn != null) //אם נמצא המשתמש
 						{
 							_context.Games.Add(newGame);
 							await _context.SaveChangesAsync();
 							//הכנסת המשחק לבסיס הנתונים
 
-							newGame.GameCode = newGame.ID + 100;
+							newGame.GameCode = newGame.ID + 100; //הגדרת קוד המשחק לפי האיידי
 							await _context.SaveChangesAsync();
 
 							return Ok(newGame);
 						}
-						return BadRequest("User not found");
+						return BadRequest("משתמש לא נמצא");
 					}
-					return BadRequest("User not logged in");
+					return BadRequest("המשתמש הרצוי אינו מחובר");
 				}
-				return BadRequest("Empty session");
+				return BadRequest("אין משתמש מחובר");
 			}
-			else
-			{
-				return BadRequest("Game was not sent");
-			}
+			return BadRequest("בעיה בקבלת המידע");
 		}
 
 		[HttpPost("Copy")]
-		public async Task<IActionResult> DuplicateGame(Game gamefrompage) //יצירת משחק חדש
-																		  //מקבל כפרמטר את גוף הקריאה שמתקבל בהפעלת השיטה - מידע על משחק בודד
+		public async Task<IActionResult> DuplicateGame(Game gamefrompage) //שכפול משחק קיים
 		{
-			//שליפת המשחק לשכפול והתוכן שלו
-			Game gameToCopy = await _context.Games.Include(g => g.GameCategories).ThenInclude(c => c.CategoryItems).FirstOrDefaultAsync(g => g.ID == gamefrompage.ID);
-			if (gameToCopy != null)
-			{
-				string SessionContent = HttpContext.Session.GetString("UserId");
-
-				if (string.IsNullOrEmpty(SessionContent) == false)//האם מישהו מחובר
+			if (gamefrompage != null) //אם הגיע מידע על משחק
+            {
+				string SessionContent = HttpContext.Session.GetString("UserId"); //בדיקת הסשן
+				if (string.IsNullOrEmpty(SessionContent) == false)//האם מחובר משתמש בכלל
 				{
-					if (gameToCopy.UserID == Convert.ToInt32(SessionContent))//האם מי שמחובר זה מי שיצר את המשחק
+					//שליפת המשחק לשכפול והתוכן שלו
+					Game gameToCopy = await _context.Games.Include(g => g.GameCategories).ThenInclude(c => c.CategoryItems).FirstOrDefaultAsync(g => g.ID == gamefrompage.ID);
+					if (gameToCopy != null) //אם נמצא המשחק
 					{
-						//הכנסת משחק חדש לבסיס הנתונים
-						Game newGame = new Game();
-						newGame.GameName = "עותק של " + gameToCopy.GameName;
-						newGame.IsPublished = false;
-						newGame.UserID = gameToCopy.UserID;
-
-						_context.Games.Add(newGame);
-						await _context.SaveChangesAsync();
-
-						//עכשיו יש למשחק המועתק איידי חדש משלו
-						Game newGameFromDb = await _context.Games.Include(g => g.GameCategories).ThenInclude(c => c.CategoryItems).FirstOrDefaultAsync(g => g.ID == newGame.ID);
-
-						List<Category> categoriesToCopy = gameToCopy.GameCategories.ToList(); //רשימת הקטגוריות להעתקה
-						List<Category> categoriesToAdd = new List<Category>(); //רשימת קטגוריות ריקה זמנית
-						foreach (Category c in categoriesToCopy) //עבור כל קטגוריה שצריך להעתיק
-                        {
-							Category currentCategory = new Category();
-							currentCategory.CategoryName = c.CategoryName;
-							currentCategory.GameID = newGameFromDb.ID;
-							categoriesToAdd.Add(currentCategory);
-
-							List<string> imagesToCopy = new List<string>();
-
-							currentCategory.CategoryItems = new List<Item>();
-							foreach(Item i in c.CategoryItems) //עבור כל פריט בקטגוריה הזו
-                            {
-								Item currentItem = new Item();
-								currentItem.IsPicture = i.IsPicture;
-								currentItem.ItemContent = i.ItemContent;
-								currentItem.ItemCategory = currentCategory;
-								currentCategory.CategoryItems.Add(currentItem);
-                            }
-						}
-						newGameFromDb.GameCategories.AddRange(categoriesToAdd);
-
-						newGame.GameCode = newGame.ID + 100;
-						await _context.SaveChangesAsync();
-
-						if (newGame != null)
+						if (gameToCopy.UserID == Convert.ToInt32(SessionContent))//האם המשתמש המחובר זה המשתמש הרצוי
 						{
-							return Ok(newGame);
+							//הכנסת משחק חדש לבסיס הנתונים
+							Game newGame = new Game();
+							newGame.GameName = "עותק של " + gameToCopy.GameName;
+							newGame.IsPublished = false;
+							newGame.UserID = gameToCopy.UserID;
+
+							_context.Games.Add(newGame);
+							await _context.SaveChangesAsync();
+
+							//עכשיו כשיש למשחק המועתק איידי חדש משלו נשלוף אותו מחדש
+							Game newGameFromDb = await _context.Games.Include(g => g.GameCategories).ThenInclude(c => c.CategoryItems).FirstOrDefaultAsync(g => g.ID == newGame.ID);
+
+							List<Category> categoriesToCopy = gameToCopy.GameCategories.ToList(); //רשימת הקטגוריות להעתקה
+							List<Category> categoriesToAdd = new List<Category>(); //רשימת קטגוריות ריקה זמנית
+							foreach (Category c in categoriesToCopy) //עבור כל קטגוריה שצריך להעתיק
+							{
+								Category currentCategory = new Category();
+								currentCategory.CategoryName = c.CategoryName;
+								currentCategory.GameID = newGameFromDb.ID;
+								categoriesToAdd.Add(currentCategory);
+
+								List<string> imagesToCopy = new List<string>();
+
+								currentCategory.CategoryItems = new List<Item>();
+								foreach (Item i in c.CategoryItems) //עבור כל פריט בקטגוריה הזו
+								{
+									Item currentItem = new Item();
+									currentItem.IsPicture = i.IsPicture;
+									currentItem.ItemContent = i.ItemContent;
+									currentItem.ItemCategory = currentCategory;
+									currentCategory.CategoryItems.Add(currentItem);
+								}
+							}
+							newGameFromDb.GameCategories.AddRange(categoriesToAdd);
+
+							//עדכון קוד המשחק לפי האיידי החדש
+							newGame.GameCode = newGame.ID + 100;
+							await _context.SaveChangesAsync();
+
+							if (newGame != null) //אם יש משחק
+							{
+								return Ok(newGame);
+							}
+							return BadRequest("שגיאה בשכפול המשחק");
 						}
-						return BadRequest("failed");
+						return BadRequest("המשתמש הרצוי אינו מחובר");
 					}
-					return BadRequest("User not logged in");
+					return BadRequest("משחק לא נמצא");
 				}
-				return BadRequest("Empty session");
+				return BadRequest("אין משתמש מחובר");
 			}
-			else
-			{
-				return BadRequest("Game not found");
-			}
+			return BadRequest("בעיה בקבלת המידע");
 		}
 
 			[HttpPost("Publish")]
-		public async Task<IActionResult> PublishGame(Game gameToPublish)
+		public async Task<IActionResult> PublishGame(Game gameToPublish) //פרסום משחק
 		{
-			Game gameFromDb = await _context.Games.FirstOrDefaultAsync(g => g.ID == gameToPublish.ID);
-
-			if (gameFromDb != null)
-            {
-				gameFromDb.IsPublished = true;
-				await _context.SaveChangesAsync();
-				return Ok(gameFromDb.IsPublished);
+			if (gameToPublish!=null) //האם הגיעו פרטים על משחק
+			{
+				string SessionContent = HttpContext.Session.GetString("UserId"); //בדיקת הסשן
+				if (string.IsNullOrEmpty(SessionContent) == false) //האם מחובר משתמש בכלל
+				{
+					//שליפת פרטי המשחק אותו רוצים לפרסם
+					Game gameFromDb = await _context.Games.FirstOrDefaultAsync(g => g.ID == gameToPublish.ID);
+					if (gameFromDb != null) //האם נמצא המשחק
+					{
+						if (gameFromDb.UserID == Convert.ToInt32(SessionContent)) //האם המשתמש המחובר זה המשתמש הרצוי
+						{
+							//תוכן השיטה בפועל
+							gameFromDb.IsPublished = true;
+							await _context.SaveChangesAsync();
+							return Ok(gameFromDb.IsPublished);
+						}
+						return BadRequest("המשתמש הרצוי אינו מחובר");
+					}
+					return BadRequest("משחק לא נמצא");
+				}
+				return BadRequest("אין משתמש מחובר");
 			}
-			else
-            {
-                return BadRequest("no such game");
-            }
+			return BadRequest("בעיה בקבלת המידע");
 		}
 
 		[HttpPost("UnPublish")]
-		public async Task<IActionResult> UnPublishGame(Game gameToPublish)
+		public async Task<IActionResult> UnPublishGame(Game gameToPublish) //ביטול פרסום משחק
 		{
-			Game gameFromDb = await _context.Games.FirstOrDefaultAsync(g => g.ID == gameToPublish.ID);
-
-			if (gameFromDb != null)
+			if (gameToPublish!=null) //האם הגיעו פרטים על משחק
 			{
-				gameFromDb.IsPublished = false;
-				await _context.SaveChangesAsync();
-				return Ok(gameFromDb.IsPublished);
+				string SessionContent = HttpContext.Session.GetString("UserId"); //בדיקת הסשן
+				if (string.IsNullOrEmpty(SessionContent) == false) //האם מחובר משתמש בכלל
+				{
+					//שליפת פרטי המשחק אותו רוצים לפרסם
+					Game gameFromDb = await _context.Games.FirstOrDefaultAsync(g => g.ID == gameToPublish.ID);
+					if (gameFromDb != null) //האם נמצא המשחק
+					{
+						if (gameFromDb.UserID == Convert.ToInt32(SessionContent)) //האם המשתמש המחובר זה המשתמש הרצוי
+						{
+							//תוכן השיטה בפועל
+							gameFromDb.IsPublished = false;
+							await _context.SaveChangesAsync();
+							return Ok(gameFromDb.IsPublished);
+						}
+						return BadRequest("המשתמש הרצוי אינו מחובר");
+					}
+					return BadRequest("משחק לא נמצא");
+				}
+				return BadRequest("אין משתמש מחובר");
 			}
-			else
-			{
-				return BadRequest("no such game");
-			}
+			return BadRequest("בעיה בקבלת המידע");
 		}
 
 		[HttpPost("Update")]
-		public async Task<IActionResult> UpdateGame(Game gameToUpdate)
+		public async Task<IActionResult> UpdateGame(Game gameToUpdate) //עדכון משחק
 		{
-			Game gameFromDB = await _context.Games.FirstOrDefaultAsync(g => g.ID == gameToUpdate.ID);
-
-			if (gameFromDB != null)
+			if (gameToUpdate!=null) //האם הגיע מידע על משחק
 			{
-				gameFromDB.GameName = gameToUpdate.GameName;
-				gameFromDB.IsPublished = gameToUpdate.IsPublished;
+				string SessionContent = HttpContext.Session.GetString("UserId"); //בדיקת הסשן
+				if (string.IsNullOrEmpty(SessionContent) == false) //האם מחובר משתמש בכלל
+				{
+					Game gameFromDB = await _context.Games.FirstOrDefaultAsync(g => g.ID == gameToUpdate.ID); //שליפת פרטי המשחק מבסיס הנתונים
+					if (gameFromDB != null) //אם נמצא המשחק שרוצים לעדכן
+					{
+						if (gameFromDB.UserID == Convert.ToInt32(SessionContent)) //האם המשתמש המחובר זה המשתמש הרצוי
+						{
+							//תוכן השיטה בפועל
+							gameFromDB.GameName = gameToUpdate.GameName;
+							gameFromDB.IsPublished = gameToUpdate.IsPublished;
 
-				await _context.SaveChangesAsync();
-				return Ok(gameFromDB);
-
+							await _context.SaveChangesAsync();
+							return Ok(gameFromDB);
+						}
+						return BadRequest("המשתמש הרצוי אינו מחובר");
+					}
+					return BadRequest("משחק לא נמצא");
+				}
+				return BadRequest("אין משתמש מחובר");
 			}
-			else
-			{
-				return BadRequest("no such game");
-			}
+			return BadRequest("בעיה בקבלת המידע");
 		}
 
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> DeleteGame(int id)
 		{
-			Game gameToDelete = await _context.Games.FirstOrDefaultAsync(g => g.ID == id);
-			if (gameToDelete != null)
+			if (id > 0) //האם הגיע איידי תקין של משחק
 			{
-				_context.Games.Remove(gameToDelete); //מחיקה ללא שמירה
-				await _context.SaveChangesAsync(); //שמירה של השינויים
+				string SessionContent = HttpContext.Session.GetString("UserId"); //בדיקת הסשן
+				if (string.IsNullOrEmpty(SessionContent) == false) //האם מחובר משתמש בכלל
+				{
+					Game gameToDelete = await _context.Games.FirstOrDefaultAsync(g => g.ID == id); //שליפת המשחק שהאיידי שלו
+					if (gameToDelete != null) //האם נמצא המשחק
+					{
+						if (gameToDelete.UserID == Convert.ToInt32(SessionContent)) //האם המשתמש המחובר זה המשתמש הרצוי
+						{
+							//תוכן השיטה בפועל
+							_context.Games.Remove(gameToDelete); //מחיקה ללא שמירה
+							await _context.SaveChangesAsync(); //שמירה של השינויים
 
-				return Ok(true); //החזרה של תשובה חיובית שמעידה על הצלחה של המחיקה
+							return Ok(true); //החזרה של תשובה חיובית שמעידה על הצלחה של המחיקה
+						}
+						return BadRequest("המשתמש הרצוי אינו מחובר");
+					}
+					return BadRequest("משחק לא נמצא");
+				}
+				return BadRequest("אין משתמש מחובר");
 			}
-			else
-			{
-				return BadRequest("no such game");
-			}
+			return BadRequest("בעיה בקבלת המידע");
 		}
 	}
 }

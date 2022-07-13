@@ -41,13 +41,7 @@
     {
         if (currentCategory.ID == 0) //אם הקטגוריה היא חדשה וצריך ליצור אותה
         {
-
-            Console.WriteLine("לפני הקריאה");
-
             var postResponse = await Http.PostAsJsonAsync("api/Categories/New", currentCategory); //יצירת פריט חדש וריק
-
-            Console.WriteLine("אחרי הקריאה");
-
             if (postResponse.IsSuccessStatusCode == true)
             {
                 Category CategoryFromDb = postResponse.Content.ReadFromJsonAsync<Category>().Result; //קליטת הפריט החדש מהטבלה
@@ -56,13 +50,13 @@
             }
             else
             {
-                Console.WriteLine(postResponse.Content.ReadAsStringAsync().Result);
-
-                var options = new DialogOptions() { CloseButton = true };
-                DialogService.Show<Error>(postResponse.Content.ReadAsStringAsync().Result, options);
+                var parameters = new DialogParameters();
+                parameters.Add("Content", postResponse.Content.ReadAsStringAsync().Result);
+                var options = new DialogOptions() { DisableBackdropClick = true };
+                DialogService.Show<Error>("שגיאה", parameters, options);
             }
         }
-        else //אם הפריט קיים וצריך לעדכן אותו
+        else //אם הקטגוריה קיימת וצריך לעדכן אותה
         {
             var updateResponse = await Http.PostAsJsonAsync("api/Categories/Update", currentCategory); //קריאת עדכון לטבלת הפריטים
 
@@ -74,8 +68,10 @@
             }
             else
             {
-                var options = new DialogOptions() { CloseButton = true };
-                DialogService.Show<Error>(updateResponse.Content.ReadAsStringAsync().Result, options);
+                var parameters = new DialogParameters();
+                parameters.Add("Content", updateResponse.Content.ReadAsStringAsync().Result);
+                var options = new DialogOptions() { DisableBackdropClick = true };
+                DialogService.Show<Error>("שגיאה", parameters, options);
             }
         }
     }

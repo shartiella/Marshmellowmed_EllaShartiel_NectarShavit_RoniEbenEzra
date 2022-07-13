@@ -7,8 +7,8 @@
 <section class="gameCategory">
     <header>
         <h3>@CategoryAll.CategoryName</h3>
-        <MudIconButton Icon="@Icons.Filled.Edit" Variant="Variant.Filled" Color="Color.Secondary" Title="שינוי שם" @onclick="EditCategory" />
-        <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Secondary" Title="מחיקה" @onclick="DeleteCategory" />
+        <MudIconButton Class="marsh-btn marsh-btn-primary" Icon="@Icons.Filled.Edit" Variant="Variant.Filled" Color="Color.Secondary" Title="שינוי שם" @onclick="EditCategory" />
+        <MudIconButton Class="marsh-btn marsh-btn-primary" Icon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Secondary" Title="מחיקה" @onclick="DeleteCategory" />
 
     </header>
 
@@ -32,7 +32,7 @@
     {
         <p>קטגוריה ריקה, לחצו על הכפתור כדי להוסיף פריטים</p>
     }
-    <MudButton Variant="Variant.Filled" Color="Color.Secondary" @onclick="AddNewItem" Disabled="@NewItemDisabled">הוספת פריט</MudButton>
+    <MudButton Class="marsh-btn marsh-btn-primary" Variant="Variant.Filled" Color="Color.Secondary" @onclick="AddNewItem" Disabled="@NewItemDisabled">הוספת פריט</MudButton>
 
 </section>
 
@@ -94,15 +94,15 @@
         }
         else
         {
-            var options = new DialogOptions() { CloseButton = true };
-            DialogService.Show<Error>(getResponse.Content.ReadAsStringAsync().Result, options);
+            var parameters = new DialogParameters();
+            parameters.Add("Content", getResponse.Content.ReadAsStringAsync().Result);
+            var options = new DialogOptions() { DisableBackdropClick = true };
+            DialogService.Show<Error>("שגיאה", parameters, options);
         }
-
     }
 
     void AfterCategorypdate(Category updatedCategory)
     {
-        //UpdatedCategory.InvokeAsync(updatedCategory);
         CategoryAll.CategoryName = updatedCategory.CategoryName;
     }
 
@@ -137,7 +137,10 @@
             }
             else
             {
-                //WorkersList = new List<Worker>();
+                var parameters = new DialogParameters();
+                parameters.Add("Content", deleteResponse.Content.ReadAsStringAsync().Result);
+                var options = new DialogOptions() { DisableBackdropClick = true };
+                DialogService.Show<Error>("שגיאה", parameters, options);
             }
         }
     }

@@ -24,15 +24,13 @@ namespace Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Server.Controlle
 		[HttpGet("{mail}")]
 		public async Task<IActionResult> LoginUser(string mail)
 		{
-
 			User userToReturn = await _context.Users.FirstOrDefaultAsync(u => u.Email == mail.ToLower()); //האם יש אימייל שתואם למייל שהתקבל, אם כן אז לקלוט אותו
 			if (userToReturn != null)
 			{
 				HttpContext.Session.SetString("UserId", userToReturn.ID.ToString());
 				return Ok(userToReturn.ID);
 			}
-			return BadRequest("User not found");
-
+			return BadRequest("משתמש לא נמצא");
 		}
 	}
 }

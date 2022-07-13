@@ -17,20 +17,14 @@
 
     void openHow()
     {
-        var parameters = new DialogParameters();
-        //parameters.Add("currentCategory", newCategory);
-
         var options = new DialogOptions() { CloseButton = true };
-        DialogService.Show<HowToPlay>("איך משחקים", parameters, options);
+        DialogService.Show<HowToPlay>("איך משחקים", options);
     }
 
     void openAbout()
     {
-        var parameters = new DialogParameters();
-        //parameters.Add("currentCategory", newCategory);
-
         var options = new DialogOptions() { NoHeader = true , CloseButton = true };
-        DialogService.Show<About>("אודות", parameters, options);
+        DialogService.Show<About>("אודות", options);
     }
 
     void play()

@@ -46,11 +46,11 @@
             var imgdeleteResponse = await Http.PostAsJsonAsync("api/Items/deleteImages", imagesToDelete); //מחיקת התמונה
             if (imgdeleteResponse.IsSuccessStatusCode == true) //אם המחיקה הצליחה
             {
-                Console.WriteLine(imgdeleteResponse.Content.ReadAsStringAsync().Result);
+                //Console.WriteLine(imgdeleteResponse.Content.ReadAsStringAsync().Result);
             }
             else
             {
-                Console.WriteLine(imgdeleteResponse.Content.ReadAsStringAsync().Result);
+                //Console.WriteLine(imgdeleteResponse.Content.ReadAsStringAsync().Result);
             }
         }
 
@@ -65,7 +65,10 @@
         }
         else
         {
-            //WorkersList = new List<Worker>();
+            var parameters = new DialogParameters();
+            parameters.Add("Content", deleteResponse.Content.ReadAsStringAsync().Result);
+            var options = new DialogOptions() { DisableBackdropClick = true };
+            DialogService.Show<Error>("שגיאה", parameters, options);
         }
 
         MudDialog.Close(DialogResult.Ok(true));

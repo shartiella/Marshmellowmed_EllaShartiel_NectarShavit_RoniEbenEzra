@@ -1,29 +1,38 @@
 ﻿@page "/"
 @inject HttpClient Http
 @inject NavigationManager nav
+@inject IDialogService DialogService
+
 @using Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Shared.Entities
 
 <NavBar></NavBar>
-
-<h2>התחברות</h2>
-<EditForm Model="thisUser" OnValidSubmit="loginUser" OnInvalidSubmit="invalidLogin">
-    <DataAnnotationsValidator></DataAnnotationsValidator>
-    <MudTextField @bind-Value="thisUser.Email" Label="כתובת מייל" Variant="Variant.Outlined" />
-    <ValidationMessage For="@(() => thisUser.Email)" /><p>@msg</p>
-    <input type="submit" value="כניסה" class="mud-button-root mud-button mud-button-filled mud-button-filled-default mud-button-filled-size-medium mud-ripple" />
-</EditForm>
+<div id="login-box">
+    <h2>התחברות</h2>
+    <EditForm Model="thisUser" OnValidSubmit="loginUser">
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+        <MudTextField @bind-Value="thisUser.Email" Label="כתובת מייל" Variant="Variant.Filled" />
+        <ValidationMessage For="@(() => thisUser.Email)" />
+        <section class="btns-section">
+            <input type="submit" value="כניסה" class="mud-button-root mud-button mud-button-filled mud-button-filled-default mud-button-filled-size-medium mud-ripple marsh-btn marsh-btn-primary" />
+        </section>
+    </EditForm>
+</div>
 
 
 @code {
     User thisUser = new User();
 
-    string inputMail = "";
-    string msg = "";
+    //string inputMail = "admin@mail.com";
+
+    protected override void OnInitialized() //למחוק את זה
+    {
+        thisUser.Email = "admin@mail.com";
+    }
 
     async Task loginUser()
     {
         /////////////////////////////////////////////////////////////////////////////////////////////לשנות את המייל לthisUser.Email
-        var loginUser = await Http.GetAsync("api/users/" + "admin@mail.com"); //שולף משתמש לפי האימייל ופותח לו סשן
+        var loginUser = await Http.GetAsync("api/users/" + thisUser.Email); //שולף משתמש לפי האימייל ופותח לו סשן
         if (loginUser.IsSuccessStatusCode == true) //אם יש כזה והקריאה הצליחה
         {
             int userId = loginUser.Content.ReadFromJsonAsync<int>().Result;
@@ -31,49 +40,19 @@
         }
         else
         {
-            string error = loginUser.Content.ReadAsStringAsync().Result;
-            if (error == "User not found")
-            {
-                msg = "לא נמצא משתמש התואם למייל שהוזן";
-            }
-            else
-            {
-                msg = "התרחשה תקלת שרת";
-            }
+            var parameters = new DialogParameters();
+            parameters.Add("Content", loginUser.Content.ReadAsStringAsync().Result);
+            var options = new DialogOptions() { DisableBackdropClick = true };
+            DialogService.Show<Error>("שגיאה", parameters, options);
         }
     }
 
-    async Task invalidLogin()
-    {
-
-        //למחוק כל מה שיש כאן כדי שזה לא יעבוד בסוף
-
-        if (string.IsNullOrEmpty(thisUser.Email) == false) //אם יש משהו בתיבת הטקסט
-        {
-            /////////////////////////////////////////////////////////////////////////////////////////////לשנות את המייל לthisUser.Email
-            var loginUser = await Http.GetAsync("api/users/" + "admin@mail.com"); //שולף משתמש לפי האימייל ופותח לו סשן
-            if (loginUser.IsSuccessStatusCode == true) //אם יש כזה והקריאה הצליחה
-            {
-                int userId = loginUser.Content.ReadFromJsonAsync<int>().Result;
-                nav.NavigateTo("./Games/" + userId); //מעביר לעמוד משחקים עם מספר היוזר
-            }
-            else
-            {
-                string error = loginUser.Content.ReadAsStringAsync().Result;
-                if (error == "User not found")
-                {
-                    msg = "לא נמצא משתמש התואם למייל שהוזן";
-                }
-                else
-                {
-                    msg = "התרחשה תקלת שרת";
-                }
-            }
-        }
-        else
-        {
-            msg = "יש להקליד כתובת מייל";
-        }
-    }
+    //async Task invalidLogin()
+    //{
+    //    var parameters = new DialogParameters();
+    //    parameters.Add("Content", "קלט לא תקין");
+    //    var options = new DialogOptions() { DisableBackdropClick = true };
+    //    DialogService.Show<Error>("שגיאה", parameters, options);
+    //}
 
 }

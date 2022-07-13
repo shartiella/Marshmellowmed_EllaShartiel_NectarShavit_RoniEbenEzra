@@ -24,112 +24,161 @@ namespace Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Server.Controlle
             _fileStorage = fileStorage;
         }
 
-        [HttpGet] //הנתיב של השיטה יהיה הנתיב של הקונטרולר
-        public async Task<IActionResult> GetItems() //שיטה מסוג טאסק אסינכרוני שמחזירה תשובת רשת
+        [HttpGet("{Id}")]
+        public async Task<IActionResult> GetItemById(int Id) //שליפת פריט לפי איידי
         {
-            List<Item> ItemsList = await _context.Items.Include(i => i.ItemCategory).ThenInclude(c => c.CategoryName).ToListAsync();
-            //יצרנו רשימה שכל פריט בה הוא כמו שורה בטבלה שלנו ונתנו לה שם
-            //לתוך הרשימה קראנו לבסיס הנתונים ובתוכו לטבלה ואת מה שקיבלנו המרנו לרשימה באופן אסינכרוני
-            //האינקלוד הוא כדי שהקריאה תכלול גם את המידע מהטבלה השנייה במקום נאל
-            return Ok(ItemsList);
-            //החזרת תשובת רשת של הצלחה ובתוכה התוכן של הרשימה שיצרנו
-        }
-
-        [HttpGet("{Id}")]//הנתיב של השיטה הוא כנתיב הקונטרולר סלאש משהו שיפורש כפרמטר ת.ז
-        public async Task<IActionResult> GetItemById(int Id) //השיטה מקבל איידי כפרמטר אינטי
-        {
-            Item oneItem = await _context.Items.FirstOrDefaultAsync(i => i.ID == Id);
-            //יצרנו משתנה מסוג עובד שמכיל את כל הפרטים על עובד מסוים
-            //פנינו לבסיס הנתונים ולטבלה בתוכו ומתוכה לקחנו את השורה שהאיידי שלה שווה לפרמטר שקיבלנו
-            if (oneItem != null) //אם קיבלנו משהו תקין
+            if (Id > 0) //האם הגיע איידי תקין של פריט
             {
-                return Ok(oneItem); //נחזיר תשובת רשת של הצלחה עם המידע שקיבלנו
+                string SessionContent = HttpContext.Session.GetString("UserId"); //בדיקת הסשן
+                if (string.IsNullOrEmpty(SessionContent) == false) //האם מחובר משתמש בכלל
+                {
+                    Item oneItem = await _context.Items.FirstOrDefaultAsync(i => i.ID == Id); //שליפת הפריט
+                    if (oneItem != null) //אם נמצא הפריט
+                    {
+                        Category categoryOfItem = await _context.Categories.FirstOrDefaultAsync(c => c.ID == oneItem.CategoryID); //שליפת הקטגוריה
+                        Game gameOfCategory = await _context.Games.FirstOrDefaultAsync(g => g.ID == categoryOfItem.GameID); //שליפת המשחק
+                        if (gameOfCategory != null) //אם נמצא המשחק
+                        {
+                            if (gameOfCategory.UserID == Convert.ToInt32(SessionContent)) //האם המשתמש המחובר זה המשתמש הרצוי
+                            {
+                                //תוכן השיטה בפועל
+                                return Ok(oneItem);
+                            }
+                            return BadRequest("המשתמש הרצוי אינו מחובר");
+                        }
+                        return BadRequest("משחק לא נמצא");
+                    }
+                    return BadRequest("פריט לא נמצא");
+                }
+                return BadRequest("אין משתמש מחובר");
             }
-            else //אחרת - אם לא נמצא איידי תואם לפרמטר
-            {
-                return BadRequest("No such worker"); //נחזיר תשובת אי הצלחה עם משוב מחרוזתי
-            }
+            return BadRequest("בעיה בקבלת המידע");
         }
+    
 
         [HttpPost("New")]
-        public async Task<IActionResult> AddItem(Item newItem)
-        //מקבל כפרמטר את גוף הקריאה שמתקבל בהפעלת השיטה - מידע על פריט בודד
+        public async Task<IActionResult> AddItem(Item newItem) //יצירת פריט חדש
         {
-            if (newItem != null)
+            if (newItem!=null) //האם הגיע מידע על פריט
             {
-                _context.Items.Add(newItem);
-                await _context.SaveChangesAsync();
-                //הכנסת הפריט לבסיס הנתונים
+                string SessionContent = HttpContext.Session.GetString("UserId"); //בדיקת הסשן
+                if (string.IsNullOrEmpty(SessionContent) == false) //האם מחובר משתמש בכלל
+                {
+                    Category categoryOfItem = await _context.Categories.FirstOrDefaultAsync(c => c.ID == newItem.CategoryID); //שליפת הקטגוריה
+                    Game gameOfCategory = await _context.Games.FirstOrDefaultAsync(g => g.ID == categoryOfItem.GameID); //שליפת המשחק
+                    if (gameOfCategory != null) //אם נמצא המשחק
+                    {
+                        if (gameOfCategory.UserID == Convert.ToInt32(SessionContent)) //האם המשתמש המחובר זה המשתמש הרצוי
+                        {
+                            //תוכן השיטה בפועל
+                            _context.Items.Add(newItem);
+                            await _context.SaveChangesAsync();
+                            //הכנסת הפריט לבסיס הנתונים
 
-                return Ok(newItem);
+                            return Ok(newItem);
+                        }
+                        return BadRequest("המשתמש הרצוי אינו מחובר");
+                    }
+                    return BadRequest("משחק לא נמצא");
+                }
+                return BadRequest("אין משתמש מחובר");
             }
-            else
-            {
-                return BadRequest("Item was not sent");
-            }
+            return BadRequest("בעיה בקבלת המידע");
         }
-
 
 
         [HttpPost("Update")]
-        public async Task<IActionResult> UpdateItem(Item itemToUpdate)
+        public async Task<IActionResult> UpdateItem(Item itemToUpdate) //עדכון פריט
         {
-            Item ItemfromDB = await _context.Items.FirstOrDefaultAsync(i => i.ID == itemToUpdate.ID);
-
-            if (ItemfromDB != null)
+            if (itemToUpdate!=null) //האם הגיע איידי תקין של פריט
             {
-                ItemfromDB.ItemContent = itemToUpdate.ItemContent;
-                ItemfromDB.IsPicture = itemToUpdate.IsPicture;
+                string SessionContent = HttpContext.Session.GetString("UserId"); //בדיקת הסשן
+                if (string.IsNullOrEmpty(SessionContent) == false) //האם מחובר משתמש בכלל
+                {
+                    Item ItemfromDB = await _context.Items.FirstOrDefaultAsync(i => i.ID == itemToUpdate.ID); //שליפת הפריט
+                    if (ItemfromDB != null) //אם נמצא הפריט
+                    {
+                        Category categoryOfItem = await _context.Categories.FirstOrDefaultAsync(c => c.ID == ItemfromDB.CategoryID); //שליפת הקטגוריה
+                        Game gameOfCategory = await _context.Games.FirstOrDefaultAsync(g => g.ID == categoryOfItem.GameID); //שליפת המשחק
+                        if (gameOfCategory != null) //אם נמצא המשחק
+                        {
+                            if (gameOfCategory.UserID == Convert.ToInt32(SessionContent)) //האם המשתמש המחובר זה המשתמש הרצוי
+                            {
+                                //תוכן השיטה בפועל
+                                ItemfromDB.ItemContent = itemToUpdate.ItemContent;
+                                ItemfromDB.IsPicture = itemToUpdate.IsPicture;
 
-                await _context.SaveChangesAsync();
-                return Ok(ItemfromDB);
-
+                                await _context.SaveChangesAsync();
+                                return Ok(ItemfromDB);
+                            }
+                            return BadRequest("המשתמש הרצוי אינו מחובר");
+                        }
+                        return BadRequest("משחק לא נמצא");
+                    }
+                    return BadRequest("פריט לא נמצא");
+                }
+                return BadRequest("אין משתמש מחובר");
             }
-            else
-            {
-                return BadRequest("no such item");
-            }
+            return BadRequest("בעיה בקבלת המידע");
         }
 
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteItem(int id)
+        public async Task<IActionResult> DeleteItem(int id) //מחיקת פריט
         {
-            Item itemToDelete = await _context.Items.FirstOrDefaultAsync(i => i.ID == id);
-            if (itemToDelete != null)
+            if (id > 0) //האם הגיע איידי תקין של פריט
             {
-                if (itemToDelete.ItemContent.StartsWith("uploaded") == true) //אם הפריט מכיל תמונה שצריך למחוק אותה
+                string SessionContent = HttpContext.Session.GetString("UserId"); //בדיקת הסשן
+                if (string.IsNullOrEmpty(SessionContent) == false) //האם מחובר משתמש בכלל
                 {
-                    //האם יש לפחות פריט נוסף שמשתמש בה
-                    List<Item> isPictureReused = await _context.Items.Where(i => i.ItemContent == itemToDelete.ItemContent).ToListAsync();
-                    if (isPictureReused.Count > 1)
+                    Item itemToDelete = await _context.Items.FirstOrDefaultAsync(i => i.ID == id); //שליפת הפריט
+                    if (itemToDelete != null) //אם נמצא הפריט
                     {
-                        //אם יש, אז לא למחוק
-                    }
-                    else
-                    {
-                        List<string> imagesToDelete = new List<string>();
-                        imagesToDelete.Add(itemToDelete.ItemContent.Substring(14));
-                        foreach(string img in imagesToDelete)
+                        Category categoryOfItem = await _context.Categories.FirstOrDefaultAsync(c => c.ID == itemToDelete.CategoryID); //שליפת הקטגוריה
+                        Game gameOfCategory = await _context.Games.FirstOrDefaultAsync(g => g.ID == categoryOfItem.GameID); //שליפת המשחק
+                        if (gameOfCategory != null) //אם נמצא המשחק
                         {
-                            await _fileStorage.DeleteFile(img, "uploadedFiles");
+                            if (gameOfCategory.UserID == Convert.ToInt32(SessionContent)) //האם המשתמש המחובר זה המשתמש הרצוי
+                            {
+                                //תוכן השיטה בפועל
+                                if (itemToDelete.ItemContent.StartsWith("uploaded") == true) //אם הפריט מכיל תמונה שצריך למחוק אותה
+                                {
+                                    //האם יש לפחות פריט נוסף שמשתמש בה
+                                    List<Item> isPictureReused = await _context.Items.Where(i => i.ItemContent == itemToDelete.ItemContent).ToListAsync();
+                                    if (isPictureReused.Count > 1)
+                                    {
+                                        //אם יש, אז לא למחוק
+                                    }
+                                    else
+                                    {
+                                        //יצירת רשימה של תמונות למחיקה
+                                        List<string> imagesToDelete = new List<string>();
+                                        imagesToDelete.Add(itemToDelete.ItemContent.Substring(14));
+                                        foreach (string img in imagesToDelete)
+                                        {
+                                            await _fileStorage.DeleteFile(img, "uploadedFiles"); //מחיקת התמונות ברשימה
+                                        }
+                                    }
+                                }
+
+                                _context.Items.Remove(itemToDelete); //מחיקה ללא שמירה
+                                await _context.SaveChangesAsync(); //שמירה של השינויים
+
+                                return Ok(true); //מחיקת הפריט בוצעה בהצלחה
+                            }
+                            return BadRequest("המשתמש הרצוי אינו מחובר");
                         }
+                        return BadRequest("משחק לא נמצא");
                     }
+                    return BadRequest("פריט לא נמצא");
                 }
-
-                _context.Items.Remove(itemToDelete); //מחיקה ללא שמירה
-                await _context.SaveChangesAsync(); //שמירה של השינויים
-
-                return Ok(true); //החזרה של תשובה חיובית שמעידה על הצלחה של המחיקה
+                return BadRequest("אין משתמש מחובר");
             }
-            else
-            {
-                return BadRequest("no such item");
-            }
+            return BadRequest("בעיה בקבלת המידע");
         }
 
         [HttpPost("upload")]
-        public async Task<IActionResult> UploadFile([FromBody] string imageBase64)
+        public async Task<IActionResult> UploadFile([FromBody] string imageBase64) //העלאת תמונה
         {
             //לוקח תמונה ויוצר לה נתיב
             byte[] picture = Convert.FromBase64String(imageBase64);
@@ -140,12 +189,12 @@ namespace Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Server.Controlle
             }
             else
             {
-                return BadRequest("upload failed");
+                return BadRequest("העלאת תמונה כשלה");
             }
         }
 
         [HttpPost("deleteImages")]
-		public async Task<IActionResult> DeleteImages([FromBody] List<string> imagesToDelete)
+		public async Task<IActionResult> DeleteImages([FromBody] List<string> imagesToDelete) //מחיקת תמונות מרובות
 		{
             foreach(string img in imagesToDelete)
             {
@@ -164,7 +213,7 @@ namespace Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Server.Controlle
         }
 
         [HttpPost("deleteImage")]
-        public async Task<IActionResult> DeleteImage([FromBody] string imageToDelete)
+        public async Task<IActionResult> DeleteImage([FromBody] string imageToDelete) //מחיקת תמונה בודדת
         {
 
             List<Item> isPictureReused = await _context.Items.Where(i => i.ItemContent == imageToDelete).ToListAsync();

@@ -93,11 +93,11 @@
             var deleteResponse = await Http.PostAsJsonAsync("api/Items/deleteImage", imageUrl); //מחיקת התמונה
             if (deleteResponse.IsSuccessStatusCode == true) //אם המחיקה הצליחה
             {
-                Console.WriteLine(deleteResponse.Content.ReadAsStringAsync().Result);
+                //Console.WriteLine(deleteResponse.Content.ReadAsStringAsync().Result);
             }
             else
             {
-                Console.WriteLine(deleteResponse.Content.ReadAsStringAsync().Result);
+                //Console.WriteLine(deleteResponse.Content.ReadAsStringAsync().Result);
             }
         }
 
@@ -132,27 +132,24 @@
             }
             else
             {
-                var options = new DialogOptions() { CloseButton = true };
-                DialogService.Show<Error>(postResponse.Content.ReadAsStringAsync().Result, options);
+                var parameters = new DialogParameters();
+                parameters.Add("Content", postResponse.Content.ReadAsStringAsync().Result);
+                var options = new DialogOptions() { DisableBackdropClick = true };
+                DialogService.Show<Error>("שגיאה", parameters, options);
             }
         }
         else //אם הפריט קיים וצריך לעדכן אותו
         {
             if (currentItem.ItemContent.StartsWith("uploaded")) //אם כבר יש תמונה בפריט שצריך למחוק אותה מתיקיית התמונות
             {
-                //List<string> imagesToDelete = new List<string>(); //הכנה למחיקה
-
-                //imagesToDelete.Add(currentItem.ItemContent.Substring(14)); //הוספת תמונת הפריט הנוכחי למחיקה
-                //var deleteResponse = await Http.PostAsJsonAsync("api/Items/deleteImages", imagesToDelete); //מחיקת התמונה
-
                 var deleteResponse = await Http.PostAsJsonAsync("api/Items/deleteImage", currentItem.ItemContent); //מחיקת התמונה
                 if (deleteResponse.IsSuccessStatusCode == true) //אם המחיקה הצליחה
                 {
-                    Console.WriteLine(deleteResponse.Content.ReadAsStringAsync().Result);
+                    //Console.WriteLine(deleteResponse.Content.ReadAsStringAsync().Result);
                 }
                 else
                 {
-                    Console.WriteLine(deleteResponse.Content.ReadAsStringAsync().Result);
+                    //Console.WriteLine(deleteResponse.Content.ReadAsStringAsync().Result);
                 }
             }
 
@@ -171,8 +168,10 @@
             }
             else
             {
-                var options = new DialogOptions() { CloseButton = true };
-                DialogService.Show<Error>(updateResponse.Content.ReadAsStringAsync().Result, options);
+                var parameters = new DialogParameters();
+                parameters.Add("Content", updateResponse.Content.ReadAsStringAsync().Result);
+                var options = new DialogOptions() { DisableBackdropClick = true };
+                DialogService.Show<Error>("שגיאה", parameters, options);
             }
         }
     }
@@ -198,14 +197,18 @@
                 }
                 else
                 {
-                    var options = new DialogOptions() { CloseButton = true };
-                    DialogService.Show<Error>(saveResponse.Content.ReadAsStringAsync().Result, options);
+                    var parameters = new DialogParameters();
+                    parameters.Add("Content", saveResponse.Content.ReadAsStringAsync().Result);
+                    var options = new DialogOptions() { DisableBackdropClick = true };
+                    DialogService.Show<Error>("שגיאה", parameters, options);
                 }
             }
             else
             {
-                var options = new DialogOptions() { CloseButton = true };
-                DialogService.Show<Error>("הקובץ גדול מידי", options);
+                var parameters = new DialogParameters();
+                parameters.Add("Content", "הקובץ גדול מידי");
+                var options = new DialogOptions() { DisableBackdropClick = true };
+                DialogService.Show<Error>("שגיאה", parameters, options);
             }
         }
     }
