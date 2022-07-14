@@ -28,30 +28,35 @@
             }
             else //אם הפריט הוא תמונה
             {
-                <section class="pic-upload">
-                    <InputFile id="imageInput" OnChange="UploadFile" hidden multiple accept=".jpg, .jpeg, .png" />
+        <section class="pic-upload">
+            <InputFile id="imageInput" OnChange="UploadFile" hidden multiple accept=".jpg, .jpeg, .png" />
+            @if (currentItem.ItemContent.StartsWith("uploaded") == true || imageUrl.StartsWith("uploaded") == true) //אם לא העלו עדיין תמונה
+            {
+                <MudButton HtmlTag="label"
+                           Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           StartIcon="@Icons.Filled.CloudUpload"
+                           for="imageInput">
+                    החלפת תמונה
+                </MudButton>
+                <div class="img-container preview">
                     <img src=@imageUrl width="300" />
-                    @if (currentItem.ItemContent.StartsWith("uploaded") == true || imageUrl.StartsWith("uploaded") == true) //אם לא העלו עדיין תמונה
-                    {
-                        <MudButton HtmlTag="label"
-                                   Variant="Variant.Filled"
-                                   Color="Color.Primary"
-                                   StartIcon="@Icons.Filled.CloudUpload"
-                                   for="imageInput">
-                            החלפת תמונה
-                        </MudButton>
+                </div>
                     }
                     else //אם כבר יש תמונה ורוצים להחליף אותה
                     {
-                        <MudButton HtmlTag="label"
-                                   Variant="Variant.Filled"
-                                   Color="Color.Primary"
-                                   StartIcon="@Icons.Filled.CloudUpload"
-                                   for="imageInput">
-                            העלאת תמונה
-                        </MudButton>
+                    <MudButton HtmlTag="label"
+                               Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               StartIcon="@Icons.Filled.CloudUpload"
+                               for="imageInput">
+                        העלאת תמונה
+                    </MudButton>
+                    <div class="img-container">
+                        <img src=@imageUrl width="300" />
+                    </div>
                     }
-                </section>
+            </section>
             }
             <section class="btns-section">
                 <MudButton @onclick="Cancel" Variant="Variant.Outlined" Color="Color.Primary">ביטול</MudButton>

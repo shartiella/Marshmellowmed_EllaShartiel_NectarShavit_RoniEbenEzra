@@ -26,12 +26,26 @@ h4{
 }
 
 h7 {
-    font-size: 1.2em;
+    font-size: 1.5em;
     font-weight: 700;
     display: block;
+    text-align: center;
+}
+
+.loading-gif {
+    margin: 0 auto;
+    text-align: center;
+    background-color: white;
+    width: min-content;
+    height: min-content;
+    border-radius: 15px;
+    margin-top:200px;
 }
 
 
+#loadingimg {
+    margin: -150px;
+}
 
 .mud-button {
     font-size: 1.5em;
@@ -42,6 +56,10 @@ h7 {
 
 .mud-button-filled.mud-button-filled-primary:disabled {
     background: radial-gradient(#A0A0A0, #B9B9B9);
+}
+
+.mud-button-root:disabled .mud-button-label {
+    color: white;
 }
 
 .mud-button-filled.mud-button-filled-primary {
@@ -138,10 +156,22 @@ margin-top:20px;
     #games .mud-table.cell {
         font-size: 1.2em;
     }
+
+    #games .games-table {
+        border-bottom-color: white;
+        border-bottom-width: 1px;
+        border-bottom-style: solid;
+        max-width: 1150px;
+        margin:auto;
+    }
+
+
 .mud-table-root .mud-table-head .mud-table-cell {
     font-weight: 700;
     color: inherit;
     font-size: 1.3em;
+    padding-left: 0px;
+    padding-right: 0px;
 }
 
 .mud-table-root {
@@ -151,6 +181,8 @@ margin-top:20px;
     .mud-table-root .mud-table-body .mud-table-cell {
         color: inherit;
         font-size: 1.3em;
+        padding-left: 0px;
+        padding-right: 0px;
     }
 
 #games .mud-icon-button-color-primary {
@@ -189,11 +221,17 @@ section.edit-game {
 .GV .mud-icon-root.mud-svg-icon.GVno {
     background: radial-gradient(#F9726F, #B43610);
     border-radius: 7px;
+    padding: 3px;
+    outline-style: solid;
+    outline-width: thin;
 }
 
 .GV .mud-icon-root.mud-svg-icon.GVyes {
     background: radial-gradient(#7575cd, #50529F);
     border-radius: 7px;
+    padding: 3px;
+    outline-style: solid;
+    outline-width: thin;
 }
 
 .game-verifications h3 {
@@ -261,9 +299,6 @@ a, .btn-link {
         top: 0.5rem;
     }
 
-#loadingimg{
-
-}
 
 header.edit-game {
     margin: 60px;
@@ -319,7 +354,7 @@ header.edit-game {
     display: inline-block;
     margin: 10px;
     text-align: center;
-    background-color: gainsboro;
+    background-color: #E4E4E4;
     border-radius: 15px;
     vertical-align: top;
     text-align: -webkit-center;
@@ -327,10 +362,10 @@ header.edit-game {
 }
 
     .gameCategory > header {
-        background: radial-gradient(#B9B9E7, #7678CA);
+        background:linear-gradient(0.35turn,#7678CA, #B9B9E7, #7678CA);
         padding: 15px;
         text-align: center;
-        border-radius: 15px;
+        border-radius: 10px;
         text-align-last: justify;
     }
 
@@ -452,6 +487,15 @@ opacity:1;
     padding: 10px;
 }
 
+    .mud-dialog .mud-dialog-title {
+        align-self: center;
+    }
+
+    .mud-dialog .dialog-content {
+        max-width: 400px;
+        margin: auto;
+    }
+
     .mud-dialog h6 {
         font-family: Assistant;
         font-size: 2em;
@@ -465,7 +509,7 @@ opacity:1;
 
     .mud-dialog .mud-typography-body1 {
         font-family: Assistant;
-        font-size: 1.2em;
+        font-size: 1.5em;
         font-weight: 600;
         color: black;
     }
@@ -481,7 +525,9 @@ opacity:1;
     background: radial-gradient(#B9B9E7, #7678CA);
     border-radius: 10px;
     padding-left: 20px;
-    margin-left: 20px;
+    margin: 10px;
+    margin-top: 0;
+    margin-bottom: 0;
     box-shadow: 2px 2px 5px rgb(0 0 0 / 25%);
 }
 
@@ -499,11 +545,13 @@ opacity:1;
 
 .radio-group {
     margin-bottom: 20px;
+    text-align: center;
 }
 
 .btns-section {
     text-align: center;
-    width: 100%;
+/*    width: 100%;
+*/    margin: 30px;
 }
 
 .btns-section .mud-button {
@@ -512,7 +560,21 @@ opacity:1;
     margin-top: 0px;
 }
 
-.pic-upload {
+.mud-button-outlined.mud-button-outlined-primary {
+    color: #49498E;
+    border: 3px solid #49498E;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    text-align: center;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+.mud-button-outlined.mud-button-outlined-primary:hover {
+    color: #49498E;
+    border: 3px solid #49498E;
+    padding-top: 3px;
+    padding-bottom: 3px;
     text-align: center;
     margin-bottom: 20px;
     margin-top: 20px;
@@ -526,13 +588,32 @@ opacity:1;
     .pic-upload .mud-button {
         display: inline-block;
         vertical-align: middle;
-        margin-right: 20px;
+        margin-bottom: 20px;
     }
 
-.mud-main-content {
-    padding: 0px;
-    padding-bottom: 1px;
-}
+    .pic-upload .img-container {
+        background-color: #E4E4E4;
+        width: min-content;
+        margin: auto;
+        padding: 40px;
+        border-radius: 15px;
+    }
+
+    .pic-upload .img-container.preview {
+/*        background-color: #E4E4E4;
+        width: min-content;
+        margin: auto;
+        padding: 40px;
+        border-radius: 15px;*/
+    }
+        .pic-upload .img-container img {
+            width: 180px;
+        }
+
+    .mud-main-content {
+        padding: 0px;
+        padding-bottom: 70px;
+    }
 
 /*CSS ישן*/
 @import url('https://fonts.googleapis.com/css2?family=Assistant&display=swap');
@@ -558,21 +639,20 @@ nav {
     nav #right {
         text-align: right;
         display: inline;
-        padding-right: 5px
+        padding-right: 50px;
     }
 
     nav #left {
         position: absolute;
-        left: 0;
-        margin-right: 5px;
-        margin-top: 10px;
+        left: 60px;
+        margin-top: 5px;
     }
 
     nav a {
         color: white;
         font-family: 'Assistant', sans-serif;
-        font-size: large;
-        padding-left: 20px;
+        font-size: 1.5em;
+        padding-right: 50px;
     }
 
 
