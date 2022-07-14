@@ -730,10 +730,12 @@ main {
     margin-left: 20px;
     font-size: 35pt;
     font-weight: bold;
+    color: #323366;
 }
 
 #aboutPopUpContent {
     margin-top: 20px;
+    text-align: center
 }
 
     #aboutPopUpContent p {
@@ -747,7 +749,7 @@ main {
         margin-bottom: 20px;
         padding: 5px;
         display: inline-block;
-        border-radius: 70px;
+        border-radius: 10px;
         width: fit-content;
     }
 
@@ -831,7 +833,10 @@ a {
 }
 
 #howPopUpContent {
-    margin-top: 20px;
+    vertical-align: middle;
+    text-align: center;
+    margin: 15px;
+    color: #25224C;
 }
 
     #howPopUpContent p {
@@ -849,24 +854,21 @@ a {
         width: fit-content;
     }
 
-    #howPopUpContent table {
-        text-align: right;
-    }
 
-        #howPopUpContent table tr {
-        }
-
-            #howPopUpContent table tr td {
-                padding-right: 13px;
-                vertical-align: middle;
-            }
-
-            #howPopUpContent table tr th {
-                padding-right: 13px;
-                vertical-align: middle;
-                text-align: center;
-            }
 
     #howPopUpContent > img {
-        margin: 5px;
+        margin: 100px;
     }
+#slideContent{
+    display: block;
+}
+
+#TelemLink{
+color: #50529F;
+text-decoration: underline;
+}
+.headlineAbout {
+    display: inline-block;
+    margin: auto;
+    margin-top: 25px;
+}
