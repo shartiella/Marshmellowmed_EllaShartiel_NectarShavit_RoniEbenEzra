@@ -85,7 +85,7 @@
     [Parameter]
     public EventCallback<Item> UpdatedItem { get; set; } //פרמטר לעדכון קומפוננטת הפריט על עדכון לצורך שינוי התצוגה
 
-    public string imageUrl = "/Images/defaultimg.png";
+    public string imageUrl = "Images/defaultimg.png";
 
     string errorDivVisible = "";
 
@@ -99,7 +99,7 @@
             }
             else
             {
-                imageUrl = "/Images/emptyimg.PNG";
+                imageUrl = "Images/emptyimg.PNG";
             }
         }
     }
@@ -107,7 +107,7 @@
 
     async Task Cancel() //ביטול
     {
-        if (imageUrl != currentItem.ItemContent && imageUrl!= "/Images/emptyimg.PNG")//אם יש תמונה בפריט שצריך למחוק אותה מתיקיית התמונות
+        if (imageUrl != currentItem.ItemContent && imageUrl!= "Images/emptyimg.PNG")//אם יש תמונה בפריט שצריך למחוק אותה מתיקיית התמונות
         {
 
             var deleteResponse = await Http.PostAsJsonAsync("api/Items/deleteImage", imageUrl); //מחיקת התמונה
@@ -133,7 +133,7 @@
 
     async Task UpdateItem() //עדכון הפריט - בלחיצה על שמירה
     {
-        if (currentItem.IsPicture == true && imageUrl == "/Images/defaultimg.png")
+        if (currentItem.IsPicture == true && imageUrl == "Images/defaultimg.png")
         {
             errorDivVisible = "errorDiv";
         }
@@ -206,7 +206,7 @@
     {
         if (currentItem.IsPicture == true)
         {
-            if (imageUrl == "/Images/defaultimg.png")
+            if (imageUrl == "Images/defaultimg.png")
             {
                 errorDivVisible = "errorDiv";
 

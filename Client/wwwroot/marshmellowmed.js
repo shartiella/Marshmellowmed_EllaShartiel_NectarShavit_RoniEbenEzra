@@ -9472,7 +9472,7 @@ if (reversed == null) { reversed = false; }
 			if (response.ok) {
 				//חילוץ המידע של המשחק מקריאת הרשת בפורמט של ג'ייסון
 				myJson = await response.json();
-				console.log(myJson);
+				//console.log(myJson);
 				insertJasonToArray();
 				loadStartAnimation();
 		
@@ -9486,12 +9486,12 @@ if (reversed == null) { reversed = false; }
 		
 				if (error == "game not published") {
 					gameChoiceScreen.responseText.text = "משחק קיים אך לא פורסם";
-					console.log("משחק קיים אך לא פורסם");
+					//console.log("משחק קיים אך לא פורסם");
 				} else if (error == "no such game") {
-					console.log("המשחק שחיפשת אינו קיים");
+					//console.log("המשחק שחיפשת אינו קיים");
 					gameChoiceScreen.responseText.text = "המשחק שחיפשת אינו קיים";
 				} else {
-					console.log("אירעה תקלת שרת, נסו שוב");
+					//console.log("אירעה תקלת שרת, נסו שוב");
 					gameChoiceScreen.responseText.text = "אירעה תקלת שרת, נסו שוב";
 				}
 			}
@@ -9527,7 +9527,7 @@ if (reversed == null) { reversed = false; }
 					countIteamId++;
 				}
 			}
-			console.log(gameArrayBackUp);
+			//console.log(gameArrayBackUp);
 		}
 		
 		function loadStartAnimation() //טעינת אנימציית הפתיחה של המשחק
@@ -9645,7 +9645,7 @@ if (reversed == null) { reversed = false; }
 					}
 				}
 			}
-			console.log(gameArray);
+			//console.log(gameArray);
 		}
 		
 		
@@ -9935,14 +9935,14 @@ if (reversed == null) { reversed = false; }
 				var qContent;
 		
 				//אם תמונה
-				if (gameArray[2][currentQ][3] != "false") {
+				//console.log(gameArray[2][currentQ][3])
+				//console.log(gameArray[2][currentQ][0])
+				if (gameArray[2][currentQ][3] == true) {
+							//console.log("image")
 					img = new Image();
-					
-					
-					//var onlyName = gameArray[2][currentQ][0].substr(14, gameArray[2][currentQ][0].length-1);
-					console.log(gameArray[2][currentQ][0]);
+					//console.log(gameArray[2][currentQ][0]);
 					img.src = gameArray[2][currentQ][0];
-					//img.src = "https://localhost:5001/uploadedFiles"+gameArray[2][currentQ][0];
+					//img.src = "https://localhost:5001/"+gameArray[2][currentQ][0];
 		
 					qContent = new createjs.Bitmap(img).set({});
 		
@@ -9966,15 +9966,15 @@ if (reversed == null) { reversed = false; }
 							qContent.x = qContent.getBounds().width * picHeight / -2;
 							qContent.y = qContent.getBounds().height * picHeight / -2;
 						}
-						qContent.name = "g0_q" + questionNum;
-						marsh.addChild(qContent);
 					};
 		
-		
+					qContent.name = "g0_q" + questionNum;
+					marsh.addChild(qContent);
 				} else {
 					//טיפול בטקסט
 					var qTextContent;
 					qTextContent = new lib.textCon100();
+					//console.log(gameArray[2][currentQ][0].length)
 					if (gameArray[2][currentQ][0].length > 70) {
 						qTextContent.text_box.font = "45px Assistant";
 					} else if (gameArray[2][currentQ][0].length > 60) {
@@ -10009,8 +10009,8 @@ if (reversed == null) { reversed = false; }
 		
 					qTextContent.name = "g0_q" + questionNum;
 					marsh.addChild(qTextContent);
+					//טיפול בטקסט
 				}
-		
 		
 		
 		
@@ -10376,7 +10376,7 @@ if (reversed == null) { reversed = false; }
 			marshFeedback.y = -(totalHeight / mcNum * i) + totalHeight / (mcNum * 2);
 		
 		
-			if (gameArrayBackUp[2][n][3] != "true") {
+			if (gameArrayBackUp[2][n][3] == false) {
 				var qTextContent;
 		
 				qTextContent = new lib.textCon100();
@@ -10417,11 +10417,9 @@ if (reversed == null) { reversed = false; }
 				img = new Image();
 				
 					//var onlyName = gameArrayBackUp[2][n][0].substr(14, gameArray[2][currentQ][0].length-1);
-					console.log(gameArrayBackUp[2][n][0]);
+					//console.log(gameArrayBackUp[2][n][0]);
 					img.src = gameArrayBackUp[2][n][0];		
-				
-				
-				//img.src = gameArrayBackUp[2][n][0];
+				//img.src = "https://localhost:5001/"+gameArray[2][currentQ][0];
 				var qContentFeedback = new createjs.Bitmap(img).set({});
 				qContentFeedback.name = "g0_q" + n;
 		
