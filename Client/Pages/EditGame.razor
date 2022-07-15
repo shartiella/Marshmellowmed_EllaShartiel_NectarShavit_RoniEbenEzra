@@ -213,12 +213,12 @@
 
     void AddNewCategory()
     {
-        //הגדרת נתוני הפריט הדיפולטיים
+        //הגדרת נתוני הקטגוריה הדיפולטיים
         newCategory.CategoryName = "";
         newCategory.GameID = singleGame.ID;
         newCategory.CategoryItems = new List<Item>();
 
-        //הקפצת חלון עריכת הפריט החדש
+        //הקפצת חלון עריכת הקטגוריה החדשה
         var parameters = new DialogParameters();
         parameters.Add("currentCategory", newCategory);
         parameters.Add("UpdatedCategory", EventCallback.Factory.Create<Category>(this, NewCategoryAfter));
