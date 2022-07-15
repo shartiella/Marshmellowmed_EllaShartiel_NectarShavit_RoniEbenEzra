@@ -1,17 +1,44 @@
 ﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@200;300;400;500;600;700;800&display=swap');
 
-html, body {
-    /*    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-*/ font-family: 'Assistant', sans-serif;
+html {
+    font-family: 'Assistant', sans-serif;
     background-color: inherit;
-/*    direction: rtl;
-*/    /*    background-image: linear-gradient(to right, #28316E, #1D1937, #28316E);
-*/  color: black;
+/*    color: black;
+*/    height: inherit;
 }
 
-h1{
+body {
+    font-family: 'Assistant', sans-serif;
+    background-color: inherit;
+    /*    color: black;
+*/ height: inherit;
+}
 
+#app {
+    height: inherit;
+}
+
+.mud-rtl-provider.mud-application-layout-rtl {
+    height: inherit;
+}
+
+.mud-layout {
+    height: 100%;
+    width: 100%;
+    position: relative;
+}
+
+.mud-main-content {
+    padding: 0px;
+    height: inherit;
+}
+
+.edit-game > form {
+            padding-bottom: 50px;
+}
+
+h1 {
 }
 h2 {
     color: white;
@@ -75,6 +102,13 @@ h7 {
 .mud-button-filled.mud-button-filled-tertiary {
     background: radial-gradient(#F9726F, #B43610);
     color: white;
+}
+
+#login-bg {
+    background-image: url(../Images/background-img.jpg);
+    background-position: center;
+    background-size: cover;
+    height: inherit;
 }
 
 #login-box {
@@ -164,9 +198,26 @@ margin-top:20px;
         max-width: 1150px;
         margin:auto;
     }
+/*
+        #games .games-table .mud-tooltip {
+            padding: 4px 8px;
+            text-align: center;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            font-size: 12px;
+            line-height: 1.4em;
+            border-radius: var(--mud-default-borderradius);
+            z-index: var(--mud-zindex-tooltip);
+            color: var(--mud-palette-dark-text);
+            background-color: var(--mud-palette-grey-darker);
+            max-width: 100px;
+        }*/
 
-
-.mud-table-root .mud-table-head .mud-table-cell {
+.mud-table-sort-label:hover {
+    color: #b0b1ff;
+}
+    .mud-table-root .mud-table-head .mud-table-cell {
     font-weight: 700;
     color: inherit;
     font-size: 1.3em;
@@ -278,6 +329,7 @@ a, .btn-link {
 
 .validation-message {
     color: red;
+    font-size: 1.2em;
 }
 
 #blazor-error-ui {
@@ -471,9 +523,12 @@ opacity:1;
     width: inherit;
 }
 
-.item-content img{
-    max-height:100px;
-}
+    .item-content img {
+        width: auto;
+        height: auto;
+        max-height: 100px;
+        max-width: 100px;
+    }
 
 .mud-input-control-input-container{
     display:block;
@@ -485,6 +540,7 @@ opacity:1;
     border-radius: 10px;
     transition-duration: 0.5s;
     padding: 10px;
+    min-width: fit-content;
 }
 
     .mud-dialog .mud-dialog-title {
@@ -550,8 +606,14 @@ opacity:1;
 
 .btns-section {
     text-align: center;
-/*    width: 100%;
-*/    margin: 30px;
+    width: 100%;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.mud-dialog form .btns-section {
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .btns-section .mud-button {
@@ -580,10 +642,14 @@ opacity:1;
     margin-top: 20px;
 }
 
-    .pic-upload img {
-        display: inline-block;
-        vertical-align: middle;
-    }
+.pic-upload .btns-section {
+    margin: 0;
+    margin-top: 20px;
+}
+.pic-upload img {
+    display: inline-block;
+    vertical-align: middle;
+}
 
     .pic-upload .mud-button {
         display: inline-block;
@@ -591,13 +657,15 @@ opacity:1;
         margin-bottom: 20px;
     }
 
-    .pic-upload .img-container {
-        background-color: #E4E4E4;
-        width: min-content;
-        margin: auto;
-        padding: 40px;
-        border-radius: 15px;
-    }
+.pic-upload .img-container {
+    background-color: #E4E4E4;
+    margin: auto;
+    padding: 40px;
+    border-radius: 15px;
+    display: flex;
+    height: 260px;
+    width: 260px;
+}
 
     .pic-upload .img-container.preview {
 /*        background-color: #E4E4E4;
@@ -606,26 +674,57 @@ opacity:1;
         padding: 40px;
         border-radius: 15px;*/
     }
-        .pic-upload .img-container img {
-            width: 180px;
-        }
-
-    .mud-main-content {
-        padding: 0px;
-        padding-bottom: 70px;
+    .pic-upload .img-container > img {
+        width: 180px;
+        position: absolute;
+        align-self: center;
     }
 
-/*CSS ישן*/
-@import url('https://fonts.googleapis.com/css2?family=Assistant&display=swap');
+    .pic-upload .img-container.preview > img {
+        height: auto;
+        width: auto;
+        align-self: center;
+        max-height: 180px;
+        max-width: 180px;
+        margin: auto auto;
+        position: relative;
+    }
 
-nav {
-    background-image: linear-gradient(#2a2b60, #464689);
-    padding: 10px;
-    top: 0;
-    left: 0;
-    right: 0;
-    box-shadow: 0px 5px 16px rgb(0 0 0 / 25%);
-}
+    .pic-upload .img-container .errorDiv {
+        border: solid;
+        border-color: red;
+        height: 145%;
+        width: 145%;
+        z-index: 1;
+        background: rgba(255, 209, 209, 0.6);
+        border-radius: 15px;
+        margin-top: -40px;
+        margin-right: -40px;
+        padding: 128px;
+        padding-bottom: 0px;
+    }
+
+            .pic-upload .img-container .errorDiv .errorDivContent {
+                text-align: center;
+                color: #900000;
+                text-shadow: 0 0 4px white;
+                font-size: 1.5em;
+                font-weight: 600;
+                margin-right: -75px;
+                margin-top: -36px;
+                width: 145px;
+            }
+            /*CSS ישן*/
+            @import url('https://fonts.googleapis.com/css2?family=Assistant&display=swap');
+
+            nav {
+                background-image: linear-gradient(#2a2b60, #464689);
+                padding: 10px;
+                top: 0;
+                left: 0;
+                right: 0;
+                box-shadow: 0px 5px 16px rgb(0 0 0 / 25%);
+            }
 
     nav h1 {
         display: inline;
@@ -652,21 +751,37 @@ nav {
         color: white;
         font-family: 'Assistant', sans-serif;
         font-size: 1.5em;
-        padding-right: 50px;
+        padding-right: 25px;
+        padding-left: 25px;
+    }
+
+    nav .currentPage {
+        border-bottom: solid;
+        border-color: white;
+        padding-bottom: 19px;
+        border-bottom-width: 2px;
+    }
+
+    nav .notCurrentPage {
+        border-bottom: none;
     }
 
 
+   #game main {
+        width: 100%;
+        height: 500px;
+    }
 
-main {
-    width: 100%;
-    height: 500px;
-}
-
-    main iframe {
+   #game main iframe {
         width: 100%;
         height: 94%;
         position: absolute;
     }
+
+main#game {
+    height: 100%;
+    max-height: 870px;
+}
 
 .aboutPopUpClosed {
     display: none;
@@ -735,7 +850,8 @@ main {
 
 #aboutPopUpContent {
     margin-top: 20px;
-    text-align: center
+    text-align: center;
+    font-size: 1.2em;
 }
 
     #aboutPopUpContent p {
@@ -832,19 +948,19 @@ a {
     font-weight: bold;
 }
 
-#howPopUpContent {
-    vertical-align: middle;
+.howPopUpContent {
     text-align: center;
-    margin: 15px;
+    margin-bottom: 25px;
     color: #25224C;
+    font-size: 1.3em;
 }
 
-    #howPopUpContent p {
+    .howPopUpContent p {
         margin-bottom: 20px;
         margin-top: 20px;
     }
 
-    #howPopUpContent a {
+    .howPopUpContent a {
         background-color: white;
         margin-top: 10px;
         margin-bottom: 20px;
@@ -854,12 +970,20 @@ a {
         width: fit-content;
     }
 
+.slideContent img {
+    margin: auto;
+    display: block;
+}
 
+.howPopUpContent > img {
+    margin: 100px;
+}
 
-    #howPopUpContent > img {
-        margin: 100px;
-    }
-#slideContent{
+#howPopUpContent{
+    width:700px;
+
+}
+.slideContent {
     display: block;
 }
 
@@ -870,5 +994,5 @@ text-decoration: underline;
 .headlineAbout {
     display: inline-block;
     margin: auto;
-    margin-top: 25px;
+    margin-top: -10px;
 }

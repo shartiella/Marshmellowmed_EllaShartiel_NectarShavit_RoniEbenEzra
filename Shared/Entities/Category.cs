@@ -12,6 +12,7 @@ namespace Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Shared.Entities
     {
         public int ID { get; set; }
 
+        [Required(ErrorMessage = "לא ניתן לשמור קטגוריה ללא שם")]
         [StringLength(10, ErrorMessage = "מגבלת תווים - 10")]
         public string CategoryName { get; set; }
         public int GameID { get; set; }

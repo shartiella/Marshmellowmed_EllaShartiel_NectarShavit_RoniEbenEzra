@@ -5,17 +5,26 @@
 
 @using Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Shared.Entities
 
-<NavBar></NavBar>
-<div id="login-box">
-    <h2>התחברות</h2>
-    <EditForm Model="thisUser" OnValidSubmit="loginUser">
-        <DataAnnotationsValidator></DataAnnotationsValidator>
-        <MudTextField @bind-Value="thisUser.Email" Label="כתובת מייל" Variant="Variant.Filled" />
-        <ValidationMessage For="@(() => thisUser.Email)" />
-        <section class="btns-section">
-            <input type="submit" value="כניסה" class="mud-button-root mud-button mud-button-filled mud-button-filled-primary mud-button-filled-size-medium mud-ripple" />
-        </section>
-    </EditForm>
+<div id="login-bg">
+
+
+    <NavBar isPageGame="notCurrentPage" isPageEditor="currentPage"></NavBar>
+
+    <div id="login-box">
+        <h2>התחברות</h2>
+        <EditForm Model="thisUser" OnValidSubmit="loginUser">
+            <DataAnnotationsValidator></DataAnnotationsValidator>
+            <MudTextField @bind-Value="thisUser.Email" Label="כתובת מייל" Variant="Variant.Filled" />
+            <ValidationMessage For="@(() => thisUser.Email)" />
+            <section class="btns-section">
+                <input type="submit" value="כניסה" class="mud-button-root mud-button mud-button-filled mud-button-filled-primary mud-button-filled-size-medium mud-ripple" />
+            </section>
+        </EditForm>
+        <div>
+            <p>שליף - מיילים אפשריים:</p>
+            <p>admin@mail.com telem@mail.com</p>
+        </div>
+    </div>
 </div>
 
 
@@ -26,7 +35,7 @@
 
     protected async override Task OnInitializedAsync() //למחוק את זה
     {
-        thisUser.Email = "admin@mail.com"; ///למחוק
+        //thisUser.Email = "admin@mail.com"; ///למחוק
 
         var loginUserCheck = await Http.GetAsync("api/users/Check"); //בודק האם מחובר משתמש כבר
         if (loginUserCheck.IsSuccessStatusCode == true) //אם מחובר משתמש
@@ -38,7 +47,6 @@
 
     async Task loginUser()
     {
-        /////////////////////////////////////////////////////////////////////////////////////////////לשנות את המייל לthisUser.Email
         var loginUser = await Http.GetAsync("api/users/" + thisUser.Email); //שולף משתמש לפי האימייל ופותח לו סשן
         if (loginUser.IsSuccessStatusCode == true) //אם יש כזה והקריאה הצליחה
         {

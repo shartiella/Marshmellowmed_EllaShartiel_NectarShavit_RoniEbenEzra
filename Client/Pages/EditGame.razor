@@ -5,148 +5,149 @@
 
 @page "/EditGame/{gameCode:int}"
 
-<NavBar></NavBar>
-
-@if (singleGame != null) //אם נטען משחק
-{
-<EditForm Model="singleGame" OnValidSubmit="validSubmit">
-    <header class="edit-game">
-        <div class="game-name">
-            <h2>עריכת משחק - </h2>
-            @if (editingGameName == false)
-            {
-                <p class="game-name"> @singleGame.GameName</p>
-                <MudTooltip Text="עריכת שם המשחק" Arrow="true" Placement="Placement.Bottom">
-                    <MudIconButton @onclick="EditGameName" Icon="@Icons.Filled.Edit" Color="Color.Primary"></MudIconButton>
-                </MudTooltip> }
-            else
-            {
-                <MudTextField AutoFocus="true" T="string" @bind-Value="singleGame.GameName" Counter="30" MaxLength="30" HelperText="" Immediate="true" Validation="@(new Func<string, IEnumerable<string>>(MaxCharacters))" Label="" Variant="Variant.Outlined" @onfocusout="SaveGameName" @onkeydown="SaveGameNameEnter" />
-            }
-        </div>
-        <input type="submit" value="שמירה וחזרה למשחקים שלי" class="mud-button-root mud-button mud-button-filled mud-button-filled-secondary mud-button-filled-size-medium mud-ripple" />
-    </header>
-
-    <section class="edit-game">
-        <div class="game-verifications">
-            <h3>תנאים לפרסום המשחק:</h3>
-
-            <section class="GV category-number">
-                @if (categoriesCount >= 2)
-                {
-                    <MudIcon Class="GVyes" Icon="@Icons.Outlined.Check"></MudIcon>
-                }
-                else
-                {
-                    <MudIcon Class="GVno" Icon="@Icons.Outlined.Close"></MudIcon>
-                }
-                <div class="gvText">
-                    <p>בין 2-5 קטגוריות</p>
-                    <p>מספר קטגוריות: @categoriesCount.ToString()</p>
-                </div>
-            </section>
-
-            <section class="GV item-number">
-                @if (minItemCountperCat == categoriesCount && categoriesCount > 0)
-                {
-                    <MudIcon Class="GVyes" Icon="@Icons.Outlined.Check"></MudIcon>
-                }
-                else
-                {
-                    <MudIcon Class="GVno" Icon="@Icons.Outlined.Close"></MudIcon>
-                }
-
-                <div class="gvText">
-                    <p>בין 2-4 פריטים בקטגוריה</p>
-                    @if (categoriesCount - minItemCountperCat > 0)
+<NavBar isPageGame="notCurrentPage" isPageEditor="currentPage"></NavBar>
+<div class="edit-game">
+    @if (singleGame != null) //אם נטען משחק
+    {
+        <EditForm Model="singleGame" OnValidSubmit="validSubmit">
+            <header class="edit-game">
+                <div class="game-name">
+                    <h2>עריכת משחק - </h2>
+                    @if (editingGameName == false)
                     {
-                        <p>יש להוסיף פריטים ב-@(categoriesCount-minItemCountperCat) מהקטגוריות</p>
+                        <p class="game-name"> @singleGame.GameName</p>
+                        <MudTooltip Text="עריכת שם המשחק" Arrow="true" Placement="Placement.Bottom">
+                            <MudIconButton @onclick="EditGameName" Icon="@Icons.Filled.Edit" Color="Color.Primary"></MudIconButton>
+                        </MudTooltip> }
+                    else
+                    {
+                        <MudTextField AutoFocus="true" T="string" @bind-Value="singleGame.GameName" Counter="30" MaxLength="30" HelperText="" Immediate="true" Validation="@(new Func<string, IEnumerable<string>>(MaxCharacters))" Label="" Variant="Variant.Outlined" @onfocusout="SaveGameName" @onkeydown="SaveGameNameEnter" />
+                    }
+                </div>
+                <input type="submit" value="שמירה וחזרה למשחקים שלי" class="mud-button-root mud-button mud-button-filled mud-button-filled-secondary mud-button-filled-size-medium mud-ripple" />
+            </header>
+
+            <section class="edit-game">
+                <div class="game-verifications">
+                    <h3>תנאים לפרסום המשחק:</h3>
+
+                    <section class="GV category-number">
+                        @if (categoriesCount >= 2)
+                        {
+                            <MudIcon Class="GVyes" Icon="@Icons.Outlined.Check"></MudIcon>
+                        }
+                        else
+                        {
+                            <MudIcon Class="GVno" Icon="@Icons.Outlined.Close"></MudIcon>
+                        }
+                        <div class="gvText">
+                            <p>בין 2-5 קטגוריות</p>
+                            <p>מספר קטגוריות: @categoriesCount.ToString()</p>
+                        </div>
+                    </section>
+
+                    <section class="GV item-number">
+                        @if (minItemCountperCat == categoriesCount && categoriesCount > 0)
+                        {
+                            <MudIcon Class="GVyes" Icon="@Icons.Outlined.Check"></MudIcon>
+                        }
+                        else
+                        {
+                            <MudIcon Class="GVno" Icon="@Icons.Outlined.Close"></MudIcon>
+                        }
+
+                        <div class="gvText">
+                            <p>בין 2-4 פריטים בקטגוריה</p>
+                            @if (categoriesCount - minItemCountperCat > 0)
+                            {
+                                <p>יש להוסיף פריטים ב-@(categoriesCount-minItemCountperCat) מהקטגוריות</p>
+                            }
+                            else
+                            {
+                                <p>בכל הקטגוריות יש לפחות 2 פריטים</p>
+                            }
+                        </div>
+                    </section>
+
+                    <section class="GV item-total-number">
+                        @if (totalItemCount >= 10)
+                        {
+                            <MudIcon Class="GVyes" Icon="@Icons.Outlined.Check"></MudIcon>
+                        }
+                        else
+                        {
+                            <MudIcon Class="GVno" Icon="@Icons.Outlined.Close"></MudIcon>
+                        }
+
+                        <div class="gvText">
+                            <p>בין 10-20 פריטים במשחק</p>
+                            <p>מספר פריטים כולל: @totalItemCount.ToString()</p>
+                        </div>
+                    </section>
+
+                    <section class="GV publish-game-btn">
+                        @if (categoriesCount >= 2 && minItemCountperCat == categoriesCount && categoriesCount > 0 && totalItemCount >= 10) //אם הוא עומד בתנאי הפרסום
+                        {
+                            if (singleGame.IsPublished == false) //אם המשחק עוד לא פורסם
+                            {
+                                <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="PublishGame" Disabled="false">פרסום משחק</MudButton>
+                            }
+                            else
+                            {
+                                <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="UnPublishGame" Disabled="false">ביטול פרסום משחק</MudButton>
+                            }
+                        }
+                        else //אם הוא לא עומד בתנאי הפרסום
+                        {
+                            singleGame.IsPublished = false;
+                            <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="PublishGame" Disabled="true">פרסום משחק</MudButton>
+                        }
+                    </section>
+
+                </div>
+
+                <div id="categories-area">
+                    @if (singleGame.GameCategories != null)//אם קיימת רשימת קטגוריות
+                    {
+                        if (singleGame.GameCategories.Count() > 0)//אם קיימות קטגוריות
+                        {
+                            foreach (Category c in singleGame.GameCategories)
+                            {
+                                <CategoryComp CategoryAll=@c DeletedCategory="DeleteCategoryAfter" ItemChange="AfterChangeInItems"></CategoryComp>
+                            }
+
+                        }
+                        else
+                        {
+                            <p>לחצו על הכפתור כדי להוסיף קטגוריה</p>
+                        }
                     }
                     else
                     {
-                        <p>בכל הקטגוריות יש לפחות 2 פריטים</p>
+                        <p>בעיה בטעינת רשימת הקטגוריות</p>
+                    }
+                    @if (categoriesCount >= 5)//אם הגיע למספר הקטגוריות המקסימלי
+                    {
+                        <MudTooltip Text="הגעת למספר הקטגוריות המקסימלי למשחק" Arrow="true" Placement="Placement.Top">
+                            <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="AddNewCategory" Disabled="true">הוספת קטגוריה</MudButton>
+                        </MudTooltip>
+                    }
+                    else //אם אפשר עוד להוסיף קטגוריות
+                    {
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="AddNewCategory" Disabled="false">הוספת קטגוריה</MudButton>
+
                     }
                 </div>
             </section>
 
-            <section class="GV item-total-number">
-                @if (totalItemCount >= 10)
-                {
-                    <MudIcon Class="GVyes" Icon="@Icons.Outlined.Check"></MudIcon>
-                }
-                else
-                {
-                    <MudIcon Class="GVno" Icon="@Icons.Outlined.Close"></MudIcon>
-                }
+        </EditForm>
+    }
+    else //אם לא נטען משחק
+    {
+        <p>המשחק לא נמצא</p>
+    }
 
-                <div class="gvText">
-                    <p>בין 10-20 פריטים במשחק</p>
-                    <p>מספר פריטים כולל: @totalItemCount.ToString()</p>
-                </div>
-            </section>
-
-            <section class="GV publish-game-btn">
-                @if (categoriesCount >= 2 && minItemCountperCat == categoriesCount && categoriesCount > 0 && totalItemCount >= 10) //אם הוא עומד בתנאי הפרסום
-                {
-                    if (singleGame.IsPublished == false) //אם המשחק עוד לא פורסם
-                    {
-                        <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="PublishGame" Disabled="false">פרסום משחק</MudButton>
-                    }
-                    else
-                    {
-                        <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="UnPublishGame" Disabled="false">ביטול פרסום משחק</MudButton>
-                    }
-                }
-                else //אם הוא לא עומד בתנאי הפרסום
-                {
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="PublishGame" Disabled="true">פרסום משחק</MudButton>
-                }
-            </section>
-
-        </div>
-
-        <div id="categories-area">
-            @if (singleGame.GameCategories != null)//אם קיימת רשימת קטגוריות
-            {
-                if (singleGame.GameCategories.Count() > 0)//אם קיימות קטגוריות
-                {
-                    foreach (Category c in singleGame.GameCategories)
-                    {
-                        <CategoryComp CategoryAll=@c DeletedCategory="DeleteCategoryAfter" ItemChange="AfterChangeInItems"></CategoryComp>
-                    }
-
-                }
-                else
-                {
-                    <p>לחצו על הכפתור כדי להוסיף קטגוריה</p>
-                }
-            }
-            else
-            {
-                <p>בעיה בטעינת רשימת הקטגוריות</p>
-            }
-            @if (categoriesCount >= 5)//אם הגיע למספר הקטגוריות המקסימלי
-            {
-                <MudTooltip Text="הגעת למספר הקטגוריות המקסימלי למשחק" Arrow="true" Placement="Placement.Top">
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="AddNewCategory" Disabled="true">הוספת קטגוריה</MudButton>
-                </MudTooltip>
-            }
-            else //אם אפשר עוד להוסיף קטגוריות
-            {
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="AddNewCategory" Disabled="false">הוספת קטגוריה</MudButton>
-
-            }
-        </div>
-    </section>
-
-</EditForm>
-}
-else //אם לא נטען משחק
-{
-    <p>המשחק לא נמצא</p>
-}
-
-
+</div>
 
 @code {
 

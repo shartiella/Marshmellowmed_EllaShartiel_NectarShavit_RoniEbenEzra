@@ -6,7 +6,7 @@
 
 @page "/Games/{userId:int}"
 
-<NavBar></NavBar>
+<NavBar isPageGame="notCurrentPage" isPageEditor="currentPage"></NavBar>
 <div id="games">
     @if (currentUser != null)
     {
@@ -19,8 +19,8 @@
                 <DataAnnotationsValidator></DataAnnotationsValidator>
                 <p>הוספת משחק</p>
                 <MudTextField T="string" @bind-Value="newGame.GameName" Counter="30" MaxLength="30" Label="שם המשחק" Immediate="true" Validation="@(new Func<string, IEnumerable<string>>(MaxCharacters))" Variant="Variant.Filled" />
-                <ValidationMessage For="@(() => newGame.GameName)" />
                 <input type="submit" value="יצירת משחק" class="mud-button-root mud-button mud-button-filled mud-button-filled-secondary mud-button-filled-size-medium mud-ripple" />
+                <ValidationMessage For="@(() => newGame.GameName)" />
             </EditForm>
         </div>
         <div class="games-table">
@@ -32,7 +32,21 @@
                     <MudTh>עריכה</MudTh>
                     <MudTh>שכפול</MudTh>
                     <MudTh>מחיקה</MudTh>
-                    <MudTh><MudTableSortLabel SortBy="new Func<Game, object>(x=>x.IsPublished)">פרסום</MudTableSortLabel></MudTh>
+                    <MudTh>
+                        <MudTableSortLabel SortBy="new Func<Game, object>(x=>x.IsPublished)">
+                            <MudTooltip Arrow="true" Placement="Placement.Top">
+                                <ChildContent>
+                                    פרסום
+                                </ChildContent>
+                                <TooltipContent>
+                                    <MudText Style="font-family:Assistant" Typo="Typo.body1">תנאי הפרסום הם:</MudText>
+                                    <MudText Style="font-family:Assistant" Typo="Typo.body2">לפחות 2 קטגוריות</MudText>
+                                    <MudText Style="font-family:Assistant" Typo="Typo.body2">לפחות 2 פריטים בקטגוריה</MudText>
+                                    <MudText Style="font-family:Assistant" Typo="Typo.body2">ולפחות 10 פריטים במשחק</MudText>
+                                </TooltipContent>
+                            </MudTooltip>
+                        </MudTableSortLabel>
+                    </MudTh>
                 </HeaderContent>
                 <RowTemplate>
                     <MudTd DataLabel="שם המשחק">@context.GameName </MudTd>

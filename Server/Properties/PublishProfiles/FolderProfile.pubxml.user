@@ -3,4 +3,7 @@
 https://go.microsoft.com/fwlink/?LinkID=208121. 
 -->
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PublishTargetUrl>D:\OneDrive - Holon Institute of Technology\TriangleProject\Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra\Server\bin\Release\net5.0\publish\</_PublishTargetUrl>
+  </PropertyGroup>
 </Project>

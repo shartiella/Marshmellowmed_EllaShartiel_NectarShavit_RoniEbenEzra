@@ -1,0 +1,15 @@
+
+@font-face
+{
+  font-family: 'Assistant';
+src: url(https://fonts.gstatic.com/s/assistant/v8/2sDPZGJYnIjSi6H75xkZZE1I0yCmYzzQtuZnIGSV35Gu.woff2) format('woff2');}
+
+#EnterTxt {
+    border-radius: 35px;
+    color: #232859;
+    font-size: 1.5em;
+    font-weight: bold;
+    border: 6px solid #A791C7;
+    direction: rtl;
+    text-align: center;
+}

@@ -6,25 +6,35 @@
         <img id="logo" src="images/logo.png" />
     </div>
     <span id="left">
-        <a @onclick="play">משחק</a>
+        <span Class="@isPageGame">
+            <a @onclick="play">משחק</a>
+        </span>
         <a id="howToPlay" @onclick="openHow">איך משחקים?</a>
-        <a @onclick="editor">עורך</a>
-        <a id="about" @onclick="openAbout">אודות</a>
-    </span>
+        <span Class="@isPageEditor">
+            <a @onclick="editor">עורך</a>
+        </span>
+            <a id="about" @onclick="openAbout">אודות</a>
+        </span>
 </nav>
 
 @code {
 
+    [Parameter]
+    public string isPageGame { get; set; }
+
+    [Parameter]
+    public string isPageEditor { get; set; }
+
     void openHow()
     {
         var options = new DialogOptions() { CloseButton = true };
-        DialogService.Show<HowToPlay>("איך משחקים", options);
+        DialogService.Show<HowToPlay>("איך משחקים?", options);
     }
 
     void openAbout()
     {
-        var options = new DialogOptions() { NoHeader = true , CloseButton = true };
-        DialogService.Show<About>("אודות", options);
+        var options = new DialogOptions() { CloseButton = true };
+        DialogService.Show<About>("", options);
     }
 
     void play()

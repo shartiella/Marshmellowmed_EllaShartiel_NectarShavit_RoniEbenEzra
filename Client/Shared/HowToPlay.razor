@@ -1,32 +1,34 @@
-﻿<h2 class="howH2">איך משחקים?</h2>
+﻿<div id="howPopUpContent">
+    <MudCarousel Class="mud-width-full" Style="height:470px" ShowArrows="true" ShowBullets="true" AutoCycle="false" TData="object">
+        <MudCarouselItem Transition="transition">
+            <div class="slideContent" style="height:100%">
+                <div class="howPopUpContent">
+                    יש ללחוץ על השיפוד המתאים על מנת למיין את המרשמלו לקטגוריה הנכונה.
+                    <br />אם המרשמלו תואם לקטגוריה הוא יצלה במידה הנכונה ויתווסף לשיפוד.
+                </div>
 
-
-<MudCarousel Class="mud-width-full" Style="height:200px;" ShowArrows="true" ShowBullets="true" AutoCycle="false" TData="object">
-    <MudCarouselItem Transition="transition">
-        <div id="slideContent" style="height:100%">
-            <div id="howPopUpContent">יש ללחוץ על השיפוד המתאים על מנת למיין את המרשמלו לקטגוריה הנכונה. <br />אם המרשמלו תואם לקטגוריה הוא יצלה במידה הנכונה ויתווסף לשיפוד.</div>
-
-            <img src="/Images/win.gif" />
-        </div>
-    </MudCarouselItem>
-    <MudCarouselItem Transition="transition">
-        <div id="slideContent">
-            <div id="howPopUpContent">
-                אם המרשמלו לא מתאים לקטגוריה הוא ישרף ויחזור שוב בהמשך.
+                <img src="Images/win.gif" />
             </div>
-            <img src="/Images/loose.gif" />
-        </div>
-    </MudCarouselItem>
-    <MudCarouselItem Transition="transition">
-        <div id="slideContent" style="height:100%">
-            <div id="howPopUpContent">
-                ניתן לשנות את מהירות תנועת המרשמלו בכל זמן נתון במהלך המשחק.<br />
-                ניתן לעצור ולהגדיל את המרשמלו באמצעות מעבר עכבר.
+        </MudCarouselItem>
+        <MudCarouselItem Transition="transition">
+            <div class="slideContent">
+                <div class="howPopUpContent">
+                    אם המרשמלו לא מתאים לקטגוריה הוא ישרף ויחזור שוב בהמשך.
+                </div>
+                <img src="Images/loose.gif" />
             </div>
-            <img src="Images/mouseAndSpeed.gif" />
-        </div>
-    </MudCarouselItem>
-</MudCarousel>
+        </MudCarouselItem>
+        <MudCarouselItem Transition="transition">
+            <div class="slideContent" style="height:100%">
+                <div class="howPopUpContent">
+                    ניתן לשנות את מהירות תנועת המרשמלו בכל זמן נתון במהלך המשחק.<br />
+                    ניתן לעצור ולהגדיל את המרשמלו באמצעות מעבר עכבר.
+                </div>
+                <img src="Images/mouseAndSpeed.gif" />
+            </div>
+        </MudCarouselItem>
+    </MudCarousel>
+</div>
 
 @code {
     private Transition transition = Transition.Slide;

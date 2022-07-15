@@ -13,7 +13,7 @@ namespace Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Shared.Entities
     {
         public int ID { get; set; }
 
-        [Required(ErrorMessage ="שדה חובה")]
+        [Required(ErrorMessage ="נא להזין כתובת מייל")]
         [EmailAddress(ErrorMessage ="נא להכניס כתובת מייל תקינה")]
         public string Email { get; set; }
         public string FirstName { get; set; }

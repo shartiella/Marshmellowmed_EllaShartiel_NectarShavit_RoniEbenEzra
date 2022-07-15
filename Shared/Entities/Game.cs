@@ -12,7 +12,7 @@ namespace Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Shared.Entities
     {
         public int ID { get; set; }
 
-        [Required(ErrorMessage = "שדה חובה")]
+        [Required(ErrorMessage = "לא ניתן לשמור משחק ללא שם")]
         [StringLength(30,ErrorMessage ="מגבלת תווים - 30")]
         public string GameName { get; set; }
         public int GameCode { get; set; }

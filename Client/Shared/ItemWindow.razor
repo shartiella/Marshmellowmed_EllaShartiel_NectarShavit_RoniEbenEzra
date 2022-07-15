@@ -6,7 +6,7 @@
 <MudDialog>
     <DialogContent>
         @*<MudText>@ContentText</MudText>*@
-        <EditForm Model="currentItem" OnValidSubmit="UpdateItem">
+        <EditForm Model="currentItem" OnValidSubmit="UpdateItem" OnInvalidSubmit="invalid">
             <DataAnnotationsValidator></DataAnnotationsValidator>
             @*<MudRadioGroup @bind-SelectedOption="@SelectedOption">
             <MudRadio Option="true" Color="Color.Primary">טקסט</MudRadio>
@@ -28,35 +28,45 @@
             }
             else //אם הפריט הוא תמונה
             {
-        <section class="pic-upload">
-            <InputFile id="imageInput" OnChange="UploadFile" hidden multiple accept=".jpg, .jpeg, .png" />
-            @if (currentItem.ItemContent.StartsWith("uploaded") == true || imageUrl.StartsWith("uploaded") == true) //אם לא העלו עדיין תמונה
-            {
-                <MudButton HtmlTag="label"
-                           Variant="Variant.Filled"
-                           Color="Color.Primary"
-                           StartIcon="@Icons.Filled.CloudUpload"
-                           for="imageInput">
-                    החלפת תמונה
-                </MudButton>
-                <div class="img-container preview">
-                    <img src=@imageUrl width="300" />
-                </div>
+                <section class="pic-upload">
+                    <InputFile id="imageInput" OnChange="UploadFile" hidden multiple accept=".jpg, .jpeg, .png" />
+                    @if (currentItem.ItemContent.StartsWith("uploaded") == true || imageUrl.StartsWith("uploaded") == true) //אם לא העלו עדיין תמונה
+                    {
+                        <div class="btns-section">
+                            <MudButton HtmlTag="label"
+                                       Variant="Variant.Filled"
+                                       Color="Color.Primary"
+                                       StartIcon="@Icons.Filled.CloudUpload"
+                                       for="imageInput">
+                                החלפת תמונה
+                            </MudButton>
+                        </div>
+                        <div class="img-container preview">
+                            <img src=@imageUrl width="300" />
+                        </div>
                     }
                     else //אם כבר יש תמונה ורוצים להחליף אותה
                     {
-                    <MudButton HtmlTag="label"
-                               Variant="Variant.Filled"
-                               Color="Color.Primary"
-                               StartIcon="@Icons.Filled.CloudUpload"
-                               for="imageInput">
-                        העלאת תמונה
-                    </MudButton>
-                    <div class="img-container">
-                        <img src=@imageUrl width="300" />
-                    </div>
+                        <div class="btns-section">
+                            <MudButton HtmlTag="label"
+                                       Variant="Variant.Filled"
+                                       Color="Color.Primary"
+                                       StartIcon="@Icons.Filled.CloudUpload"
+                                       for="imageInput">
+                                העלאת תמונה
+                            </MudButton>
+                        </div>
+                        <div class="img-container">
+                            <img src=@imageUrl width="300" />
+                            <div class="@errorDivVisible">
+                                <div class="errorDivContent">
+                                    <MudIcon Icon="@Icons.Filled.Error" Size="Size.Large"/>
+                                    <p>לא ניתן לשמור פריט ללא תוכן</p>
+                                </div>
+                            </div>
+                        </div>
                     }
-            </section>
+                </section>
             }
             <section class="btns-section">
                 <MudButton @onclick="Cancel" Variant="Variant.Outlined" Color="Color.Primary">ביטול</MudButton>
@@ -65,7 +75,6 @@
         </EditForm>
     </DialogContent>
     <DialogActions>
-        @*<MudButton Color="Color.Primary" OnClick="Submit">שמירה</MudButton>*@
     </DialogActions>
 </MudDialog>
 @code {
@@ -77,6 +86,8 @@
     public EventCallback<Item> UpdatedItem { get; set; } //פרמטר לעדכון קומפוננטת הפריט על עדכון לצורך שינוי התצוגה
 
     public string imageUrl = "/Images/defaultimg.png";
+
+    string errorDivVisible = "";
 
     protected override void OnInitialized()
     {
@@ -122,67 +133,91 @@
 
     async Task UpdateItem() //עדכון הפריט - בלחיצה על שמירה
     {
-
-        if (currentItem.ID == 0) //אם הפריט הוא חדש וצריך ליצור אותו
+        if (currentItem.IsPicture == true && imageUrl == "/Images/defaultimg.png")
         {
-            //שמירת הפריט החדש עם הנתונים שלו בבסיס הנתונים
-
-            if (currentItem.IsPicture == true) //אם זה תמונה
-            {
-                currentItem.ItemContent = imageUrl; //שמירת תמונת התצוגה המקדימה בתור התמונה הסופית של הפריט
-            }
-
-            var postResponse = await Http.PostAsJsonAsync("api/Items/New", currentItem); //יצירת פריט חדש וריק
-            if (postResponse.IsSuccessStatusCode == true)
-            {
-                currentItem = postResponse.Content.ReadFromJsonAsync<Item>().Result; //קליטת הפריט החדש מהטבלה
-                await UpdatedItem.InvokeAsync(currentItem); //עדכון של קומפוננטת פריט
-                MudDialog.Close(DialogResult.Ok(true)); //סגירת החלון
-            }
-            else
-            {
-                var parameters = new DialogParameters();
-                parameters.Add("Content", postResponse.Content.ReadAsStringAsync().Result);
-                var options = new DialogOptions() { DisableBackdropClick = true };
-                DialogService.Show<Error>("שגיאה", parameters, options);
-            }
+            errorDivVisible = "errorDiv";
         }
-        else //אם הפריט קיים וצריך לעדכן אותו
+        else
         {
-            if (currentItem.ItemContent.StartsWith("uploaded")) //אם כבר יש תמונה בפריט שצריך למחוק אותה מתיקיית התמונות
+            if (currentItem.ID == 0) //אם הפריט הוא חדש וצריך ליצור אותו
             {
-                var deleteResponse = await Http.PostAsJsonAsync("api/Items/deleteImage", currentItem.ItemContent); //מחיקת התמונה
-                if (deleteResponse.IsSuccessStatusCode == true) //אם המחיקה הצליחה
+                //שמירת הפריט החדש עם הנתונים שלו בבסיס הנתונים
+
+                if (currentItem.IsPicture == true) //אם זה תמונה
                 {
-                    //Console.WriteLine(deleteResponse.Content.ReadAsStringAsync().Result);
+                    currentItem.ItemContent = imageUrl; //שמירת תמונת התצוגה המקדימה בתור התמונה הסופית של הפריט
+                }
+
+                var postResponse = await Http.PostAsJsonAsync("api/Items/New", currentItem); //יצירת פריט חדש וריק
+                if (postResponse.IsSuccessStatusCode == true)
+                {
+                    currentItem = postResponse.Content.ReadFromJsonAsync<Item>().Result; //קליטת הפריט החדש מהטבלה
+                    await UpdatedItem.InvokeAsync(currentItem); //עדכון של קומפוננטת פריט
+                    MudDialog.Close(DialogResult.Ok(true)); //סגירת החלון
                 }
                 else
                 {
-                    //Console.WriteLine(deleteResponse.Content.ReadAsStringAsync().Result);
+                    var parameters = new DialogParameters();
+                    parameters.Add("Content", postResponse.Content.ReadAsStringAsync().Result);
+                    var options = new DialogOptions() { DisableBackdropClick = true };
+                    DialogService.Show<Error>("שגיאה", parameters, options);
                 }
             }
-
-            if (currentItem.IsPicture == true) //אם זה תמונה
+            else //אם הפריט קיים וצריך לעדכן אותו
             {
-                currentItem.ItemContent = imageUrl; //השמת התמונה החדשה בתוכן הפריט
+                if (currentItem.ItemContent.StartsWith("uploaded")) //אם כבר יש תמונה בפריט שצריך למחוק אותה מתיקיית התמונות
+                {
+                    var deleteResponse = await Http.PostAsJsonAsync("api/Items/deleteImage", currentItem.ItemContent); //מחיקת התמונה
+                    if (deleteResponse.IsSuccessStatusCode == true) //אם המחיקה הצליחה
+                    {
+                        //Console.WriteLine(deleteResponse.Content.ReadAsStringAsync().Result);
+                    }
+                    else
+                    {
+                        //Console.WriteLine(deleteResponse.Content.ReadAsStringAsync().Result);
+                    }
+                }
+
+                if (currentItem.IsPicture == true) //אם זה תמונה
+                {
+                    currentItem.ItemContent = imageUrl; //השמת התמונה החדשה בתוכן הפריט
+                }
+
+                var updateResponse = await Http.PostAsJsonAsync("api/Items/Update", currentItem); //קריאת עדכון לטבלת הפריטים
+
+                if (updateResponse.IsSuccessStatusCode == true)
+                {
+                    currentItem = updateResponse.Content.ReadFromJsonAsync<Item>().Result; //קבלת הפריט המעודכן מבסיס הנתונים
+                    await UpdatedItem.InvokeAsync(currentItem); //עדכון של קומפוננטת פריט
+                    MudDialog.Close(DialogResult.Ok(true)); //סגירת החלון
+                }
+                else
+                {
+                    var parameters = new DialogParameters();
+                    parameters.Add("Content", updateResponse.Content.ReadAsStringAsync().Result);
+                    var options = new DialogOptions() { DisableBackdropClick = true };
+                    DialogService.Show<Error>("שגיאה", parameters, options);
+                }
             }
+        }
+    }
 
-            var updateResponse = await Http.PostAsJsonAsync("api/Items/Update", currentItem); //קריאת עדכון לטבלת הפריטים
-
-            if (updateResponse.IsSuccessStatusCode == true)
+    async Task invalid()
+    {
+        if (currentItem.IsPicture == true)
+        {
+            if (imageUrl == "/Images/defaultimg.png")
             {
-                currentItem = updateResponse.Content.ReadFromJsonAsync<Item>().Result; //קבלת הפריט המעודכן מבסיס הנתונים
-                await UpdatedItem.InvokeAsync(currentItem); //עדכון של קומפוננטת פריט
-                MudDialog.Close(DialogResult.Ok(true)); //סגירת החלון
+                errorDivVisible = "errorDiv";
+
             }
             else
             {
-                var parameters = new DialogParameters();
-                parameters.Add("Content", updateResponse.Content.ReadAsStringAsync().Result);
-                var options = new DialogOptions() { DisableBackdropClick = true };
-                DialogService.Show<Error>("שגיאה", parameters, options);
+                UpdateItem();
             }
+
         }
+
     }
 
     long maxFileSize = 4194304; //גודל תמונה מקסימלי
@@ -203,6 +238,7 @@
                 {
                     string resizeUrl = saveResponse.Content.ReadAsStringAsync().Result; //שליפת נתיב התמונה
                     imageUrl = resizeUrl; //הצגה בתצוגה מקדימה
+                    errorDivVisible = "";
                 }
                 else
                 {
@@ -222,11 +258,11 @@
         }
     }
 
-    void SaveItemEnter(KeyboardEventArgs e)
+    async Task SaveItemEnter(KeyboardEventArgs e)
     {
         if (e.Code == "Enter" || e.Code == "NumpadEnter")
         {
-            UpdateItem();
+            await UpdateItem();
         }
     }
 }

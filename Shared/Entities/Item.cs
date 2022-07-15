@@ -12,6 +12,7 @@ namespace Marshmellowmed_EllaShartiel_NectarShavit_RoniEbenEzra.Shared.Entities
     {
         public int ID { get; set; }
 
+        [Required(ErrorMessage = "לא ניתן לשמור פריט ללא תוכן")]
         [StringLength(100, ErrorMessage = "מגבלת תווים - 100")]
         public string ItemContent { get; set; }
         public bool IsPicture { get; set; }
