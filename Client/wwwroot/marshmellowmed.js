@@ -8,7 +8,7 @@ var loadedGoogleCount = 0;
 var gFontsUpdateCacheList = [];
 var tFontsUpdateCacheList = [];
 lib.ssMetadata = [
-		{name:"marshmellowmed_atlas_1", frames: [[1539,0,364,432],[1489,1607,339,155],[0,1746,311,164],[1974,932,70,70],[1974,1004,70,70],[1973,1076,70,70],[1801,1360,219,245],[1268,1478,219,245],[1268,1372,531,104],[2018,0,24,23],[1905,0,111,111],[1268,992,549,176],[1663,932,44,47],[1986,220,44,68],[1709,932,44,47],[1986,290,44,68],[1755,932,44,47],[1905,220,79,68],[1819,1114,44,47],[1905,290,79,68],[1865,1114,44,47],[1905,360,79,68],[1911,1114,44,47],[1649,1478,79,68],[1730,1478,44,41],[1986,360,44,59],[1905,113,105,105],[1819,932,153,97],[2018,25,24,23],[1268,1170,388,200],[1658,1170,384,188],[1539,932,73,39],[1489,1478,158,59],[1819,1031,152,81],[2012,113,29,7],[2018,50,18,8],[1539,434,476,260],[1539,696,486,234],[0,992,1266,752],[0,0,1537,990],[1614,932,47,47]]}
+		{name:"marshmellowmed_atlas_1", frames: [[1268,0,364,432],[1268,1216,339,155],[1609,1216,311,164],[1974,886,70,70],[1973,1092,70,70],[1922,1251,70,70],[1746,392,219,245],[1756,639,219,245],[1268,1110,531,104],[2024,0,24,23],[1819,985,111,111],[1268,932,549,176],[1994,1251,44,47],[1977,602,44,68],[1994,1300,44,47],[1977,672,44,68],[1922,1323,44,47],[1967,392,79,68],[1968,1349,44,47],[1967,462,79,68],[1922,1372,44,47],[1967,532,79,68],[1428,1373,44,47],[1922,1181,79,68],[1756,886,44,41],[1977,742,44,59],[1932,985,105,105],[1819,886,153,97],[2024,25,24,23],[1634,0,388,200],[1634,202,384,188],[0,0,1266,752],[1634,392,73,39],[1268,1373,158,59],[1819,1098,152,81],[1709,392,29,7],[2024,50,18,8],[1268,434,476,260],[1268,696,486,234],[0,754,1266,752],[1977,803,47,47]]}
 ];
 
 
@@ -151,8 +151,8 @@ lib.tfontAvailable = function(family, totalTypekitCount) {
 
 
 
-(lib.CachedBmp_34 = function() {
-	this.initialize(img.CachedBmp_34);
+(lib.CachedBmp_93 = function() {
+	this.initialize(img.CachedBmp_93);
 }).prototype = p = new cjs.Bitmap();
 p.nominalBounds = new cjs.Rectangle(0,0,3073,1979);
 
@@ -309,77 +309,77 @@ p.nominalBounds = new cjs.Rectangle(0,0,2513,914);
 
 
 
-(lib.CachedBmp_11 = function() {
+(lib.CachedBmp_92 = function() {
 	this.initialize(ss["marshmellowmed_atlas_1"]);
 	this.gotoAndStop(29);
 }).prototype = p = new cjs.Sprite();
 
 
 
-(lib.CachedBmp_10 = function() {
+(lib.CachedBmp_94 = function() {
 	this.initialize(ss["marshmellowmed_atlas_1"]);
 	this.gotoAndStop(30);
 }).prototype = p = new cjs.Sprite();
 
 
 
-(lib.CachedBmp_8 = function() {
+(lib.CachedBmp_90 = function() {
 	this.initialize(ss["marshmellowmed_atlas_1"]);
 	this.gotoAndStop(31);
 }).prototype = p = new cjs.Sprite();
 
 
 
-(lib.CachedBmp_7 = function() {
+(lib.CachedBmp_8 = function() {
 	this.initialize(ss["marshmellowmed_atlas_1"]);
 	this.gotoAndStop(32);
 }).prototype = p = new cjs.Sprite();
 
 
 
-(lib.CachedBmp_6 = function() {
+(lib.CachedBmp_7 = function() {
 	this.initialize(ss["marshmellowmed_atlas_1"]);
 	this.gotoAndStop(33);
 }).prototype = p = new cjs.Sprite();
 
 
 
-(lib.CachedBmp_5 = function() {
+(lib.CachedBmp_6 = function() {
 	this.initialize(ss["marshmellowmed_atlas_1"]);
 	this.gotoAndStop(34);
 }).prototype = p = new cjs.Sprite();
 
 
 
-(lib.CachedBmp_4 = function() {
+(lib.CachedBmp_5 = function() {
 	this.initialize(ss["marshmellowmed_atlas_1"]);
 	this.gotoAndStop(35);
 }).prototype = p = new cjs.Sprite();
 
 
 
-(lib.CachedBmp_3 = function() {
+(lib.CachedBmp_4 = function() {
 	this.initialize(ss["marshmellowmed_atlas_1"]);
 	this.gotoAndStop(36);
 }).prototype = p = new cjs.Sprite();
 
 
 
-(lib.CachedBmp_2 = function() {
+(lib.CachedBmp_3 = function() {
 	this.initialize(ss["marshmellowmed_atlas_1"]);
 	this.gotoAndStop(37);
 }).prototype = p = new cjs.Sprite();
 
 
 
-(lib.CachedBmp_9 = function() {
+(lib.CachedBmp_2 = function() {
 	this.initialize(ss["marshmellowmed_atlas_1"]);
 	this.gotoAndStop(38);
 }).prototype = p = new cjs.Sprite();
 
 
 
-(lib.Bitmap1 = function() {
+(lib.CachedBmp_9 = function() {
 	this.initialize(ss["marshmellowmed_atlas_1"]);
 	this.gotoAndStop(39);
 }).prototype = p = new cjs.Sprite();
@@ -1081,14 +1081,14 @@ if (reversed == null) { reversed = false; }
 
 	// Layer_1
 	this.shape = new cjs.Shape();
-	this.shape.graphics.lf(["#25224C","#383E87"],[0,1],-304.2,0,220.9,0).s().p("A+BQrQh3gBhUhTQhUhVAAh3IAA4VQAAh3BUhVQBUhUB3AAMA8DAAAQB3AABUBUQBUBVAAB3IAAYVQAAB3hUBVQhUBTh3ABg");
-	this.shape.setTransform(304.2,106.65);
+	this.shape.graphics.lf(["#25224C","#383E87"],[0,1],-267,73,258.1,73).s().p("EgpcAYyQh3AAhVhUQhUhUAAh3MAABgolQAAh3BUhUQBUhUB3AAMBS5AAAQB4AABUBUQBUBUAAB3MgABAolQAAB3hUBUQhUBUh3AAg");
+	this.shape.setTransform(267.075,116);
 
 	this.timeline.addTween(cjs.Tween.get(this.shape).wait(1));
 
 	this._renderFirstFrame();
 
-}).prototype = getMCSymbolPrototype(lib.gameChoiceWindowBG, new cjs.Rectangle(83.3,0,441.8,213.3), null);
+}).prototype = getMCSymbolPrototype(lib.gameChoiceWindowBG, new cjs.Rectangle(-27,-42.6,588.2,317.20000000000005), null);
 
 
 (lib.gameChoiceBGtrees = function(mode,startPosition,loop,reversed) {
@@ -1103,7 +1103,7 @@ if (reversed == null) { reversed = false; }
 	cjs.MovieClip.apply(this,[props]);
 
 	// Layer_1
-	this.instance = new lib.CachedBmp_34();
+	this.instance = new lib.CachedBmp_93();
 	this.instance.setTransform(0,0,0.5,0.5);
 
 	this.timeline.addTween(cjs.Tween.get(this.instance).wait(1));
@@ -2693,7 +2693,7 @@ if (reversed == null) { reversed = false; }
 	cjs.MovieClip.apply(this,[props]);
 
 	// Layer_4
-	this.instance = new lib.CachedBmp_10();
+	this.instance = new lib.CachedBmp_94();
 	this.instance.setTransform(-77.9,-49.6,0.5,0.5);
 
 	this.timeline.addTween(cjs.Tween.get(this.instance).wait(1));
@@ -2713,7 +2713,7 @@ if (reversed == null) { reversed = false; }
 	this.timeline.addTween(cjs.Tween.get(this.shape_1).wait(1));
 
 	// Layer_7
-	this.instance_1 = new lib.CachedBmp_11();
+	this.instance_1 = new lib.CachedBmp_92();
 	this.instance_1.setTransform(-116.45,-56.7,0.5,0.5);
 
 	this.timeline.addTween(cjs.Tween.get(this.instance_1).wait(1));
@@ -2755,7 +2755,7 @@ if (reversed == null) { reversed = false; }
 	mask.setTransform(362.4558,240.5598);
 
 	// Layer_3
-	this.instance = new lib.CachedBmp_9();
+	this.instance = new lib.CachedBmp_90();
 	this.instance.setTransform(35.9,16.6,0.5,0.5);
 
 	var maskedShapeInstanceList = [this.instance];
@@ -5892,7 +5892,7 @@ if (reversed == null) { reversed = false; }
 
 	this._renderFirstFrame();
 
-}).prototype = getMCSymbolPrototype(lib.gameChoiceWindow, new cjs.Rectangle(44.3,-39,524,295), null);
+}).prototype = getMCSymbolPrototype(lib.gameChoiceWindow, new cjs.Rectangle(-66,-81.6,670,398), null);
 
 
 (lib.gameBG = function(mode,startPosition,loop,reversed) {
@@ -7835,21 +7835,21 @@ if (reversed == null) { reversed = false; }
 	props.reversed = reversed;
 	cjs.MovieClip.apply(this,[props]);
 
-	// Layer_1
+	// bonfireMC
 	this.instance = new lib.bonfireMC();
-	this.instance.setTransform(926.7,593.95,1,1,0,0,0,399.9,480.8);
+	this.instance.setTransform(926.7,614.95,1,1,0,0,0,399.9,480.8);
 
+	this.timeline.addTween(cjs.Tween.get(this.instance).wait(1));
+
+	// Layer_1
 	this.instance_1 = new lib.gameChoiceBGground();
-	this.instance_1.setTransform(883.9,887,1,1,0,0,0,883.9,198.1);
+	this.instance_1.setTransform(30.7,646.75);
 
-	this.instance_2 = new lib.gameChoiceBGtrees();
-	this.instance_2.setTransform(928.4,494.9,1,1,0,0,0,768.2,494.9);
-
-	this.timeline.addTween(cjs.Tween.get({}).to({state:[{t:this.instance_2},{t:this.instance_1},{t:this.instance}]}).wait(1));
+	this.timeline.addTween(cjs.Tween.get(this.instance_1).wait(1));
 
 	this._renderFirstFrame();
 
-}).prototype = getMCSymbolPrototype(lib.pauseBG, new cjs.Rectangle(0,0,1767.7,1085.2), null);
+}).prototype = getMCSymbolPrototype(lib.pauseBG, new cjs.Rectangle(30.7,259.2,1767.7,783.8), null);
 
 
 (lib.gameChoiceScreen = function(mode,startPosition,loop,reversed) {
@@ -7870,7 +7870,7 @@ if (reversed == null) { reversed = false; }
 	this.responseText.lineHeight = 28;
 	this.responseText.lineWidth = 385;
 	this.responseText.parent = this;
-	this.responseText.setTransform(661.3426,193.7,0.8562,0.8562);
+	this.responseText.setTransform(639.9926,193.7,0.8562,0.8562);
 	if(!lib.properties.webfonts['Assistant']) {
 		lib.webFontTxtInst['Assistant'] = lib.webFontTxtInst['Assistant'] || [];
 		lib.webFontTxtInst['Assistant'].push(this.responseText);
@@ -7879,14 +7879,14 @@ if (reversed == null) { reversed = false; }
 	this.EnterTxt = new lib.an_TextInput({'id': 'EnterTxt', 'value':'', 'disabled':false, 'visible':true, 'class':'ui-textinput'});
 
 	this.EnterTxt.name = "EnterTxt";
-	this.EnterTxt.setTransform(661.6,164.75,2.4805,2.4805,0,0,0,50.1,11.1);
+	this.EnterTxt.setTransform(640.25,164.75,2.4805,2.4805,0,0,0,50.1,11.1);
 
 	this.text = new cjs.Text("משחקים לדוגמא: 101, 102", "normal 400 16px 'Assistant'", "#FFFFFF");
 	this.text.textAlign = "center";
 	this.text.lineHeight = 27;
 	this.text.lineWidth = 385;
 	this.text.parent = this;
-	this.text.setTransform(661.3426,261.9,0.8562,0.8562);
+	this.text.setTransform(639.9926,261.9,0.8562,0.8562);
 	if(!lib.properties.webfonts['Assistant']) {
 		lib.webFontTxtInst['Assistant'] = lib.webFontTxtInst['Assistant'] || [];
 		lib.webFontTxtInst['Assistant'].push(this.text);
@@ -7897,7 +7897,7 @@ if (reversed == null) { reversed = false; }
 	this.text_1.lineHeight = 48;
 	this.text_1.lineWidth = 385;
 	this.text_1.parent = this;
-	this.text_1.setTransform(661.3686,97.05,0.8046,0.8046);
+	this.text_1.setTransform(640.0186,97.05,0.8046,0.8046);
 	if(!lib.properties.webfonts['Assistant']) {
 		lib.webFontTxtInst['Assistant'] = lib.webFontTxtInst['Assistant'] || [];
 		lib.webFontTxtInst['Assistant'].push(this.text_1);
@@ -7907,12 +7907,12 @@ if (reversed == null) { reversed = false; }
 
 	// Layer_1
 	this.shape = new cjs.Shape();
-	this.shape.graphics.f().ls(["#DFD6EC","#E3DBEE","#AD94C6","#FFFFFF","#FAF8FC","#E9E4F2","#D1C4E2","#BDA9D2"],[0,0.224,0.463,0.808,0.843,0.894,0.957,1],-135.4,0,135.5,0).ss(6).p("Aw3D1MAhvAAAQBmAABHhIQBIhHAAhmQAAhkhIhIQhHhIhmAAMghvAAAQhmAAhHBIQhIBIAABkQAABmBIBHQBHBIBmAAg");
-	this.shape.setTransform(661.381,162.6937,0.854,0.854);
+	this.shape.graphics.f().ls(["#DFD6EC","#E3DBEE","#AD94C6","#FFFFFF","#FAF8FC","#E9E4F2","#D1C4E2","#BDA9D2"],[0,0.224,0.463,0.808,0.843,0.894,0.957,1],-115.6,0,115.7,0).ss(6).p("AuaDRIc0AAQBXAAA9g9QA9g9AAhXQAAhVg9g+Qg9g9hXAAI80AAQhWAAg9A9Qg9A+AABVQAABXA9A9QA9A9BWAAg");
+	this.shape.setTransform(640.025,162.7);
 
 	this.shape_1 = new cjs.Shape();
-	this.shape_1.graphics.f("#FFFFFF").s().p("Aw4D1QhkAAhIhIQhIhHAAhmQAAhlBIhHQBIhIBkAAMAhwAAAQBmAABHBIQBIBIAABkQAABmhIBHQhHBIhmAAg");
-	this.shape_1.setTransform(661.381,162.6937,0.854,0.854);
+	this.shape_1.graphics.f("#FFFFFF").s().p("AuaDRQhWAAg9g9Qg9g+AAhWQAAhWA9g9QA9g9BWAAIc0AAQBXAAA9A9QA9A9AABWQAABWg9A+Qg9A9hXAAg");
+	this.shape_1.setTransform(640.025,162.7);
 
 	this.instance = new lib.an_CSS({'id': '', 'href':'assets/myCss.css'});
 
@@ -7920,7 +7920,7 @@ if (reversed == null) { reversed = false; }
 
 	this.startGameBTN = new lib.startGameBTN();
 	this.startGameBTN.name = "startGameBTN";
-	this.startGameBTN.setTransform(661.5,235.25,0.7467,0.7467,0,0,0,0.2,0.1);
+	this.startGameBTN.setTransform(640.15,235.25,0.7467,0.7467,0,0,0,0.2,0.1);
 
 	this.myCss = new lib.an_CSS({'id': 'myCss', 'href':'assets/myCss.css'});
 
@@ -7928,24 +7928,21 @@ if (reversed == null) { reversed = false; }
 	this.myCss.setTransform(869.25,42.95,1,1,0,0,0,50,11);
 
 	this.instance_1 = new lib.gameChoiceWindow();
-	this.instance_1.setTransform(619.75,187.45,1,1,0,0,0,262.6,106.7);
+	this.instance_1.setTransform(635.6,183.6,0.7479,0.8268,0,0,0,262.7,106.8);
 
-	this.instance_2 = new lib.logo();
-	this.instance_2.setTransform(1108.15,49.75,1,1,0,0,0,132.8,25.9);
+	this.instance_2 = new lib.bonfireMC();
+	this.instance_2.setTransform(640.05,497.8,0.672,0.672,0,0,0,399.9,480.9);
 
-	this.instance_3 = new lib.bonfireMC();
-	this.instance_3.setTransform(650.65,497.8,0.672,0.672,0,0,0,399.9,480.9);
+	this.instance_3 = new lib.gameChoiceBGground();
+	this.instance_3.setTransform(607.85,703.95,1,1,0,0,0,883.9,198.1);
 
-	this.instance_4 = new lib.gameChoiceBGground();
-	this.instance_4.setTransform(607.85,703.95,1,1,0,0,0,883.9,198.1);
-
-	this.timeline.addTween(cjs.Tween.get({}).to({state:[{t:this.instance_4},{t:this.instance_3},{t:this.instance_2},{t:this.instance_1},{t:this.myCss},{t:this.startGameBTN},{t:this.instance},{t:this.shape_1},{t:this.shape}]}).wait(1));
+	this.timeline.addTween(cjs.Tween.get({}).to({state:[{t:this.instance_3},{t:this.instance_2},{t:this.instance_1},{t:this.myCss},{t:this.startGameBTN},{t:this.instance},{t:this.shape_1},{t:this.shape}]}).wait(1));
 
 	// Layer_2
-	this.instance_5 = new lib.Bitmap1();
-	this.instance_5.setTransform(-116,-89);
+	this.instance_4 = new lib.gameChoiceBGtrees();
+	this.instance_4.setTransform(652.2,405.9,1,1,0,0,0,768.2,494.9);
 
-	this.timeline.addTween(cjs.Tween.get(this.instance_5).wait(1));
+	this.timeline.addTween(cjs.Tween.get(this.instance_4).wait(1));
 
 	this._renderFirstFrame();
 
@@ -8703,8 +8700,8 @@ if (reversed == null) { reversed = false; }
 	// Layer_2 (mask)
 	var mask = new cjs.Shape();
 	mask._off = true;
-	mask.graphics.p("EgryAgOQiPAAhlhpQhlhqAAiVMAAAg1LQAAiVBlhpQBkhqCQAAMBXmAAAQCOAABmBqQBkBpAACVMAAAA1LQAACVhkBqQhmBpiOAAg");
-	mask.setTransform(-2,-13.675);
+	mask.graphics.p("EgubAe1QiFAAhfhpQhehoAAiVMAAAgyeQAAiTBfhqQBehoCFAAMBc3AAAQCGAABeBoQBeBqAACTMgABAyeQABCVheBoQhfBpiGAAg");
+	mask.setTransform(2.05,-11.6);
 
 	// Layer_1
 	this.pauseBTN = new lib.pauseBTN();
@@ -8723,23 +8720,32 @@ if (reversed == null) { reversed = false; }
 	}
 
 	this.instance = new lib.pauseBG();
-	this.instance.setTransform(-19.75,4.5,0.4801,0.4801,0,0,0,884,542.8);
+	this.instance.setTransform(-22.75,4.5,0.4801,0.4801,0,0,0,884,542.8);
 
-	this.shape = new cjs.Shape();
-	this.shape.graphics.lf(["#25224C","#383E87"],[0,1],-314.5,0,314.6,0).s().p("EgrwAgTQiPAAhlijQhlijAAjoMAAAgvKQAAjmBlikQBlijCPAAMBXhAAAQCPAABlCjQBlCkAADmMAAAAvKQAADohlCjQhlCjiPAAg");
-	this.shape.setTransform(-1.775,-14.325);
-
-	var maskedShapeInstanceList = [this.pauseBTN,this.text,this.instance,this.shape];
+	var maskedShapeInstanceList = [this.pauseBTN,this.text,this.instance];
 
 	for(var shapedInstanceItr = 0; shapedInstanceItr < maskedShapeInstanceList.length; shapedInstanceItr++) {
 		maskedShapeInstanceList[shapedInstanceItr].mask = mask;
 	}
 
-	this.timeline.addTween(cjs.Tween.get({}).to({state:[{t:this.shape},{t:this.instance},{t:this.text},{t:this.pauseBTN}]}).wait(1));
+	this.timeline.addTween(cjs.Tween.get({}).to({state:[{t:this.instance},{t:this.text},{t:this.pauseBTN}]}).wait(1));
+
+	// gameChoiceWindowBG
+	this.shape = new cjs.Shape();
+	this.shape.graphics.lf(["#25224C","#383E87"],[0,1],-100.6,-177,-100.6,177.1).s().p("Eg14AgNQiaAAhuhtQhthtAAicMAABg0uQAAiaBthuQBuhtCaAAMBrvAAAQCcAABtBtQBtBuAACaMgABA0uQAACchtBtQhtBtibAAg");
+	this.shape.setTransform(2.25,-36.175);
+
+	var maskedShapeInstanceList = [this.shape];
+
+	for(var shapedInstanceItr = 0; shapedInstanceItr < maskedShapeInstanceList.length; shapedInstanceItr++) {
+		maskedShapeInstanceList[shapedInstanceItr].mask = mask;
+	}
+
+	this.timeline.addTween(cjs.Tween.get(this.shape).wait(1));
 
 	this._renderFirstFrame();
 
-}).prototype = getMCSymbolPrototype(lib.pauseScreenCard, new cjs.Rectangle(-316.8,-219.8,629.6,412.3), null);
+}).prototype = getMCSymbolPrototype(lib.pauseScreenCard, new cjs.Rectangle(-327.3,-208.9,658.8,394.6), null);
 
 
 (lib.pauseScreen = function(mode,startPosition,loop,reversed) {
@@ -8756,18 +8762,18 @@ if (reversed == null) { reversed = false; }
 	// pauseScreenCard
 	this.pauseScreenCard = new lib.pauseScreenCard();
 	this.pauseScreenCard.name = "pauseScreenCard";
-	this.pauseScreenCard.setTransform(1072.65,642.9,1,1,0,0,0,424.3,260.4);
+	this.pauseScreenCard.setTransform(654.3,362.9,0.9089,0.9088,0,0,0,0.1,0.4);
 
 	this.timeline.addTween(cjs.Tween.get(this.pauseScreenCard).wait(1));
 
-	// Layer_4
+	// Layer_1
 	this.instance = new lib.gameChoiceWindowBG();
-	this.instance.setTransform(961.3,368.3,1.4211,1.9379,0,0,0,525.2,106.7);
-	this.instance.shadow = new cjs.Shadow("rgba(255,255,255,1)",0,0,50);
+	this.instance.setTransform(652.35,342.5,1.0112,1.112,0,0,0,262.6,106.7);
+	this.instance.shadow = new cjs.Shadow("rgba(255,255,255,1)",0,0,37);
 
 	this.shape = new cjs.Shape();
-	this.shape.graphics.lf(["#25224C","#383E87"],[0,1],-314.7,72.4,314.8,72.4).s().p("EgryAgOQiPAAhlhpQhlhqAAiVMAAAg1LQAAiVBlhpQBkhqCQAAMBXmAAAQCOAABmBqQBkBpAACVMAAAA1LQAACVhkBqQhmBpiOAAg");
-	this.shape.setTransform(648.15,371.125);
+	this.shape.graphics.lf(["#25224C","#383E87"],[0,1],-276.1,-8.2,266.7,-8.2).s().p("Egq1Aa2Qh8AAhXhTQhXhSAAh1MAAAgs2QAAh1BXhTQBXhTB7AAMBVsAAAQB8AABXBTQBXBTAAB1MAAAAs2QAAB1hXBSQhXBTh7AAg");
+	this.shape.setTransform(653.8552,368.4275,0.8567,0.8567);
 
 	this.timeline.addTween(cjs.Tween.get({}).to({state:[{t:this.shape},{t:this.instance}]}).wait(1));
 
@@ -9433,6 +9439,7 @@ if (reversed == null) { reversed = false; }
 			gameChoiceScreen.name = "gameChoiceScreen";
 			stage.addChild(gameChoiceScreen);
 			gameChoiceScreen.responseText.text = "";
+			
 			//מאזין לשינוי ערכים בקומבו
 			$("#dom_overlay_container").on("keyup", "#EnterTxt", gameChoiceByCombo);
 		}
@@ -9448,11 +9455,14 @@ if (reversed == null) { reversed = false; }
 				gameChoiceScreen.startGameBTN.cursor = "auto";
 				gameChoiceScreen.startGameBTN.gotoAndStop(0);
 				gameChoiceScreen.startGameBTN.removeEventListener("click", getJson);
+				window.removeEventListener("keyup", getJsonEnter);
+		
 			} else {
 				//בכל בחירה אחרת - כלומר בחר נושא תקין, נאפשר לחיצה והפנייה לפונקציית תחילת המשחק
 				gameChoiceScreen.startGameBTN.cursor = "pointer";
 				gameChoiceScreen.startGameBTN.gotoAndStop(1);
 				gameChoiceScreen.startGameBTN.addEventListener("click", getJson);
+				window.addEventListener("keyup", getJsonEnter);
 			}
 		}
 		
@@ -9461,6 +9471,12 @@ if (reversed == null) { reversed = false; }
 		//הנתיב המוביל לפרויקט המחולל שלכם לשיטה השולפת משחק לפי קוד
 		//var url = "https://localhost:5001/api/Games/toPlay/";
 		var url = "api/Games/toPlay/";
+		
+		function getJsonEnter(evt){
+			  if (evt.key === "Enter") {
+		    getJson();
+				  }
+		}
 		
 		//פונקציה א-סינכרונית לשליפת המידע מבסיס הנתונים דרך קריאת רשת
 		async function getJson() {
@@ -9495,6 +9511,7 @@ if (reversed == null) { reversed = false; }
 					gameChoiceScreen.responseText.text = "אירעה תקלת שרת, נסו שוב";
 				}
 			}
+			window.removeEventListener("keyup", getJsonEnter);
 		}
 		
 		function insertJasonToArray() {
@@ -10520,7 +10537,7 @@ lib.properties = {
 	opacity: 1.00,
 	webfonts: {},
 	manifest: [
-		{src:"images/CachedBmp_34.png", id:"CachedBmp_34"},
+		{src:"images/CachedBmp_93.png", id:"CachedBmp_93"},
 		{src:"images/CachedBmp_33.png", id:"CachedBmp_33"},
 		{src:"images/CachedBmp_29.png", id:"CachedBmp_29"},
 		{src:"images/marshmellowmed_atlas_1.png", id:"marshmellowmed_atlas_1"},
